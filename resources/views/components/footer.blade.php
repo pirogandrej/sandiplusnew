@@ -12,6 +12,11 @@
     <i class="fa fa-long-arrow-up"></i>
 </div>
 
+<div class="dots-pointer">
+    <span class="dot"></span>
+    <span class="dot"></span>
+</div>
+
 <div id='div-social'>
     <div id="youtube" class="social">
         <a href="https://www.youtube.com/channel/UCiyfSAulFx7CRkFvU08W4XQ" target="_blank"><i class="fa fa-youtube-play fa-2x youtube" aria-hidden="true"></i></a>
