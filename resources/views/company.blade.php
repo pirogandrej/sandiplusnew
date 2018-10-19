@@ -119,13 +119,8 @@
 
             </div>
         </div>
-
     </div>
-
 @endsection
 
 @section('scripts')
-
-    <script src="{{ asset( 'js/custom_company.js' ) }}"></script>
-
 @endsection

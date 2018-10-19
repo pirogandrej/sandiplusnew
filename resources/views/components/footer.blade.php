@@ -4,14 +4,6 @@
     </a>
 </div>
 
-<div id="arrow-down-pointer">
-    <i class="fa fa-long-arrow-down"></i>
-</div>
-
-<div id="arrow-up-pointer">
-    <i class="fa fa-long-arrow-up"></i>
-</div>
-
 <div class="dots-pointer">
     <span class="dot"></span>
     <span class="dot"></span>
@@ -32,6 +24,3 @@
     </div>
 </div>
 
-<div class="copyright">
-    COPYRIGHT @ 2018 SANDI+. ALL RIGHTS RESERVED.
-</div>

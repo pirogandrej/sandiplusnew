@@ -13,8 +13,8 @@ mix
         'public/css/all.css')
 
     .scripts([
-        'public/js/app.js',
-        'public/js/custom.js'
+        'public/js/app.js'
+        // 'public/js/custom.js'
         ],
         'public/js/all.js')
 

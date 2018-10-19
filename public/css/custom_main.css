@@ -1,3 +1,10 @@
+body::-webkit-scrollbar{
+    width: 0;
+}
+body{
+    -ms-overflow-style: none;
+    overflow: -moz-scrollbars-none;
+}
 .menu-brand.dark {
     display: none;
 }
@@ -65,29 +72,33 @@
 }
 #screen-1 .content {
     position: absolute;
-    top: 55%;
+    bottom: 74px;
     width: 50%;
 }
 #screen-1 .item1 {
     position: relative;
     left: calc(11vw - 15px);
-    font-size: 1.04vw;
-    width: 100%;
-    padding-bottom: 20px;
-    letter-spacing: 0.01vw;
-    font-weight: 300;
+    width: 1.41vw;
+    padding-bottom: 2.4vw;
 }
 #screen-1 .item2 {
     position: relative;
-    font-size: 1.65vw;
+    font-size: 2.5vw;
     left: calc(11vw - 15px);
     font-weight: 600;
-    line-height: 42px;
-    width: 100%;
+    line-height: 2.71vw;
+    width: 32.14vw;
     letter-spacing: 0.07vw;
+    padding-bottom: 2.4vw;
 }
-#screen-1 .item2-mobile {
-    display: none;
+#screen-1 .item3 {
+    position: relative;
+    left: calc(11vw - 15px);
+    font-size: 1.14vw;
+    width: 100%;
+    letter-spacing: 0.01vw;
+    font-weight: 300;
+    font-style: normal;
 }
 
 #screen-2 {

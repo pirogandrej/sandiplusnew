@@ -12,20 +12,20 @@
 
     @include('components.mainMenu')
 
-    <div id="screens-list" class="container-fluid dark" data-page-id="0" data-slide-id="1">
+    <div id="screens-list" class="container-fluid dark" data-page-id="0" data-screen-id="1">
 
         <div class="row screen" id="screen-1">
             <div class="col-12">
 
                 <div class="content">
                     <div class="item1">
-                        Генеральный Директор компании
+                        <img src="{{ asset( 'img/icon-quotes-1.svg' ) }}" alt="">
                     </div>
                     <div class="item2">
-                        "Мы не строим бизнес,<br>мы строим организацию, которая<br>строит бизнес"
+                        Мы не строим бизнес, мы строим организацию, которая строит бизнес
                     </div>
-                    <div class="item2-mobile">
-                        "Мы не строим бизнес, мы строим организацию, которая строит бизнес"
+                    <div class="item3">
+                        Генеральный Директор компании
                     </div>
                 </div>
 
@@ -74,7 +74,5 @@
 @endsection
 
 @section('scripts')
-
     <script src="{{ asset( 'js/custom_main.js' ) }}"></script>
-
 @endsection
