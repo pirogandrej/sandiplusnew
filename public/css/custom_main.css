@@ -11,6 +11,9 @@ body{
 #main-menu a{
     color: white;
 }
+#button-toggle span{
+    background-color: white;
+}
 #screen-1 .scroll-pointer a span {
     border: 2px solid #fff;
 }
@@ -28,21 +31,6 @@ body{
     -webkit-animation: sup 2s infinite;
 }
 
-#screen-1 #arrow-down-pointer {
-    display: block;
-}
-#screen-1 #arrow-up-pointer {
-    display: none;
-}
-#screen-2 #arrow-down-pointer {
-    display: none;
-}
-#screen-2 #arrow-up-pointer {
-    display: block;
-}
-#arrow-down-pointer i{
-    color: white;
-}
 .dots-pointer {
     display: none;
     text-align: center;
@@ -72,19 +60,18 @@ body{
 }
 #screen-1 .content {
     position: absolute;
+    left: 11.30208333vw;
     bottom: 74px;
     width: 50%;
 }
 #screen-1 .item1 {
     position: relative;
-    left: calc(11vw - 15px);
     width: 1.41vw;
     padding-bottom: 2.4vw;
 }
 #screen-1 .item2 {
     position: relative;
     font-size: 2.5vw;
-    left: calc(11vw - 15px);
     font-weight: 600;
     line-height: 2.71vw;
     width: 32.14vw;
@@ -93,7 +80,6 @@ body{
 }
 #screen-1 .item3 {
     position: relative;
-    left: calc(11vw - 15px);
     font-size: 1.14vw;
     width: 100%;
     letter-spacing: 0.01vw;
@@ -138,8 +124,7 @@ body{
     font-size: 27px;
 }
 #screen-2 .content {
-    margin-top: 24vh;
-    max-width: 70vw;
+    max-width: 55.203vw;
     margin-left: auto;
     margin-right: auto;
 }
@@ -151,21 +136,8 @@ body{
 #screen-2 .content .item {
     text-align: center;
 }
-#arrow-up-pointer {
-    position: absolute;
-    left: calc(50% + 25px);
-    bottom: 80px;
+#screen-2 .footer .social a {
     color: black;
-    font-size: 2.2rem;
-}
-#screen-2 .copyright {
-    color: black;
-}
-#screen-2 #div-social i{
-    color: #000;
-}
-#screen-2 #div-social .social{
-    border: 1px solid black;
 }
 
 @media (min-width: 0px) and (max-width: 329px) and (orientation:portrait) {
@@ -195,26 +167,22 @@ body{
         text-align: center;
     }
     #screen-1 .item1 {
-        font-size: 2.6vw;
-        width: 100%;
-        padding-bottom: 20px;
-        font-style: italic;
-        position: absolute;
-        bottom: -10vh;
-        left:0;
+        width: 12px;
     }
     #screen-1 .item2 {
-        display: none;
-    }
-    #screen-1 .item2-mobile {
         display: block;
         font-size: 5vw;
         font-weight: 600;
-        line-height: 42px;
+        line-height: 6vw;
         width: 100%;
         margin-left: auto;
         margin-right: auto;
         left:0;
+        padding-bottom: 3vh;
+    }
+    #screen-1 .item3 {
+        font-size: 3vw;
+        font-style: italic;
     }
     .scroll-pointer {
         display: none;
@@ -309,26 +277,22 @@ body{
         text-align: center;
     }
     #screen-1 .item1 {
-        font-size: 2.6vw;
-        width: 100%;
-        padding-bottom: 20px;
-        font-style: italic;
-        position: absolute;
-        bottom: -10vh;
-        left:0;
+        width: 12px;
     }
     #screen-1 .item2 {
-        display: none;
-    }
-    #screen-1 .item2-mobile {
         display: block;
         font-size: 5vw;
         font-weight: 600;
-        line-height: 42px;
+        line-height: 4vw;
         width: 100%;
         margin-left: auto;
         margin-right: auto;
         left:0;
+        padding-bottom: 3vh;
+    }
+    #screen-1 .item3 {
+        font-size: 3vw;
+        font-style: italic;
     }
     .scroll-pointer {
         display: none;
@@ -403,42 +367,30 @@ body{
         text-align: center;
     }
     #screen-1 .item1 {
-        font-size: 2.6vw;
-        width: 100%;
-        padding-bottom: 20px;
-        font-style: italic;
-        position: absolute;
-        bottom: -10vh;
-        left: 0;
-        letter-spacing: 0.25vw;
-        font-weight: 300;
+        width: 12px;
     }
     #screen-1 .item2 {
-        display: none;
-    }
-    #screen-1 .item2-mobile {
         display: block;
         font-size: 5vw;
         font-weight: 600;
-        line-height: unset;
+        line-height: 6vw;
         width: 100%;
         margin-left: auto;
         margin-right: auto;
         left:0;
+        padding-bottom: 3vh;
+    }
+    #screen-1 .item3 {
+        font-size: 3vw;
+        font-style: italic;
     }
     .scroll-pointer {
-        display: none;
-    }
-    #screen-1 #arrow-down-pointer {
         display: none;
     }
     .dots-pointer{
         display: block;
     }
     #div-social {
-        display: none;
-    }
-    .copyright {
         display: none;
     }
     .figure-mobile {
@@ -468,10 +420,6 @@ body{
     }
     #screen-2 .content {
         display: none;
-    }
-    #arrow-up-pointer {
-        left: calc(50% - 8px);
-        bottom: 40px;
     }
 }
 
@@ -519,40 +467,30 @@ body{
         text-align: center;
     }
     #screen-1 .item1 {
-        font-size: 2.6vw;
-        width: 100%;
-        padding-bottom: 20px;
-        font-style: italic;
-        position: absolute;
-        bottom: -10vh;
-        left:0;
+        width: 12px;
     }
     #screen-1 .item2 {
-        display: none;
-    }
-    #screen-1 .item2-mobile {
         display: block;
         font-size: 5vw;
         font-weight: 600;
-        line-height: 42px;
+        line-height: 4vw;
         width: 100%;
         margin-left: auto;
         margin-right: auto;
         left:0;
+        padding-bottom: 3vh;
+    }
+    #screen-1 .item3 {
+        font-size: 3vw;
+        font-style: italic;
     }
     .scroll-pointer {
-        display: none;
-    }
-    #screen-1 #arrow-down-pointer {
         display: none;
     }
     .dots-pointer{
         display: block;
     }
     #div-social {
-        display: none;
-    }
-    .copyright {
         display: none;
     }
     .figure-mobile {
@@ -579,10 +517,6 @@ body{
     }
     #screen-2 .content {
         display: none;
-    }
-    #arrow-up-pointer {
-        left: calc(50% - 8px);
-        bottom: calc(4% + 0px);
     }
 }
 
@@ -600,7 +534,6 @@ body{
     }
     .menu-brand {
         width: 120px;
-        opacity: 1;
         left: 4%;
     }
     #main-menu {
@@ -614,37 +547,14 @@ body{
         right: calc(50% - 18px);
     }
     #screen-1 .content {
-        top: 55%;
-        width: 40%;
-    }
-    #screen-1 .item1 {
-        left: 21%;
-        font-size: 1vw;
-        width: 100%;
-        padding-bottom: 20px;
-    }
-    #screen-1 .item2 {
-        font-size: 1.8vw;
-        left: 21%;
-        font-weight: 600;
-        line-height: 42px;
-        width: 100%;
+        left: 4%;
     }
     .scroll-pointer {
         display: none;
     }
-    #arrow-down-pointer {
-        left: calc(50% - 8px);
-        bottom: 80px;
-    }
     #div-social {
         right: 4%;
-        bottom: 80px;
-    }
-    .copyright {
-        left: calc(50% - 14.2vw);
-        bottom: 40px;
-        font-size: 1.3vw;
+        width: 28.5%;
     }
     #screen-2 .content {
         position: absolute;
@@ -657,116 +567,8 @@ body{
     #screen-2 .content .item{
         padding: 0;
     }
-    #arrow-up-pointer {
-        left: calc(50% - 8px);
-        bottom: 80px;
-    }
     #screen-2 #div-social {
         right: 4%;
-        bottom: 80px;
-    }
-    #screen-2 #div-social i{
-        color: #000;
-    }
-    #screen-2 #div-social .social{
-        border: 1px solid black;
-    }
-    #screen-2 .copyright {
-        left: calc(50% - 14.2vw);
-        font-size: 1.3vw;
-        bottom: 40px;
-    }
-}
-
-@media (min-width: 768px) and (max-width: 1199px) and (orientation:landscape) and (min-height: 768px){
-    #pull-out-menu .menu {
-        margin-top: 10vw;
-        margin-left: 8vh;
-    }
-    #pull-out-menu .menu a{
-        margin-bottom: 2vh;
-        font-size: 3vw;
-    }
-    .menu-lang {
-        display: none;
-    }
-    .menu-brand {
-        width: 120px;
-        opacity: 1;
-        left: 4%;
-    }
-    #main-menu {
-        display: none;
-    }
-    #menu-bar .lang {
-        right: 4%;
-    }
-    #button-toggle {
-        display: block;
-        right: calc(50% - 18px);
-    }
-    #screen-1 .content {
-        top: 55%;
-        width: 40%;
-    }
-    #screen-1 .item1 {
-        left: 21%;
-        font-size: 1vw;
-        width: 100%;
-        padding-bottom: 20px;
-    }
-    #screen-1 .item2 {
-        font-size: 1.8vw;
-        left: 21%;
-        font-weight: 600;
-        line-height: 42px;
-        width: 100%;
-    }
-    .scroll-pointer {
-        display: none;
-    }
-    #arrow-down-pointer {
-        left: calc(50% - 8px);
-        bottom: 80px;
-    }
-    #div-social {
-        right: 4%;
-        bottom: 80px;
-    }
-    .copyright {
-        left: calc(50% - 14.2vw);
-        bottom: 40px;
-        font-size: 1.3vw;
-    }
-    #screen-2 .content {
-        position: absolute;
-        margin-top: 0vh;
-        max-height: 70vh;
-        max-width: calc(70vh/3 - 36px);
-        top: calc(50vh - 70vh/2 - 6vh);
-        left: calc(50vw - (70vh/3 - 66px)/2);
-    }
-    #screen-2 .content .item{
-        padding: 0;
-    }
-    #arrow-up-pointer {
-        left: calc(50% - 8px);
-        bottom: 80px;
-    }
-    #screen-2 #div-social {
-        right: 4%;
-        bottom: 80px;
-    }
-    #screen-2 #div-social i{
-        color: #000;
-    }
-    #screen-2 #div-social .social{
-        border: 1px solid black;
-    }
-    #screen-2 .copyright {
-        left: calc(50% - 14.2vw);
-        bottom:40px;
-        font-size: 1.3vw;
     }
 }
 
@@ -784,7 +586,6 @@ body{
     }
     .menu-brand {
         width: 120px;
-        opacity: 1;
         left: 4%;
     }
     #main-menu {
@@ -802,48 +603,17 @@ body{
         background-size: 135%;
     }
     #screen-1 .content {
-        top: 36%;
-        width: 62vw;
-        left: calc(50% - 31vw);
-        text-align: center;
-    }
-    #screen-1 .item1 {
-        font-size: 2.6vw;
-        width: 100%;
-        padding-bottom: 20px;
-        font-style: italic;
-        position: absolute;
-        bottom: -10vh;
-        left:0;
-    }
-    #screen-1 .item2 {
-        display: none;
-    }
-
-    #screen-1 .item2-mobile {
-        display: block;
-        font-size: 5vw;
-        font-weight: 600;
-        line-height: 42px;
-        width: 100%;
-        margin-left: auto;
-        margin-right: auto;
-        left:0;
+        left:4%;
     }
     .scroll-pointer {
-        display: none;
-    }
-    #screen-1 #arrow-down-pointer {
         display: none;
     }
     .dots-pointer{
         display: block;
     }
     #div-social {
-        display: none;
-    }
-    .copyright {
-        display: none;
+        width: 28.5vw;
+        right: 4vw;
     }
     .figure-mobile {
         display: block;
@@ -870,9 +640,57 @@ body{
     #screen-2 .content {
         display: none;
     }
-    #arrow-up-pointer {
-        left: calc(50% - 8px);
-        bottom: calc(4% + 0px);
+}
+
+@media (min-width: 768px) and (max-width: 1199px) and (orientation:landscape) and (min-height: 768px){
+    #pull-out-menu .menu {
+        margin-top: 10vw;
+        margin-left: 8vh;
+    }
+    #pull-out-menu .menu a{
+        margin-bottom: 2vh;
+        font-size: 3vw;
+    }
+    .menu-lang {
+        display: none;
+    }
+    .menu-brand {
+        width: 120px;
+        left: 4%;
+    }
+    #main-menu {
+        display: none;
+    }
+    #menu-bar .lang {
+        right: 4%;
+    }
+    #button-toggle {
+        display: block;
+        right: calc(50% - 18px);
+    }
+    #screen-1 .content {
+        left: 4%;
+    }
+    .scroll-pointer {
+        display: none;
+    }
+    #div-social {
+        right: 4%;
+        width: 28.5vw;
+    }
+    #screen-2 .content {
+        position: absolute;
+        margin-top: 0vh;
+        max-height: 70vh;
+        max-width: calc(70vh/3 - 36px);
+        top: calc(50vh - 70vh/2 - 6vh);
+        left: calc(50vw - (70vh/3 - 66px)/2);
+    }
+    #screen-2 .content .item{
+        padding: 0;
+    }
+    #screen-2 #div-social {
+        right: 4%;
     }
 }
 
@@ -890,7 +708,6 @@ body{
     }
     .menu-brand {
         width: 120px;
-        opacity: 1;
     }
     #main-menu ul {
         width: 600px;
@@ -900,32 +717,6 @@ body{
     }
     .scroll-pointer {
         display: none;
-    }
-    #div-social {
-        bottom: 80px;
-    }
-    #arrow-down-pointer {
-        left: 50%;
-        bottom: 80px;
-    }
-    .copyright {
-        left: calc(50% - 14.2vw);
-        bottom: 40px;
-        font-size: 1.3vw;
-    }
-    #screen-2 #div-social {
-        right: 11.5%;
-        bottom: 80px;
-    }
-    #screen-2 #div-social i{
-        color: #000;
-    }
-    #screen-2 #div-social .social{
-        border: 1px solid black;
-    }
-    #arrow-up-pointer {
-        left: 50%;
-        bottom: 80px;
     }
 }
 

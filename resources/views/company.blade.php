@@ -53,7 +53,7 @@
                     </div>
                 </div>
 
-                @include('components.footerCompany')
+                @include('components.footer')
 
             </div>
         </div>
@@ -115,7 +115,7 @@
 
                 </div>
 
-                @include('components.footerCompany')
+                @include('components.footer')
 
             </div>
         </div>

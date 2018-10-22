@@ -66,8 +66,8 @@ a {
 
 .menu-brand {
   position: absolute;
-  top: 19px;
-  left: 11%;
+  top: 30px;
+  left: 11.30208333vw;
   width: 160px;
   padding: 0;
   opacity: 0.9;
@@ -117,23 +117,22 @@ a {
 }
 
 #menu-bar .lang {
-  right: 11%;
+  right: 11.30208333vw;
   top: 30px;
   position: absolute;
   display: block;
   font-size: 12px;
   font-weight: 700;
-}
-
-#menu-bar.dark .lang {
   color: #fff;
 }
 
-#menu-bar.light .lang {
-  color: #000;
+#menu-bar.dark div.lang {
+  color: #fff;
 }
 
-/*//transform button toggle --------------------------------*/
+#menu-bar.light div.lang {
+  color: #000;
+}
 
 #button-toggle {
   display: none;
@@ -207,10 +206,6 @@ a {
   left: 50%;
 }
 
-/*//end menu-button-toggle ---------------------------------------*/
-
-/*---------------------------- scroll-pointer -------------------*/
-
 .scroll-pointer {
   position: absolute;
   bottom: 106px;
@@ -219,7 +214,7 @@ a {
 
 .scroll-pointer a {
   position: absolute;
-  left: 50%;
+  left: calc(50% + 15px);
   z-index: 2;
   display: inline-block;
   -webkit-transform: translate(0, -50%);
@@ -342,21 +337,12 @@ a {
   }
 }
 
-/*---------------------------- end scroll-pointer -------------------*/
-
-#arrow-down-pointer {
-  position: absolute;
-  bottom: 80px;
-  left: calc(50% + 25px);
-  font-size: 2.2rem;
-}
-
 #div-social {
   position: absolute;
-  width: 200px;
-  height: 50px;
-  bottom: 80px;
-  right: 11%;
+  width: 18.75vw;
+  height: 12px;
+  bottom: 74px;
+  right: 11.30208333vw;
   display: -webkit-inline-box;
   display: -ms-inline-flexbox;
   display: inline-flex;
@@ -364,77 +350,16 @@ a {
 
 .social {
   position: relative;
-  height: 40px;
-  width: 40px;
-  border-radius: 50%;
-  border: 1px solid white;
-  margin-right: 10px;
 }
 
 .social a {
   position: absolute;
+  font-size: 12px;
 }
 
-.social i {
+.social a:hover {
   color: white;
-  font-size: 1.5em;
-}
-
-#facebook a {
-  top: calc(50% - 12px);
-  left: calc(50% - 8px);
-}
-
-#youtube a {
-  top: calc(50% - 14px);
-  left: calc(50% - 12px);
-}
-
-#instagram a {
-  top: calc(50% - 13px);
-  left: calc(50% - 10px);
-}
-
-#telegram a {
-  top: calc(50% - 13px);
-  left: calc(50% - 12px);
-}
-
-.copyright {
-  position: absolute;
-  bottom: 40px;
-  left: calc(50% - 8.8vw);
-  font-size: 0.77vw;
-}
-
-#menu-dot-right {
-  position: fixed;
-  right: 40px;
-  top: calc(50% - 100px);
-  z-index: 9;
-}
-
-#menu-dot-right .dot {
-  border-radius: 50%;
-  background-color: #A8A8A8;
-  width: 5px;
-  height: 5px;
-  border: 1px solid #a8a8a8;
-}
-
-#menu-dot-right div {
-  margin-bottom: 10px;
-  width: 25px;
-  height: 25px;
-  border-radius: 50%;
-  position: relative;
-}
-
-#menu-dot-right div a {
-  text-align: center;
-  position: absolute;
-  top: calc(50% - 3px);
-  left: calc(50% - 3px);
+  text-decoration: none;
 }
 
 .screen {

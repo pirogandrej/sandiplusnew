@@ -8,12 +8,14 @@ mix
 
     .styles([
         'public/css/app.css',
+        'public/css/fullpage.min.css',
         'public/css/custom.css'
         ],
         'public/css/all.css')
 
     .scripts([
-        'public/js/app.js'
+        'public/js/app.js',
+        'public/js/fullpage.min.js'
         // 'public/js/custom.js'
         ],
         'public/js/all.js')

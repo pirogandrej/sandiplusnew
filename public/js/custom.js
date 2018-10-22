@@ -20,9 +20,6 @@ function func_init() {
     number_page = $('#screens-list').data('page-id');
     number_screen = $('#screens-list').data('screen-id');
     switch (number_page){
-        case 0:
-            $('#menu-bar').addClass('dark');
-            break;
         case 1:
             $('#menu-bar').addClass('light');
             $('#main-menu ul li:nth-child(' + number_page + ') a').css({'background-color':'black','color':'white'});
@@ -38,35 +35,35 @@ function func_init() {
     }
 }
 
-function process_to_down() {
-    $("#menu-bar").addClass("hide");
-    scroll_allowed = 0;
-    $("html,body").animate({scrollTop:hwin},1000,function () {
-        $("#menu-bar").removeClass("hide");
-        $("#menu-bar").addClass("light");
-        $("#menu-bar").removeClass("dark");
-        $(".menu-brand.light").hide();
-        $(".menu-brand.dark").show();
-        $("#screens-list").addClass("light");
-        $("#screens-list").removeClass("dark");
-        sumdelta = hwin;
-        scroll_allowed = 1;
-    });
-}
-
-function process_to_top() {
-    $("#menu-bar").addClass("hide");
-    scroll_allowed = 0;
-    $("html,body").animate({scrollTop:0}, 1000,function () {
-        $("#menu-bar").removeClass("hide");
-        $("#menu-bar").removeClass("light");
-        $("#menu-bar").addClass("dark");
-        $("#screens-list").addClass("dark");
-        $("#screens-list").removeClass("light");
-        $(".menu-brand.light").show();
-        $(".menu-brand.dark").hide();
-        scroll_allowed = 1;
-        sumdelta = 0;
+function func_fullpage() {
+    $('#fullpage').fullpage({
+        autoScrolling:true,
+        anchors: ['firstPage', 'secondPage'],
+        sectionSelector: '.screen',
+        scrollingSpeed: 1000,
+        licenseKey: 'OPEN-SOURCE-GPLV3-LICENSE',
+        onLeave: function(){
+            $("#menu-bar").addClass("hide");
+        },
+        afterLoad: function(anchorLink, index, direction){
+            $("#menu-bar").removeClass("hide");
+            if((index.index == 0) && (direction == 'up')){
+                $("#menu-bar").removeClass("light");
+                $("#menu-bar").addClass("dark");
+                $("#screens-list").addClass("dark");
+                $("#screens-list").removeClass("light");
+                $(".menu-brand.light").show();
+                $(".menu-brand.dark").hide();
+            }
+            if((index.index == 1) && (direction == 'down')){
+                $("#menu-bar").addClass("light");
+                $("#menu-bar").removeClass("dark");
+                $(".menu-brand.light").hide();
+                $(".menu-brand.dark").show();
+                $("#screens-list").addClass("light");
+                $("#screens-list").removeClass("dark");
+            }
+        }
     });
 }
 
@@ -132,28 +129,27 @@ function animate_to_position(position) {
         });
 
         $('.scroll-pointer').click(function(event) {
+            if($('html').hasClass('fp-enabled')){
+                var fpObj = fullpage_api.getActiveSection();
+                if(fpObj.index == 0){
+                    fullpage_api.moveSectionDown();
+                }
+                if(fpObj.index == 1){
+                    fullpage_api.moveSectionUp();
+                }
+            }
             switch (number_page){
-                case 0:
-                    if( scroll_allowed == 1){
-                        if($('#screens-list').hasClass('dark')){
-                            process_to_down();
-                        }
-                        else{
-                            process_to_top();
-                        }
-                    }
-                    break;
                 case 1:
                     event.preventDefault();
                     animate_to_position(2);
                     break;
             }
-
             return false;
         });
 
         $( window ).resize(function() {
             func_test_size();
+            func_fullpage();
             if ((wwin >= 1200) && ($('#button-toggle').hasClass("open"))) {
                 $('#main-menu').css('display','none');
                 $('#button-toggle').css({'display':'block','right':'calc(50% - 18px)'});
@@ -163,6 +159,7 @@ function animate_to_position(position) {
         $( document ).ready(function(){
             func_test_size();
             func_init();
+            func_fullpage();
         });
     })
 })(jQuery);

@@ -48,7 +48,7 @@
                     </div>
                 </div>
 
-{{--                @include('components.footerCompany')--}}
+                @include('components.social')
 
             </div>
         </div>

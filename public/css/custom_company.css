@@ -37,30 +37,26 @@ body{
     background-image: linear-gradient(90deg, #390C2D, #B51B27, #381184);
     transition-duration: 1s;
 }
-.footer-company {
+.footer {
     position: relative;
-    /*bottom: 80px;*/
     top: 180px;
     width: 100%;
     right: 0;
     left: 0;
 }
-.footer-company .scroll-pointer {
-    bottom: 90px;
+.footer .scroll-pointer {
+    bottom: 106px;
 }
-.footer-company #arrow-down-pointer {
-    bottom: 40px;
-}
-.footer-company #div-social {
-    bottom: 40px;
+.footer #div-social {
+    bottom: 74px;
     width: unset;
 }
-.footer-company #div-social .social{
+.footer #div-social .social{
     border: 0;
     margin-right: 0.2vw;
     width: unset;
 }
-.footer-company #div-social a{
+.footer #div-social a{
     color: black;
     position: static;
     text-decoration: none;
@@ -73,23 +69,6 @@ body{
     animation: sdp 2s infinite;
     -webkit-animation: sdp 2s infinite;
 }
-
-#arrow-up-pointer {
-    display: none;
-}
-#arrow-down-pointer {
-    color: black;
-}
-#div-social i{
-    color: #000;
-}
-#div-social .social{
-    border: 1px solid black;
-}
-.copyright {
-    color: black;
-}
-
 .block-left {
     position: fixed;
     width: 31vw;
@@ -128,9 +107,6 @@ body{
     color: #000000;
     background-color: white;
     padding-top: 80px;
-}
-#screen-1 {
-    height: 200vh;
 }
 #screen-1 .content {
     position: relative;
