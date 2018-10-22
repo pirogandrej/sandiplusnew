@@ -1,25 +1,23 @@
 var wwin;
 var hwin;
-var scroll_allowed = 1;
-var mouse_y_scroll = 0;
-var scroll_y_scroll = 0;
-var old_scroll_y_scroll = 0;
-var delta = 0;
-var sumdelta = 0;
 var number_page;
 var number_screen;
 
 function func_test_size() {
     wwin = $(window).width();
     hwin = $(window).height();
-    // console.log('w-win = ' + wwin);
-    // console.log('h-win = ' + hwin);
 }
 
 function func_init() {
     number_page = $('#screens-list').data('page-id');
     number_screen = $('#screens-list').data('screen-id');
+    if(number_page == undefined){
+        number_page = $('#fullpage').data('page-id');
+    }
     switch (number_page){
+        case 0:
+            $('#menu-bar').addClass('dark');
+            break;
         case 1:
             $('#menu-bar').addClass('light');
             $('#main-menu ul li:nth-child(' + number_page + ') a').css({'background-color':'black','color':'white'});
@@ -50,8 +48,8 @@ function func_fullpage() {
             if((index.index == 0) && (direction == 'up')){
                 $("#menu-bar").removeClass("light");
                 $("#menu-bar").addClass("dark");
-                $("#screens-list").addClass("dark");
-                $("#screens-list").removeClass("light");
+                $("#fullpage").addClass("dark");
+                $("#fullpage").removeClass("light");
                 $(".menu-brand.light").show();
                 $(".menu-brand.dark").hide();
             }
@@ -60,8 +58,8 @@ function func_fullpage() {
                 $("#menu-bar").removeClass("dark");
                 $(".menu-brand.light").hide();
                 $(".menu-brand.dark").show();
-                $("#screens-list").addClass("light");
-                $("#screens-list").removeClass("dark");
+                $("#fullpage").addClass("light");
+                $("#fullpage").removeClass("dark");
             }
         }
     });
@@ -97,7 +95,7 @@ function animate_to_position(position) {
         $('#button-toggle').click(function() {
             if ( $(this).hasClass("open") ) {
                 $('#pull-out-menu').hide();
-                if ( $('#screens-list').hasClass("dark") ) {
+                if ( $('#fullpage').hasClass("dark") ) {
                     $("#menu-bar").addClass("dark");
                     $("#menu-bar").removeClass("light");
                     $(".menu-brand.light").show();
@@ -158,8 +156,8 @@ function animate_to_position(position) {
 
         $( document ).ready(function(){
             func_test_size();
-            func_init();
             func_fullpage();
+            func_init();
         });
     })
 })(jQuery);
