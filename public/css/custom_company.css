@@ -71,7 +71,7 @@ body{
 }
 .block-left {
     position: fixed;
-    width: 31vw;
+    width: 30.733vw;
     height: 100vh;
     top: 26vh;
     left: 0;
@@ -111,8 +111,8 @@ body{
 #screen-1 .content {
     position: relative;
     top: calc(15vh - 80px);
-    width: 39vw;
-    left: 31vw;
+    width: 38.3vw;
+    left: calc(30.733vw - 15px);
 }
 #screen-1 .item1 {
     font-size: 1.25vw;
@@ -178,8 +178,8 @@ body{
 #screen-2 .content {
     position: relative;
     top: calc(15vh - 80px);
-    width: 39vw;
-    left: 31vw;
+    width: 38.3vw;
+    left: calc(30.733vw - 15px);
 }
 #screen-2 .item1 {
     font-size: 1.25vw;
