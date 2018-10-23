@@ -9,6 +9,7 @@ mix
     .styles([
         'public/css/app.css',
         'public/css/fullpage.min.css',
+        'public/fonts/SF/stylesheet.css',
         'public/css/custom.css'
         ],
         'public/css/all.css')

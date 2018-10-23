@@ -1,7 +1,7 @@
 //отступы page0-screen0
-$indentLeftRight: 217vw * 100 / 1920; //отступ слева и справа 217px -> vw
-$indentBottom: 74px; //отступ снизу
-$indentTop: 30px; //отступ сверху
+$indentTop: 30px;         //отступ сверху
+$indentLeftRight: 11.3vw; //отступ слева и справа
+$indentBottom: 74px;      //отступ снизу
 
 //common
 body {
@@ -84,7 +84,6 @@ a {
 }
 #main-menu li {
   float: left;
-  //margin-left: 23px;
 }
 #main-menu li:nth-child(1) {
   margin-left: 0;

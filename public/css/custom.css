@@ -67,7 +67,7 @@ a {
 .menu-brand {
   position: absolute;
   top: 30px;
-  left: 11.30208333vw;
+  left: 11.3vw;
   width: 120px;
   padding: 0;
   opacity: 0.9;
@@ -116,7 +116,7 @@ a {
 }
 
 #menu-bar .lang {
-  right: 11.30208333vw;
+  right: 11.3vw;
   top: 30px;
   position: absolute;
   display: block;
@@ -341,7 +341,7 @@ a {
   width: 18.75vw;
   height: 12px;
   bottom: 74px;
-  right: 11.30208333vw;
+  right: 11.3vw;
   display: -webkit-inline-box;
   display: -ms-inline-flexbox;
   display: inline-flex;

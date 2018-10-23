@@ -43,18 +43,20 @@
                 </ul>
             </div>
 
-            <div class="row content">
-                <div class="col-lg-12 col-xl-4 item">
-                    <img src="{{ asset( 'img/figure-1.svg' ) }}" alt="">
-                    <a href="/company">КОМПАНИЯ</a>
-                </div>
-                <div class="col-lg-12 col-xl-4 item">
-                    <img src="{{ asset( 'img/figure-2.svg' ) }}" alt="">
-                    <a href="#">БЛОГ</a>
-                </div>
-                <div class="col-lg-12 col-xl-4 item">
-                    <img src="{{ asset( 'img/figure-3.svg' ) }}" alt="">
-                    <a href="#">КАРЬЕРА</a>
+            <div class="container content">
+                <div class="row">
+                    <div class="col-lg-12 col-xl-4 item">
+                        <img src="{{ asset( 'img/figure-1.svg' ) }}" alt="">
+                        <a href="/company">КОМПАНИЯ</a>
+                    </div>
+                    <div class="col-lg-12 col-xl-4 item">
+                        <img src="{{ asset( 'img/figure-2.svg' ) }}" alt="">
+                        <a href="#">БЛОГ</a>
+                    </div>
+                    <div class="col-lg-12 col-xl-4 item">
+                        <img src="{{ asset( 'img/figure-3.svg' ) }}" alt="">
+                        <a href="#">КАРЬЕРА</a>
+                    </div>
                 </div>
             </div>
 

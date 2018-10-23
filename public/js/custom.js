@@ -8,31 +8,6 @@ function func_test_size() {
     hwin = $(window).height();
 }
 
-function func_init() {
-    number_page = $('#screens-list').data('page-id');
-    number_screen = $('#screens-list').data('screen-id');
-    if(number_page == undefined){
-        number_page = $('#fullpage').data('page-id');
-    }
-    switch (number_page){
-        case 0:
-            $('#menu-bar').addClass('dark');
-            break;
-        case 1:
-            $('#menu-bar').addClass('light');
-            $('#main-menu ul li:nth-child(' + number_page + ') a').css({'background-color':'black','color':'white'});
-            $('#scroll-indication div:nth-child(' + number_screen + ') hr').addClass('active');
-            $('.block-left div.row:nth-child(' + number_screen + ')').addClass('active');
-            $('#screens-list div.screen').filter(function(){
-                return $(this).data("id") != number_screen}).css("display","none");
-            break;
-        case 2:
-            $('#menu-bar').addClass('light');
-            $('#main-menu ul li:nth-child(' + number_page + ') a').css({'background-color':'black','color':'white'});
-            break;
-    }
-}
-
 function func_fullpage() {
     $('#fullpage').fullpage({
         autoScrolling:true,
@@ -63,6 +38,31 @@ function func_fullpage() {
             }
         }
     });
+}
+
+function func_init() {
+    number_page = $('#screens-list').data('page-id');
+    number_screen = $('#screens-list').data('screen-id');
+    if(number_page == undefined){
+        number_page = $('#fullpage').data('page-id');
+    }
+    switch (number_page){
+        case 0:
+            $('#menu-bar').addClass('dark');
+            break;
+        case 1:
+            $('#menu-bar').addClass('light');
+            $('#main-menu ul li:nth-child(' + number_page + ') a').css({'background-color':'black','color':'white'});
+            $('#scroll-indication div:nth-child(' + number_screen + ') hr').addClass('active');
+            $('.block-left div.row:nth-child(' + number_screen + ')').addClass('active');
+            $('#screens-list div.screen').filter(function(){
+                return $(this).data("id") != number_screen}).css("display","none");
+            break;
+        case 2:
+            $('#menu-bar').addClass('light');
+            $('#main-menu ul li:nth-child(' + number_page + ') a').css({'background-color':'black','color':'white'});
+            break;
+    }
 }
 
 function animate_to_position(position) {
