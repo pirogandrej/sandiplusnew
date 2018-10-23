@@ -36,7 +36,7 @@ function func_init() {
 function func_fullpage() {
     $('#fullpage').fullpage({
         autoScrolling:true,
-        anchors: ['firstPage', 'secondPage'],
+        lockAnchors: true,
         sectionSelector: '.screen',
         scrollingSpeed: 1000,
         licenseKey: 'OPEN-SOURCE-GPLV3-LICENSE',
@@ -95,6 +95,7 @@ function animate_to_position(position) {
         $('#button-toggle').click(function() {
             if ( $(this).hasClass("open") ) {
                 $('#pull-out-menu').hide();
+                fullpage_api.setAllowScrolling(true, 'all');
                 if ( $('#fullpage').hasClass("dark") ) {
                     $("#menu-bar").addClass("dark");
                     $("#menu-bar").removeClass("light");
@@ -109,6 +110,7 @@ function animate_to_position(position) {
             }
             else {
                 $('#pull-out-menu').show();
+                fullpage_api.setAllowScrolling(false, 'all');
                 if ( $('#menu-bar').hasClass("dark") ) {
                     $("#menu-bar").addClass("light");
                     $("#menu-bar").removeClass("dark");
@@ -147,7 +149,13 @@ function animate_to_position(position) {
 
         $( window ).resize(function() {
             func_test_size();
-            func_fullpage();
+            fullpage_api.reBuild();
+            if($('#button-toggle').hasClass('open')){
+                fullpage_api.setAllowScrolling(true, 'all');
+            }
+            else{
+                fullpage_api.setAllowScrolling(false, 'all');
+            }
             if ((wwin >= 1200) && ($('#button-toggle').hasClass("open"))) {
                 $('#main-menu').css('display','none');
                 $('#button-toggle').css({'display':'block','right':'calc(50% - 18px)'});

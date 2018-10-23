@@ -13604,7 +13604,7 @@ a {
   position: absolute;
   top: 30px;
   left: 11.30208333vw;
-  width: 160px;
+  width: 120px;
   padding: 0;
   opacity: 0.9;
 }
@@ -13615,7 +13615,7 @@ a {
 }
 
 #main-menu ul {
-  width: 600px;
+  width: 607px;
   margin: 0 auto;
   list-style: none;
   height: 70px;
@@ -13625,7 +13625,6 @@ a {
 
 #main-menu li {
   float: left;
-  margin-left: 23px;
 }
 
 #main-menu li:nth-child(1) {
@@ -13638,8 +13637,8 @@ a {
   text-decoration: none;
   font-size: 12px;
   height: 64px;
-  padding-left: 25px;
-  padding-right: 25px;
+  padding-left: 35px;
+  padding-right: 35px;
   padding-top: 30px;
   font-weight: 600;
 }
@@ -13745,7 +13744,7 @@ a {
 .scroll-pointer {
   position: absolute;
   bottom: 106px;
-  left: 50%;
+  left: calc(50% - 10px);
 }
 
 .scroll-pointer a {

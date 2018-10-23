@@ -8,8 +8,13 @@ body{
 .menu-brand.dark {
     display: none;
 }
+#main-menu{
+    width: calc(100vw - 18px);
+}
 #main-menu a{
     color: white;
+    padding-left: 37px;
+    padding-right: 37px;
 }
 #button-toggle span{
     background-color: white;
@@ -552,23 +557,25 @@ body{
     .scroll-pointer {
         display: none;
     }
-    #div-social {
-        right: 4%;
-        width: 28.5%;
-    }
     #screen-2 .content {
         position: absolute;
         margin-top: 0vh;
         max-height: 70vh;
-        max-width: calc(70vh/3 - 32px);
+        max-width: calc(70vh/3 - 36px);
         top: calc(50vh - 70vh/2 - 6vh);
-        left: calc(50vw - (70vh/3 - 62px)/2);
+        left: calc(50vw - (70vh/3 - 36px)/2);
     }
     #screen-2 .content .item{
         padding: 0;
     }
-    #screen-2 #div-social {
+    #div-social {
+        width: 38.5%;
+    }
+    #screen-1 #div-social {
         right: 4%;
+    }
+    #screen-2 #div-social {
+        right: calc(50% - 19.25%);
     }
 }
 
@@ -675,7 +682,6 @@ body{
         display: none;
     }
     #div-social {
-        right: 4%;
         width: 28.5vw;
     }
     #screen-2 .content {
@@ -684,13 +690,16 @@ body{
         max-height: 70vh;
         max-width: calc(70vh/3 - 36px);
         top: calc(50vh - 70vh/2 - 6vh);
-        left: calc(50vw - (70vh/3 - 66px)/2);
+        left: calc(50vw - (70vh/3 - 36px)/2);
     }
     #screen-2 .content .item{
         padding: 0;
     }
-    #screen-2 #div-social {
+    #screen-1 #div-social {
         right: 4%;
+    }
+    #screen-2 #div-social {
+        right: calc(50% - 14.25%);
     }
 }
 
@@ -706,17 +715,11 @@ body{
     .menu-lang {
         display: none;
     }
-    .menu-brand {
-        width: 120px;
-    }
-    #main-menu ul {
-        width: 600px;
-    }
-    #main-menu li {
-        margin-left: 23px;
-    }
     .scroll-pointer {
         display: none;
+    }
+    #screen-2 #div-social {
+        right: calc(50% - 9.375%);
     }
 }
 

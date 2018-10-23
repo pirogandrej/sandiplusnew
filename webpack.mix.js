@@ -15,8 +15,8 @@ mix
 
     .scripts([
         'public/js/app.js',
-        'public/js/fullpage.min.js'
-        // 'public/js/custom.js'
+        'public/js/fullpage.min.js',
+        'public/js/custom.js'
         ],
         'public/js/all.js')
 
