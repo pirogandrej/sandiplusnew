@@ -7,6 +7,7 @@ $indentBottom: 74px;      //отступ снизу
 body {
   padding: 0;
   margin: 0;
+  overflow: hidden;
 }
 
 ul {
@@ -74,6 +75,17 @@ a {
   width: 100%;
   vertical-align: unset;
 }
+.menu-brand.dark {
+  display: none;
+}
+#main-menu{
+  width: calc(100vw - 18px);
+}
+#main-menu a{
+  color: white;
+  padding-left: 37px;
+  padding-right: 37px;
+}
 #main-menu ul {
   width: 607px;
   margin: 0 auto;
@@ -94,8 +106,8 @@ a {
   text-decoration: none;
   font-size: 12px;
   height: 64px;
-  padding-left: 35px;
-  padding-right: 35px;
+  padding-left: 37px;
+  padding-right: 37px;
   padding-top: $indentTop;
   font-weight: 600;
 }
@@ -114,10 +126,10 @@ a {
   font-weight: 700;
   color: #fff;
 }
-#menu-bar.dark div.lang {
+#menu-bar.dark .lang {
   color: #fff;
 }
-#menu-bar.light div.lang {
+#menu-bar.light .lang {
   color: #000;
 }
 
@@ -140,6 +152,9 @@ a {
   z-index: 2000;
   right: 25px;
   top:25px;
+}
+#button-toggle span{
+  background-color: white;
 }
 #menu-bar.dark #button-toggle span{
   background: white;
@@ -298,6 +313,26 @@ a {
     transform: translate(0, 0);
     opacity: 0;
   }
+}
+
+//dots-pointer
+.dots-pointer {
+  display: none;
+  text-align: center;
+  left: calc(50% - 5px);
+  bottom: 40px;
+  position: absolute;
+}
+.dots-pointer span{
+  height: 10px;
+  width: 10px;
+  background-color: #bbb;
+  border-radius: 50%;
+  display: block;
+  margin-top: 8px;
+}
+.dots-pointer span:nth-child(2){
+  opacity: 0.7;
 }
 
 //section social

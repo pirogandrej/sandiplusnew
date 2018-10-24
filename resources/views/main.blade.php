@@ -1,9 +1,7 @@
 @extends('layouts.template')
 
 @section('styles')
-
     <link rel="stylesheet" href="{{ asset('css/custom_main.css') }}">
-
 @endsection
 
 @section('content')
@@ -12,7 +10,7 @@
 
     @include('components.mainMenu')
 
-    <div id="fullpage" class="dark" data-page-id="0" data-screen-id="1">
+    <div id="fullpage" class="dark" data-page-id="0">
 
         <div id="screen-1" class="screen">
             <div class="content">

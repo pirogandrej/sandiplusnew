@@ -1,9 +1,7 @@
 @extends('layouts.template')
 
 @section('styles')
-
     <link rel="stylesheet" href="{{ asset('css/custom_blog.css') }}">
-
 @endsection
 
 @section('content')
