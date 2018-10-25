@@ -8555,6 +8555,10 @@ button.bg-dark:focus {
   width: 3% !important;
 }
 
+.w-10 {
+  width: 10% !important;
+}
+
 .w-64 {
   width: 64% !important;
 }
@@ -8589,6 +8593,10 @@ button.bg-dark:focus {
 
 .h-3 {
   height: 3% !important;
+}
+
+.h-10 {
+  height: 10% !important;
 }
 
 .h-64 {

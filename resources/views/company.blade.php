@@ -14,7 +14,7 @@
 
     @include('components.scrollIndication')
 
-    <div id="screens-list" class="container-fluid" data-page-id="1">
+    <div id="screens-list" class="container-fluid company">
 
         <div class="row screen">
             <div class="col-12">
@@ -23,7 +23,7 @@
                     <div class="txt-number txt-center pb-2">
                         01
                     </div>
-                    <div class="txt-title txt-center pb-2">
+                    <div class="txt-title txt-center pb-4">
                         Компания
                     </div>
                     <div class="txt-italic txt-center pb-4">
@@ -63,7 +63,7 @@
                     <div class="txt-number txt-center pb-2">
                         02
                     </div>
-                    <div class="txt-title txt-center pb-2">
+                    <div class="txt-title txt-center pb-4">
                         Видение
                     </div>
                     <div class="txt-italic txt-center pb-5">

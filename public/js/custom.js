@@ -44,23 +44,42 @@ function func_fullpage() {
     });
 }
 
-function func_init() {
+function detectPage() {
+    var numDetectPage;
+
     if ($('#fullpage').length) {
+        numDetectPage = 0;
+    }
+    if ($('#screens-list').length) {
+        number_screen = $('#screens-list .screen').length;
+        if($('#screens-list').hasClass('company')){
+            numDetectPage = 1;
+        }
+        if($('#screens-list').hasClass('blog')){
+            numDetectPage = 2;
+        }
+    }
+    return numDetectPage;
+}
+
+function func_init() {
+    number_page = detectPage();
+    if (number_page == 0){
         $('body').addClass('main');
         $('#menu-bar').addClass('dark');
     }
-    else {
+    if ((number_page >= 1) && (number_page <= 5)){
         $('body').addClass('pages').css('overflow-y','auto');
         $('#menu-bar').addClass('light');
-        number_page = $('#screens-list').data('page-id');
         $('#main-menu ul li:nth-child(' + number_page + ') a').css({'background-color':'black','color':'white'});
-        if(number_page == 1){
-            old_number_screen = 1;
-            $('#scroll-indication div:nth-child(' + old_number_screen + ') hr').addClass('active');
-            $('.block-left div.row:nth-child(' + old_number_screen + ')').addClass('active');
-            $('#screens-list').find('.screen').eq(old_number_screen - 1).siblings().css("display","none");
-            number_screen = $('#screens-list .screen').length;
-        }
+    }
+    if (number_page == 1){
+        old_number_screen = 1;
+        $('#scroll-indication div:nth-child(' + old_number_screen + ') hr').addClass('active');
+        $('.block-left div.row:nth-child(' + old_number_screen + ')').addClass('active');
+        $('#screens-list').find('.screen').eq(old_number_screen - 1).siblings().css("display","none");
+    }
+    if (number_page == 2){
     }
 }
 
