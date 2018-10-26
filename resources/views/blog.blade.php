@@ -29,15 +29,19 @@
 
                         <div class="row pb-3">
                             <div class="col-5">
-                                <img src="{{ asset( 'img\img4-page2-screen1.png' ) }}" alt="" class="w-100">
+                                <a href="#">
+                                    <img src="{{ asset( 'img\img4-page2-screen1.png' ) }}" alt="" class="w-100">
+                                </a>
                             </div>
                             <div class="col-7">
                                 <div class="row">
                                     <div class="col-12">
-                                        <div class="hr-color"></div>
+                                        <div class="hr-color blue"></div>
                                     </div>
                                     <div class="col-12 titlePost">
-                                        Социальный проект SANDI+ совместно с ICMA S.P.A.
+                                        <a href="#">
+                                            Социальный проект SANDI+ совместно с ICMA S.P.A.
+                                        </a>
                                     </div>
                                 </div>
                             </div>
@@ -45,15 +49,19 @@
 
                         <div class="row pb-3">
                             <div class="col-5">
-                                <img src="{{ asset( 'img\img4-page2-screen1.png' ) }}" alt="" class="w-100">
+                                <a href="#">
+                                    <img src="{{ asset( 'img\img4-page2-screen1.png' ) }}" alt="" class="w-100">
+                                </a>
                             </div>
                             <div class="col-7">
                                 <div class="row">
                                     <div class="col-12">
-                                        <div class="hr-color"></div>
+                                        <div class="hr-color green"></div>
                                     </div>
                                     <div class="col-12 titlePost">
-                                        Социальный проект SANDI+ совместно с ICMA S.P.A.
+                                        <a href="#">
+                                            Социальный проект SANDI+ совместно с ICMA S.P.A.
+                                        </a>
                                     </div>
                                 </div>
                             </div>
@@ -61,15 +69,19 @@
 
                         <div class="row pb-3">
                             <div class="col-5">
-                                <img src="{{ asset( 'img\img4-page2-screen1.png' ) }}" alt="" class="w-100">
+                                <a href="#">
+                                    <img src="{{ asset( 'img\img4-page2-screen1.png' ) }}" alt="" class="w-100">
+                                </a>
                             </div>
                             <div class="col-7">
                                 <div class="row">
                                     <div class="col-12">
-                                        <div class="hr-color"></div>
+                                        <div class="hr-color blue"></div>
                                     </div>
                                     <div class="col-12 titlePost">
-                                        Социальный проект SANDI+ совместно с ICMA S.P.A.
+                                        <a href="#">
+                                            Социальный проект SANDI+ совместно с ICMA S.P.A.
+                                        </a>
                                     </div>
                                 </div>
                             </div>
@@ -83,13 +95,14 @@
 
                 <div class="content pt-6">
                     <div class="w-10 pb-4">
-                        <div class="hr-color"></div>
+                        <div class="hr-color yellow"></div>
                     </div>
-                    <div class="txt-title pb-3">
-                        SANDI+ и партнеры<br>в Турции. Посещение<br>завода Daikin.
+                    <div class="txt-title w-75 pb-3">
+                        SANDI+ и партнеры в Турции. Посещение завода Daikin.
                     </div>
-                    <div class="txt-normal-small pb-5 w-75">
+                    <div class="txt-normal-small pb-5 w-75 postDate">
                         <div class="iconTime">
+                            <i class="far fa-clock"></i>
                         </div>
                         <div>
                             26 Апрель 2018

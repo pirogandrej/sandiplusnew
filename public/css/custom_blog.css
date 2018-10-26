@@ -1,5 +1,9 @@
 
 /*content block ----------------------------------------*/
+#screens-list.blog .screen .col-5 {
+    padding-left: 1.5%;
+    padding-right: 1.5%;
+}
 #screens-list.blog .content {
     position: unset;
     width: unset;
@@ -9,9 +13,25 @@
     font-family: 'SF UI Text', sans-serif;
 }
 #screens-list.blog .screen .hr-color {
-    background: #FFD003;
     padding: 20px;
     border-radius: 20px;
+}
+#screens-list.blog .screen .hr-color.yellow {
+    background: #FFD003;
+}
+#screens-list.blog .screen .hr-color.blue {
+    background: #4784EF;
+;
+}
+#screens-list.blog .screen .hr-color.green {
+    background: #78C3AC;
+}
+#screens-list.blog .screen .postDate div{
+    display: inline-block;
+}
+#screens-list.blog .screen .postDate .iconTime {
+    color: darkgray;
+    padding-right: 1.5%;
 }
 #screens-list.blog .screen .blockVideo {
     position: relative;
@@ -59,7 +79,8 @@
     text-align: right;
 }
 #screens-list.blog .screen .morePostsInterest {
-    padding-top: 4vw;
+    padding-top: 17%;
+    padding-right: 5%;
 }
 #screens-list.blog .screen .morePostsInterest .title {
     font-size: 1.1vw;
@@ -67,14 +88,19 @@
     padding-bottom: 5%;
 }
 #screens-list.blog .screen .morePostsInterest .hr-color {
-    background: #4784EF;
     border-radius: 20px;
     padding: 13px;
     width: 33%;
 }
 #screens-list.blog .screen .morePostsInterest .titlePost {
-    font-size: 0.9vw;
     padding-top: 0.5rem;
+}
+#screens-list.blog .screen .morePostsInterest .titlePost a{
+    font-size: 0.9vw;
+    color: #000;
+}
+#screens-list.blog .screen .morePostsInterest .titlePost a:hover{
+    text-decoration: none;
 }
 #screens-list.blog .screen .nextPostTitle {
     width: 33%;

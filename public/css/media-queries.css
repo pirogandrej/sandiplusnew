@@ -571,8 +571,14 @@
     .scroll-pointer {
         display: none;
     }
-    #screen-2 #div-social {
+    #div-social {
         right: calc(50% - 9.375%);
+    }
+    .block-left .row{
+        margin-bottom: 2vh;
+    }
+    .block-left .row:nth-child(5){
+        margin-bottom: 5vh;
     }
 }
 

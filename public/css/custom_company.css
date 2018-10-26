@@ -10,10 +10,10 @@
     z-index: 9;
 }
 .block-left .row{
-    margin-bottom: 5vh;
+    margin-bottom: 3vh;
 }
 .block-left .row:nth-child(5){
-    margin-bottom: 9vh;
+    margin-bottom: 7vh;
 }
 .block-left .row div {
     text-align: left;

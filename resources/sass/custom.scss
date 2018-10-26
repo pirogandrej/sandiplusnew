@@ -79,7 +79,7 @@ a {
   display: none;
 }
 #main-menu{
-  width: calc(100vw - 18px);
+  width: 100vw;
 }
 #main-menu a{
   color: white;
@@ -87,7 +87,7 @@ a {
   padding-right: 37px;
 }
 #main-menu ul {
-  width: 607px;
+  width: 625px;
   margin: 0 auto;
   list-style: none;
   height: 70px;
