@@ -66,32 +66,6 @@
     background-color: #FAFAFA;
 }
 
-
-/*footer -----------------------------------------*/
-.footer {
-    position: relative;
-    top: 180px;
-    width: 100%;
-    right: 0;
-    left: 0;
-}
-
-/*social block ------------------------------------*/
-.footer #div-social {
-    bottom: 74px;
-    width: unset;
-}
-.footer #div-social .social{
-    border: 0;
-    margin-right: 0.2vw;
-    width: unset;
-}
-.footer #div-social a{
-    color: black;
-    position: static;
-    text-decoration: none;
-}
-
 /*scroll-pointer ---------------------------------*/
 .scroll-pointer a span {
     border: 2px solid #000;
@@ -102,5 +76,5 @@
     -webkit-animation: sdp 2s infinite;
 }
 .footer .scroll-pointer {
-    bottom: 106px;
+    bottom: calc(4rem + 32px);
 }

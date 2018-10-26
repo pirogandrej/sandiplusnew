@@ -225,10 +225,17 @@ body.pages .menu-brand.dark {
   left: 50%;
 }
 
+//footer
+.footer {
+  position: absolute;
+  width: 100%;
+  bottom: $indentBottom;
+}
+
 //scroll-pointer
 .scroll-pointer {
   position: absolute;
-  bottom: 106px;
+  bottom: 32px;
   left: calc(50% - 10px);
 }
 .scroll-pointer a {
@@ -353,14 +360,11 @@ body.pages .menu-brand.dark {
 //section social
 #div-social {
   position: absolute;
-  width: 18.75vw;
+  width: 400px;
   height: 12px;
-  bottom: $indentBottom;
+  bottom: 0;
   right: $indentLeftRight;
   display: inline-flex;
-}
-.social {
-  position: relative;
 }
 .social a{
   position: absolute;
@@ -368,6 +372,24 @@ body.pages .menu-brand.dark {
 }
 .social a:hover{
   color: white;
+  text-decoration: none;
+}
+/*footer -----------------------------------------*/
+body.pages .footer {
+  position: relative;
+  top: 7rem;
+}
+body.pages .footer #div-social {
+  bottom: 4rem;
+}
+body.pages .footer #div-social .social{
+  border: 0;
+  margin-right: 0.2vw;
+  width: unset;
+}
+body.pages .footer #div-social a{
+  color: black;
+  position: static;
   text-decoration: none;
 }
 
@@ -383,12 +405,11 @@ body.pages .menu-brand.dark {
   padding-top: 80px;
 }
 #screens-list .content {
-  position: relative;
-  width: 37.94vw;
-  top: calc(15vh - 80px);
-  left: calc(30.733vw - 15px);
-  /*font-family: 'Open Sans', sans-serif;*/
   font-family: 'SF UI Text', sans-serif;
+}
+#screens-list .mainBlock.col-5 {
+  padding-left: 1.5%;
+  padding-right: 1.5%;
 }
 
 //style font page

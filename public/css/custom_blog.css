@@ -1,17 +1,5 @@
 
 /*content block ----------------------------------------*/
-#screens-list.blog .screen .col-5 {
-    padding-left: 1.5%;
-    padding-right: 1.5%;
-}
-#screens-list.blog .content {
-    position: unset;
-    width: unset;
-    top: unset;
-    left: unset;
-    /*font-family: 'Open Sans', sans-serif;*/
-    font-family: 'SF UI Text', sans-serif;
-}
 #screens-list.blog .screen .hr-color {
     padding: 20px;
     border-radius: 20px;
@@ -116,21 +104,12 @@
     font-weight: 500;
 }
 
-/*social block---------------------------------------*/
-#screens-list.blog #div-social {
-    position: relative;
-    width: 23vw;
-    top:40px;
-    left:calc(50% - 9vw);
-    padding-bottom: 5vw;
+/*footer ---------------------------------------*/
+body.blog .scroll-pointer{
+    display: none;
 }
-#screens-list.blog #div-social .social{
-    border: 0;
-    width: unset;
-    margin-right: 0.2vw;
+body.blog .footer #div-social {
+    width: 23%;
+    right: calc(50% - 11.5%);
 }
-#screens-list.blog #div-social a{
-    color: black;
-    position: static;
-    text-decoration: none;
-}
+

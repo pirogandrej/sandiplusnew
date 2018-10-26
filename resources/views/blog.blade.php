@@ -91,7 +91,7 @@
                 </div>
             </div>
 
-            <div class="col-5">
+            <div class="col-5 mainBlock">
 
                 <div class="content pt-6">
                     <div class="w-10 pb-4">
@@ -124,8 +124,6 @@
                         <iframe width="560" height="314" src="https://www.youtube.com/embed/FK2F_oGKTsk" frameborder="0" allowfullscreen></iframe>
                     </div>
                 </div>
-
-                @include('components.social')
             </div>
 
             <div class="col">
@@ -147,6 +145,9 @@
         </div>
 
     </div>
+
+    @include('components.footer')
+    {{--@include('components.social')--}}
 
 @endsection
 

@@ -421,14 +421,11 @@
     #screen-2 .content .item{
         padding: 0;
     }
-    #div-social {
-        width: 38.5%;
-    }
     #screen-1 #div-social {
         right: 4%;
     }
     #screen-2 #div-social {
-        right: calc(50% - 19.25%);
+        right: calc(50% - 200px);
     }
 }
 
@@ -472,7 +469,6 @@
         display: block;
     }
     #div-social {
-        width: 28.5vw;
         right: 4vw;
     }
     .figure-mobile {
@@ -534,9 +530,6 @@
     .scroll-pointer {
         display: none;
     }
-    #div-social {
-        width: 28.5vw;
-    }
     #screen-2 .content {
         position: absolute;
         margin-top: 0vh;
@@ -552,7 +545,7 @@
         right: 4%;
     }
     #screen-2 #div-social {
-        right: calc(50% - 14.25%);
+        right: calc(50% - 200px);
     }
 }
 
@@ -568,17 +561,17 @@
     .menu-lang {
         display: none;
     }
-    .scroll-pointer {
-        display: none;
-    }
-    #div-social {
-        right: calc(50% - 9.375%);
-    }
     .block-left .row{
         margin-bottom: 2vh;
     }
     .block-left .row:nth-child(5){
         margin-bottom: 5vh;
+    }
+    .scroll-pointer {
+        display: none;
+    }
+    body.pages #div-social{
+        right: calc(50% - 200px);
     }
 }
 

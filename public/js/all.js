@@ -17091,6 +17091,7 @@ function func_init() {
         $('#screens-list').find('.screen').eq(old_number_screen - 1).siblings().css("display","none");
     }
     if (number_page == 2){
+        $('body').addClass('blog');
     }
 }
 
