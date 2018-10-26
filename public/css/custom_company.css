@@ -65,16 +65,3 @@
 #screens-list.company .div_bottom{
     background-color: #FAFAFA;
 }
-
-/*scroll-pointer ---------------------------------*/
-.scroll-pointer a span {
-    border: 2px solid #000;
-}
-.scroll-pointer a span::before {
-    background-color: #000;
-    animation: sdp 2s infinite;
-    -webkit-animation: sdp 2s infinite;
-}
-.footer .scroll-pointer {
-    bottom: calc(4rem + 32px);
-}

@@ -374,23 +374,33 @@ body.pages .menu-brand.dark {
   color: white;
   text-decoration: none;
 }
-/*footer -----------------------------------------*/
+/*footer - для всех страниц кроме главной ---------------------*/
 body.pages .footer {
   position: relative;
   top: 7rem;
 }
+body.pages .footer .scroll-pointer {
+  bottom: calc(4rem + 32px);
+}
+body.pages .footer .scroll-pointer a span {
+  border: 2px solid #000;
+}
+body.pages .footer .scroll-pointer a span::before {
+  background-color: #000;
+  animation: sdp 2s infinite;
+  -webkit-animation: sdp 2s infinite;
+}
+body.blog .footer .scroll-pointer{
+  display: none;
+}
 body.pages .footer #div-social {
   bottom: 4rem;
 }
-body.pages .footer #div-social .social{
-  border: 0;
-  margin-right: 0.2vw;
-  width: unset;
-}
 body.pages .footer #div-social a{
   color: black;
-  position: static;
-  text-decoration: none;
+}
+body.blog .footer #div-social {
+  right: calc(50% - 200px);
 }
 
 //all screen

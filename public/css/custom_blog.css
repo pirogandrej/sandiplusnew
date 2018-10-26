@@ -104,12 +104,3 @@
     font-weight: 500;
 }
 
-/*footer ---------------------------------------*/
-body.blog .scroll-pointer{
-    display: none;
-}
-body.blog .footer #div-social {
-    width: 23%;
-    right: calc(50% - 11.5%);
-}
-
