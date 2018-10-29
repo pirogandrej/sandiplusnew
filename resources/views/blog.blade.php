@@ -114,8 +114,34 @@
                     <div class="txt-normal pb-5">
                         План поездки был такой: встреча с нашими турецкими бизнес-партнерами, экскурсия на завод Daikin, экскурсия по этому самобытному городу. Мы узнали историю развития компании, с чего все начиналось, какие планы у топ-менеджеров Daikin на будущее, какой путь усовершенствования котлов TM Airfel. Сам завод впечатлил всех нас своими масштабами, автоматизацией и высоким качеством работы всех процессов.
                     </div>
-                    <div class="pb-5">
-                        <img src="{{ asset( 'img\img3-page2-screen1.png' ) }}" class="w-100" alt="">
+
+                    <div class="container pb-5">
+                        <div class="gallery row">
+                            <div class="item-masonry sizer3 col-4">
+                                <img src="{{ asset( 'img/blog/gallery/1.png' ) }}" class="w-100" alt="">
+                            </div>
+                            <div class="item-masonry sizer3 col-4">
+                                <img src="{{ asset( 'img/blog/gallery/2.png' ) }}" class="w-100" alt="">
+                            </div>
+                            <div class="item-masonry sizer3 col-4">
+                                <img src="{{ asset( 'img/blog/gallery/3.png' ) }}" class="w-100" alt="">
+                            </div>
+                            <div class="item-masonry sizer3 col-4">
+                                <img src="{{ asset( 'img/blog/gallery/4.png' ) }}" class="w-100" alt="">
+                            </div>
+                            <div class="item-masonry sizer3 col-4">
+                                <img src="{{ asset( 'img/blog/gallery/5.png' ) }}" class="w-100" alt="">
+                            </div>
+                            <div class="item-masonry sizer3 col-4">
+                                <img src="{{ asset( 'img/blog/gallery/6.png' ) }}" class="w-100" alt="">
+                            </div>
+                            <div class="item-masonry sizer3 col-4">
+                                <img src="{{ asset( 'img/blog/gallery/7.png' ) }}" class="w-100" alt="">
+                            </div>
+                            <div class="item-masonry sizer3 col-4">
+                                <img src="{{ asset( 'img/blog/gallery/8.png' ) }}" class="w-100" alt="">
+                            </div>
+                        </div>
                     </div>
                     <div class="txt-normal pb-5">
                         А сравнится с впечатлениями от экскурсии по заводу могли только эмоции от путешествия по Стамбулу. Экзотические достопримечательности, отдых на яхте в замечательной компании и этот невероятный закат - все это останется еще надолго в наших сердцах.
@@ -147,7 +173,6 @@
     </div>
 
     @include('components.footer')
-    {{--@include('components.social')--}}
 
 @endsection
 

@@ -12,38 +12,6 @@ function func_test_size() {
     hwin = $(window).height();
 }
 
-function func_fullpage() {
-    $('#fullpage').fullpage({
-        autoScrolling:true,
-        lockAnchors: true,
-        sectionSelector: '.screen',
-        scrollingSpeed: 1000,
-        licenseKey: 'OPEN-SOURCE-GPLV3-LICENSE',
-        onLeave: function(){
-            $("#menu-bar").addClass("hide");
-        },
-        afterLoad: function(anchorLink, index, direction){
-            if((index.index == 0) && (direction == 'up')){
-                $("#menu-bar").removeClass("light");
-                $("#menu-bar").addClass("dark");
-                $("#fullpage").addClass("dark");
-                $("#fullpage").removeClass("light");
-                $(".menu-brand.light").show();
-                $(".menu-brand.dark").hide();
-            }
-            if((index.index == 1) && (direction == 'down')){
-                $("#menu-bar").addClass("light");
-                $("#menu-bar").removeClass("dark");
-                $(".menu-brand.light").hide();
-                $(".menu-brand.dark").show();
-                $("#fullpage").addClass("light");
-                $("#fullpage").removeClass("dark");
-            }
-            $("#menu-bar").removeClass("hide");
-        }
-    });
-}
-
 function detectPage() {
     var numDetectPage;
 
@@ -69,19 +37,71 @@ function func_init() {
         $('#menu-bar').addClass('dark');
     }
     if ((number_page >= 1) && (number_page <= 5)){
-        $('body').addClass('pages').css('overflow-y','auto');
+        $('body').addClass('pages');
         $('#menu-bar').addClass('light');
         $('#main-menu ul li:nth-child(' + number_page + ') a').css({'background-color':'black','color':'white'});
     }
     if (number_page == 1){
         old_number_screen = 1;
-        $('#scroll-indication div:nth-child(' + old_number_screen + ') hr').addClass('active');
+        $('body').addClass('company');
         $('.block-left div.row:nth-child(' + old_number_screen + ')').addClass('active');
+        $('#scroll-indication div:nth-child(' + old_number_screen + ') hr').addClass('active');
         $('#screens-list').find('.screen').eq(old_number_screen - 1).siblings().css("display","none");
     }
     if (number_page == 2){
         $('body').addClass('blog');
     }
+}
+
+function func_fullpage_init() {
+    $('#fullpage').fullpage({
+        autoScrolling:true,
+        lockAnchors: true,
+        sectionSelector: '.screen',
+        scrollingSpeed: 1000,
+        licenseKey: 'OPEN-SOURCE-GPLV3-LICENSE',
+        onLeave: function(index, nextIndex, direction){
+            var randomValue = Math.floor(Math.random() * 3) + 1;
+            if((nextIndex.index == 1) && (direction == 'down')){
+                $('.figure-mobile').find('img').css("display","block");
+                $('.figure-mobile').find('img').eq(randomValue - 1).siblings().css("display","none");
+            }
+            $("#menu-bar").addClass("hide");
+        },
+        afterLoad: function(anchorLink, index, direction){
+            if((index.index == 0) && (direction == 'up')){
+                $("#menu-bar").removeClass("light");
+                $("#menu-bar").addClass("dark");
+                $("#fullpage").addClass("dark");
+                $("#fullpage").removeClass("light");
+                $(".menu-brand.light").show();
+                $(".menu-brand.dark").hide();
+            }
+            if((index.index == 1) && (direction == 'down')){
+                $("#menu-bar").addClass("light");
+                $("#menu-bar").removeClass("dark");
+                $(".menu-brand.light").hide();
+                $(".menu-brand.dark").show();
+                $("#fullpage").addClass("light");
+                $("#fullpage").removeClass("dark");
+            }
+            $("#menu-bar").removeClass("hide");
+        }
+    });
+}
+
+function func_masonry_init() {
+    var sizerGalleryItem = '.sizer3';
+    var containerGallery = $('.gallery');
+    containerGallery.imagesLoaded(function () {
+        // noinspection JSAnnotator
+        containerGallery.masonry({
+            itemSelector: '.item-masonry',
+            columnWidth: sizerGalleryItem,
+            percentPosition: true,
+            gutter: 20
+        })
+    });
 }
 
 function animate_to_position(position) {
@@ -194,8 +214,9 @@ function animate_to_position(position) {
 
         $( document ).ready(function(){
             func_test_size();
-            func_fullpage();
             func_init();
+            func_fullpage_init();
+            func_masonry_init();
         });
     })
 })(jQuery);

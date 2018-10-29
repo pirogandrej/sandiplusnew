@@ -1,13 +1,16 @@
-//отступы page0-screen0
+//отступы -------------------------------------------------
 $indentTop: 30px;         //отступ сверху
 $indentLeftRight: 11.3vw; //отступ слева и справа
 $indentBottom: 74px;      //отступ снизу
 
-//common
+//common --------------------------------------------------
 body {
   padding: 0;
   margin: 0;
   overflow: hidden;
+}
+body.pages {
+  overflow-y: auto;
 }
 
 ul {
@@ -19,7 +22,7 @@ a {
   color: white;
 }
 
-//mobile-menu
+//mobile-menu ---------------------------------------------
 #pull-out-menu {
   background-color: white;
   position: fixed;
@@ -49,7 +52,7 @@ a {
   margin-right: 32px;
 }
 
-//header
+//header --------------------------------------------------
 #menu-bar{
   position: fixed;
   height: 80px;
@@ -58,11 +61,16 @@ a {
   transition-timing-function: ease;
   transition: 1.2s;
 }
+body.pages #menu-bar {
+  background-color: white;
+}
 #menu-bar.hide{
   transition-timing-function: ease;
   transition: 0.1s;
   opacity: 0;
 }
+
+//brand-icon ----------------------------------------------
 .menu-brand {
   position: absolute;
   top: $indentTop;
@@ -78,6 +86,14 @@ a {
 .menu-brand.dark {
   display: none;
 }
+body.pages .menu-brand.dark {
+  display: block;
+}
+body.pages .menu-brand.light {
+  display: none;
+}
+
+//main menu -----------------------------------------------
 #main-menu{
   width: 100vw;
 }
@@ -117,6 +133,11 @@ a {
 #menu-bar.light #main-menu a {
   color: #000000;
 }
+body.pages #main-menu a {
+  color: black;
+}
+
+//icon-lang -----------------------------------------------
 #menu-bar .lang {
   right: $indentLeftRight;
   top: $indentTop;
@@ -132,23 +153,8 @@ a {
 #menu-bar.light .lang {
   color: #000;
 }
-body.pages #menu-bar {
-  background-color: white;
-}
-body.pages #main-menu {
-  width: 100vw;
-}
-body.pages #main-menu a {
-  color: black;
-}
-body.pages .menu-brand.light {
-  display: none;
-}
-body.pages .menu-brand.dark {
-  display: block;
-}
 
-//transform button toggle
+//transform button toggle ---------------------------------
 #button-toggle{
   display: none;
   width: 35px;
@@ -225,18 +231,28 @@ body.pages .menu-brand.dark {
   left: 50%;
 }
 
-//footer
+//footer --------------------------------------------------
 .footer {
   position: absolute;
   width: 100%;
   bottom: $indentBottom;
 }
+body.pages .footer {
+  position: relative;
+  top: 7rem;
+}
 
-//scroll-pointer
+//scroll-pointer ------------------------------------------
 .scroll-pointer {
   position: absolute;
   bottom: 32px;
   left: calc(50% - 10px);
+}
+body.pages .scroll-pointer {
+  bottom: calc(4rem + 32px);
+}
+body.blog .scroll-pointer{
+  display: none;
 }
 .scroll-pointer a {
   position: absolute;
@@ -261,6 +277,15 @@ body.pages .menu-brand.dark {
   border-radius: 50px;
   box-sizing: border-box;
 }
+#screen-1 .scroll-pointer a span {
+  border: 2px solid #fff;
+}
+#screen-2 .scroll-pointer a span {
+  border: 2px solid #000;
+}
+body.pages .scroll-pointer a span {
+  border: 2px solid #000;
+}
 .scroll-pointer a span::before {
   position: absolute;
   top: 0;
@@ -271,6 +296,21 @@ body.pages .menu-brand.dark {
   margin-left: -3px;
   border-radius: 100%;
   box-sizing: border-box;
+}
+#screen-1 .scroll-pointer a span::before {
+  background-color: #fff;
+  animation: sdp 2s infinite;
+  -webkit-animation: sdp 2s infinite;
+}
+#screen-2 .scroll-pointer a span::before {
+  background-color: #000;
+  animation: sup 2s infinite;
+  -webkit-animation: sup 2s infinite;
+}
+body.pages .scroll-pointer a span::before {
+  background-color: #000;
+  animation: sdp 2s infinite;
+  -webkit-animation: sdp 2s infinite;
 }
 @-webkit-keyframes sdp {
   0% {
@@ -337,7 +377,7 @@ body.pages .menu-brand.dark {
   }
 }
 
-//dots-pointer
+//dots-pointer --------------------------------------------
 .dots-pointer {
   display: none;
   text-align: center;
@@ -357,7 +397,7 @@ body.pages .menu-brand.dark {
   opacity: 0.7;
 }
 
-//section social
+//section social ------------------------------------------
 #div-social {
   position: absolute;
   width: 400px;
@@ -366,44 +406,28 @@ body.pages .menu-brand.dark {
   right: $indentLeftRight;
   display: inline-flex;
 }
-.social a{
+body.pages #div-social {
+  bottom: 4rem;
+}
+body.blog #div-social {
+  right: calc(50% - 200px);
+}
+#div-social a{
   position: absolute;
   font-size: 12px;
 }
-.social a:hover{
+#screen-2 #div-social a {
+  color: black;
+}
+body.pages #div-social a{
+  color: black;
+}
+#div-social a:hover{
   color: white;
   text-decoration: none;
 }
-/*footer - для всех страниц кроме главной ---------------------*/
-body.pages .footer {
-  position: relative;
-  top: 7rem;
-}
-body.pages .footer .scroll-pointer {
-  bottom: calc(4rem + 32px);
-}
-body.pages .footer .scroll-pointer a span {
-  border: 2px solid #000;
-}
-body.pages .footer .scroll-pointer a span::before {
-  background-color: #000;
-  animation: sdp 2s infinite;
-  -webkit-animation: sdp 2s infinite;
-}
-body.blog .footer .scroll-pointer{
-  display: none;
-}
-body.pages .footer #div-social {
-  bottom: 4rem;
-}
-body.pages .footer #div-social a{
-  color: black;
-}
-body.blog .footer #div-social {
-  right: calc(50% - 200px);
-}
 
-//all screen
+//all screen ----------------------------------------------
 #fullpage .screen {
   height: 100vh;
   position: relative;
@@ -422,7 +446,7 @@ body.blog .footer #div-social {
   padding-right: 1.5%;
 }
 
-//style font page
+//style font page -----------------------------------------
 .txt-center {
   text-align: center;
 }

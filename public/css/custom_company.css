@@ -64,4 +64,6 @@
 /*content block -------------------------------*/
 #screens-list.company .div_bottom{
     background-color: #FAFAFA;
+    margin: 0 -12.5%;
+    width: 125%;
 }

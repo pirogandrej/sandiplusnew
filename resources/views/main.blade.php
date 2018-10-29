@@ -10,7 +10,7 @@
 
     @include('components.mainMenu')
 
-    <div id="fullpage" class="dark" data-page-id="0">
+    <div id="fullpage" class="dark">
 
         <div id="screen-1" class="screen">
             <div class="content">
@@ -29,17 +29,8 @@
         </div>
 
         <div id="screen-2" class="screen">
-            <div class="figure-mobile">
-                <img src="{{ asset( 'img/figure-3.svg' ) }}" alt="">
-            </div>
 
-            <div id="menu-mobile">
-                <ul>
-                    <li><a href="/company">КОМПАНИЯ</a></li>
-                    <li><a href="#">БЛОГ</a></li>
-                    <li><a href="#">КАРЬЕРА</a></li>
-                </ul>
-            </div>
+            @include('components.contentMobile')
 
             <div class="container content">
                 <div class="row">
@@ -49,7 +40,7 @@
                     </div>
                     <div class="col-lg-12 col-xl-4 item">
                         <img src="{{ asset( 'img/figure-2.svg' ) }}" alt="">
-                        <a href="#">БЛОГ</a>
+                        <a href="/blog">БЛОГ</a>
                     </div>
                     <div class="col-lg-12 col-xl-4 item">
                         <img src="{{ asset( 'img/figure-3.svg' ) }}" alt="">

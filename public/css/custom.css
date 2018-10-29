@@ -1,9 +1,11 @@
-@charset "UTF-8";
-
 body {
   padding: 0;
   margin: 0;
   overflow: hidden;
+}
+
+body.pages {
+  overflow-y: auto;
 }
 
 ul {
@@ -59,6 +61,10 @@ a {
   transition: 1.2s;
 }
 
+body.pages #menu-bar {
+  background-color: white;
+}
+
 #menu-bar.hide {
   -webkit-transition-timing-function: ease;
           transition-timing-function: ease;
@@ -82,6 +88,14 @@ a {
 }
 
 .menu-brand.dark {
+  display: none;
+}
+
+body.pages .menu-brand.dark {
+  display: block;
+}
+
+body.pages .menu-brand.light {
   display: none;
 }
 
@@ -132,6 +146,10 @@ a {
   color: #000000;
 }
 
+body.pages #main-menu a {
+  color: black;
+}
+
 #menu-bar .lang {
   right: 11.3vw;
   top: 30px;
@@ -148,26 +166,6 @@ a {
 
 #menu-bar.light .lang {
   color: #000;
-}
-
-body.pages #menu-bar {
-  background-color: white;
-}
-
-body.pages #main-menu {
-  width: 100vw;
-}
-
-body.pages #main-menu a {
-  color: black;
-}
-
-body.pages .menu-brand.light {
-  display: none;
-}
-
-body.pages .menu-brand.dark {
-  display: block;
 }
 
 #button-toggle {
@@ -252,10 +250,23 @@ body.pages .menu-brand.dark {
   bottom: 74px;
 }
 
+body.pages .footer {
+  position: relative;
+  top: 7rem;
+}
+
 .scroll-pointer {
   position: absolute;
   bottom: 32px;
   left: calc(50% - 10px);
+}
+
+body.pages .scroll-pointer {
+  bottom: calc(4rem + 32px);
+}
+
+body.blog .scroll-pointer {
+  display: none;
 }
 
 .scroll-pointer a {
@@ -286,6 +297,18 @@ body.pages .menu-brand.dark {
           box-sizing: border-box;
 }
 
+#screen-1 .scroll-pointer a span {
+  border: 2px solid #fff;
+}
+
+#screen-2 .scroll-pointer a span {
+  border: 2px solid #000;
+}
+
+body.pages .scroll-pointer a span {
+  border: 2px solid #000;
+}
+
 .scroll-pointer a span::before {
   position: absolute;
   top: 0;
@@ -297,6 +320,24 @@ body.pages .menu-brand.dark {
   border-radius: 100%;
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
+}
+
+#screen-1 .scroll-pointer a span::before {
+  background-color: #fff;
+  animation: sdp 2s infinite;
+  -webkit-animation: sdp 2s infinite;
+}
+
+#screen-2 .scroll-pointer a span::before {
+  background-color: #000;
+  animation: sup 2s infinite;
+  -webkit-animation: sup 2s infinite;
+}
+
+body.pages .scroll-pointer a span::before {
+  background-color: #000;
+  animation: sdp 2s infinite;
+  -webkit-animation: sdp 2s infinite;
 }
 
 @-webkit-keyframes sdp {
@@ -415,51 +456,30 @@ body.pages .menu-brand.dark {
   display: inline-flex;
 }
 
-.social a {
+body.pages #div-social {
+  bottom: 4rem;
+}
+
+body.blog #div-social {
+  right: calc(50% - 200px);
+}
+
+#div-social a {
   position: absolute;
   font-size: 12px;
 }
 
-.social a:hover {
-  color: white;
-  text-decoration: none;
-}
-
-/*footer - для всех страниц кроме главной ---------------------*/
-
-body.pages .footer {
-  position: relative;
-  top: 7rem;
-}
-
-body.pages .footer .scroll-pointer {
-  bottom: calc(4rem + 32px);
-}
-
-body.pages .footer .scroll-pointer a span {
-  border: 2px solid #000;
-}
-
-body.pages .footer .scroll-pointer a span::before {
-  background-color: #000;
-  animation: sdp 2s infinite;
-  -webkit-animation: sdp 2s infinite;
-}
-
-body.blog .footer .scroll-pointer {
-  display: none;
-}
-
-body.pages .footer #div-social {
-  bottom: 4rem;
-}
-
-body.pages .footer #div-social a {
+#screen-2 #div-social a {
   color: black;
 }
 
-body.blog .footer #div-social {
-  right: calc(50% - 200px);
+body.pages #div-social a {
+  color: black;
+}
+
+#div-social a:hover {
+  color: white;
+  text-decoration: none;
 }
 
 #fullpage .screen {
