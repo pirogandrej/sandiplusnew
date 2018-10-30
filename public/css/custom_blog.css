@@ -105,12 +105,8 @@
 }
 
 .item-masonry {
-    margin-bottom: 25px;
-    padding: 0;
+    padding: 10px;
 }
-.item-masonry img{
-    display: block;
-}
-.sizer3 {
-    width: 30.5%;
+.percent-size {
+    width: 33%;
 }

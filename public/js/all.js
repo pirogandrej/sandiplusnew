@@ -20051,15 +20051,12 @@ function func_fullpage_init() {
 }
 
 function func_masonry_init() {
-    var sizerGalleryItem = '.sizer3';
-    var containerGallery = $('.gallery');
+    var containerGallery = $('.gallery-masonry');
     containerGallery.imagesLoaded(function () {
-        // noinspection JSAnnotator
         containerGallery.masonry({
             itemSelector: '.item-masonry',
-            columnWidth: sizerGalleryItem,
-            percentPosition: true,
-            gutter: 20
+            columnWidth: '.percent-size',
+            percentPosition: true
         })
     });
 }
