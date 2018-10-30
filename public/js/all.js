@@ -23914,7 +23914,6 @@ var old_number_screen;
 var new_number_screen;
 var current_index;
 
-
 function func_test_size() {
     wwin = $(window).width();
     hwin = $(window).height();
@@ -24011,26 +24010,21 @@ function func_masonry_init() {
 
 function animate_to_position(position) {
     new_number_screen = position;
+
     $('#scroll-indication div:nth-child(' + old_number_screen + ') hr').removeClass('active');
     $('.block-left div.row:nth-child(' + old_number_screen + ')').removeClass('active');
+
+    $('#screens-list .screen:nth-child(' + old_number_screen + ')').fadeOut(500);
+
     $('#scroll-indication div:nth-child(' + new_number_screen + ') hr').addClass('active');
     $('.block-left div.row:nth-child(' + new_number_screen + ')').addClass('active');
 
-    $('#screens-list div.screen').each(function() {
-        current_index = $(this).index() + 1;
-        if (current_index == old_number_screen) {
-            $(this).fadeOut(500);
-        }
-    });
-    $('#screens-list div.screen').each(function() {
-        current_index = $(this).index() + 1;
-        if (current_index == new_number_screen) {
-            $(this).fadeIn(500);
-        }
-    });
+    $('#screens-list .screen:nth-child(' + new_number_screen + ')').fadeIn(500);
+
     setTimeout(function () {
         $( "html, body" ).scrollTop( 0 );
-    }, 500);
+    }, 100);
+
     old_number_screen = new_number_screen;
 }
 
