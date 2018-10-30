@@ -1,8 +1,10 @@
+
+//отступы -------------------------------------------------
+$indentLeftRightTablet: 4%; //отступ слева и справа для планшетов
+
 @media (min-width: 0px) and (max-width: 329px) and (orientation:portrait) {
     .menu-brand {
-        width: 120px;
-        opacity: 1;
-        left: 4%;
+        left: $indentLeftRightTablet;
     }
     #main-menu {
         display: none;
@@ -12,22 +14,22 @@
     }
     #button-toggle {
         display: block;
-        right: 5%;
+        right: $indentLeftRightTablet;
     }
-    #screen-1 {
+    #fullpage .screen.dark {
         background-position: 100% 136%;
         background-size: 165%;
     }
-    #screen-1 .content {
+    #fullpage .screen.dark .content {
         top: 36%;
         width: 62vw;
         left: calc(50% - 31vw);
         text-align: center;
     }
-    #screen-1 .item1 {
+    #fullpage .screen.dark .item1 {
         width: 12px;
     }
-    #screen-1 .item2 {
+    #fullpage .screen.dark .item2 {
         display: block;
         font-size: 5vw;
         font-weight: 600;
@@ -38,23 +40,17 @@
         left:0;
         padding-bottom: 3vh;
     }
-    #screen-1 .item3 {
+    #fullpage .screen.dark .item3 {
         font-size: 3vw;
         font-style: italic;
     }
     .scroll-pointer {
         display: none;
     }
-    #screen-1 #arrow-down-pointer {
-        display: none;
-    }
     .dots-pointer{
         display: block;
     }
     #div-social {
-        display: none;
-    }
-    .copyright {
         display: none;
     }
     .figure-mobile {
@@ -82,12 +78,8 @@
     #menu-mobile ul li a {
         font-size: 8vw;
     }
-    #screen-2 .content {
+    #fullpage .screen.light .content {
         display: none;
-    }
-    #arrow-up-pointer {
-        left: calc(50% - 8px);
-        bottom: 40px;
     }
     .percent-size {
         width: 100%;
@@ -113,9 +105,7 @@
         margin-right: 32px;
     }
     .menu-brand {
-        width: 120px;
-        opacity: 1;
-        left: 4%;
+        left: $indentLeftRightTablet;
     }
     #main-menu {
         display: none;
@@ -125,22 +115,22 @@
     }
     #button-toggle {
         display: block;
-        right: 5%;
+        right: $indentLeftRightTablet;
     }
-    #screen-1 {
+    #fullpage .screen.dark {
         background-position: 100% 15%;
         background-size: 135%;
     }
-    #screen-1 .content {
+    #fullpage .screen.dark .content {
         top: 36%;
         width: 62vw;
         left: calc(50% - 31vw);
         text-align: center;
     }
-    #screen-1 .item1 {
+    #fullpage .screen.dark .item1 {
         width: 12px;
     }
-    #screen-1 .item2 {
+    #fullpage .screen.dark .item2 {
         display: block;
         font-size: 5vw;
         font-weight: 600;
@@ -151,23 +141,17 @@
         left:0;
         padding-bottom: 3vh;
     }
-    #screen-1 .item3 {
+    #fullpage .screen.dark .item3 {
         font-size: 3vw;
         font-style: italic;
     }
     .scroll-pointer {
         display: none;
     }
-    #screen-1 #arrow-down-pointer {
-        display: none;
-    }
     .dots-pointer{
         display: block;
     }
     #div-social {
-        display: none;
-    }
-    .copyright {
         display: none;
     }
     .figure-mobile {
@@ -192,12 +176,8 @@
     #menu-mobile ul li a {
         font-size: 18px;
     }
-    #screen-2 .content {
+    #fullpage .screen.light .content {
         display: none;
-    }
-    #arrow-up-pointer {
-        left: calc(50% - 8px);
-        bottom: calc(4% + 0px);
     }
     .percent-size {
         width: 100%;
@@ -206,9 +186,7 @@
 
 @media (min-width: 330px) and (max-width: 767px) and (orientation:portrait) {
     .menu-brand {
-        width: 120px;
-        opacity: 1;
-        left: 4%;
+        left: $indentLeftRightTablet;
     }
     #main-menu {
         display: none;
@@ -218,22 +196,22 @@
     }
     #button-toggle {
         display: block;
-        right: 5%;
+        right: $indentLeftRightTablet;
     }
-    #screen-1 {
+    #fullpage .screen.dark {
         background-position: 100% 136%;
         background-size: 165%;
     }
-    #screen-1 .content {
+    #fullpage .screen.dark .content {
         top: 36%;
         width: 62vw;
         left: calc(50% - 31vw);
         text-align: center;
     }
-    #screen-1 .item1 {
+    #fullpage .screen.dark .item1 {
         width: 12px;
     }
-    #screen-1 .item2 {
+    #fullpage .screen.dark .item2 {
         display: block;
         font-size: 5vw;
         font-weight: 600;
@@ -244,7 +222,7 @@
         left:0;
         padding-bottom: 3vh;
     }
-    #screen-1 .item3 {
+    #fullpage .screen.dark .item3 {
         font-size: 3vw;
         font-style: italic;
     }
@@ -282,7 +260,7 @@
     #menu-mobile ul li a {
         font-size: 27px;
     }
-    #screen-2 .content {
+    #fullpage .screen.light .content {
         display: none;
     }
     .percent-size {
@@ -309,9 +287,7 @@
         margin-right: 32px;
     }
     .menu-brand {
-        width: 120px;
-        opacity: 1;
-        left: 4%;
+        left: $indentLeftRightTablet;
     }
     #main-menu {
         display: none;
@@ -321,22 +297,22 @@
     }
     #button-toggle {
         display: block;
-        right: 5%;
+        right: $indentLeftRightTablet;
     }
-    #screen-1 {
+    #fullpage .screen.dark {
         background-position: 100% 15%;
         background-size: 135%;
     }
-    #screen-1 .content {
+    #fullpage .screen.dark .content {
         top: 36%;
         width: 62vw;
         left: calc(50% - 31vw);
         text-align: center;
     }
-    #screen-1 .item1 {
+    #fullpage .screen.dark .item1 {
         width: 12px;
     }
-    #screen-1 .item2 {
+    #fullpage .screen.dark .item2 {
         display: block;
         font-size: 5vw;
         font-weight: 600;
@@ -347,7 +323,7 @@
         left:0;
         padding-bottom: 3vh;
     }
-    #screen-1 .item3 {
+    #fullpage .screen.dark .item3 {
         font-size: 3vw;
         font-style: italic;
     }
@@ -382,7 +358,7 @@
     #menu-mobile ul li a {
         font-size: 18px;
     }
-    #screen-2 .content {
+    #fullpage .screen.light .content {
         display: none;
     }
     .percent-size {
@@ -403,26 +379,25 @@
         display: none;
     }
     .menu-brand {
-        width: 120px;
-        left: 4%;
+        left: $indentLeftRightTablet;
     }
     #main-menu {
         display: none;
     }
     #menu-bar .lang {
-        right: 4%;
+        right: $indentLeftRightTablet;
     }
     #button-toggle {
         display: block;
         right: calc(50% - 18px);
     }
-    #screen-1 .content {
-        left: 4%;
+    #fullpage .screen.dark .content {
+        left: $indentLeftRightTablet;
     }
     .scroll-pointer {
         display: none;
     }
-    #screen-2 .content {
+    #fullpage .screen.light .content {
         position: absolute;
         margin-top: 0vh;
         max-height: 70vh;
@@ -430,13 +405,13 @@
         top: calc(50vh - 70vh/2 - 6vh);
         left: calc(50vw - (70vh/3 - 36px)/2);
     }
-    #screen-2 .content .item{
+    #fullpage .screen.light .content .item{
         padding: 0;
     }
-    #screen-1 #div-social {
-        right: 4%;
+    #fullpage .screen.dark #div-social {
+        right: $indentLeftRightTablet;
     }
-    #screen-2 #div-social {
+    #fullpage .screen.light #div-social {
         right: calc(50% - 200px);
     }
     body.pages #div-social{
@@ -460,8 +435,7 @@
         display: none;
     }
     .menu-brand {
-        width: 120px;
-        left: 4%;
+        left: $indentLeftRightTablet;
     }
     #main-menu {
         display: none;
@@ -471,14 +445,14 @@
     }
     #button-toggle {
         display: block;
-        right: 5%;
+        right: $indentLeftRightTablet;
     }
-    #screen-1 {
+    #fullpage .screen.dark {
         background-position: 100% 15%;
         background-size: 135%;
     }
-    #screen-1 .content {
-        left:4%;
+    #fullpage .screen.dark .content {
+        left: $indentLeftRightTablet;
     }
     .scroll-pointer {
         display: none;
@@ -487,7 +461,7 @@
         display: block;
     }
     #div-social {
-        right: 4vw;
+        right: $indentLeftRightTablet;
     }
     .figure-mobile {
         display: block;
@@ -511,10 +485,10 @@
     #menu-mobile ul li a {
         font-size: 18px;
     }
-    #screen-2 .content {
+    #fullpage .screen.light .content {
         display: none;
     }
-    #screen-2 #div-social {
+    #fullpage .screen.light #div-social {
         right: calc(50% - 200px);
     }
     body.pages #div-social{
@@ -538,26 +512,25 @@
         display: none;
     }
     .menu-brand {
-        width: 120px;
-        left: 4%;
+        left: $indentLeftRightTablet;
     }
     #main-menu {
         display: none;
     }
     #menu-bar .lang {
-        right: 4%;
+        right: $indentLeftRightTablet;
     }
     #button-toggle {
         display: block;
         right: calc(50% - 18px);
     }
-    #screen-1 .content {
-        left: 4%;
+    #fullpage .screen.dark .content {
+        left: $indentLeftRightTablet;
     }
     .scroll-pointer {
         display: none;
     }
-    #screen-2 .content {
+    #fullpage .screen.light .content {
         position: absolute;
         margin-top: 0vh;
         max-height: 70vh;
@@ -565,13 +538,13 @@
         top: calc(50vh - 70vh/2 - 6vh);
         left: calc(50vw - (70vh/3 - 36px)/2);
     }
-    #screen-2 .content .item{
+    #fullpage .screen.light .content .item{
         padding: 0;
     }
-    #screen-1 #div-social {
-        right: 4%;
+    #fullpage .screen.dark #div-social {
+        right: $indentLeftRightTablet;
     }
-    #screen-2 #div-social {
+    #fullpage .screen.light #div-social {
         right: calc(50% - 200px);
     }
     body.pages #div-social{
@@ -603,7 +576,7 @@
     .scroll-pointer {
         display: none;
     }
-    #screen-2 #div-social {
+    #fullpage .screen.light #div-social {
         right: calc(50% - 200px);
     }
     body.pages #div-social{

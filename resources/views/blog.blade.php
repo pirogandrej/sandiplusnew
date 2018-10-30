@@ -1,7 +1,6 @@
 @extends('layouts.template')
 
 @section('styles')
-    <link rel="stylesheet" href="{{ asset('css/custom_blog.css') }}">
 @endsection
 
 @section('content')
@@ -102,7 +101,7 @@
                     </div>
                     <div class="txt-normal-small pb-5 w-75 postDate">
                         <div class="iconTime">
-                            <i class="far fa-clock"></i>
+                            <i class="fa fa-clock-o" aria-hidden="true"></i>
                         </div>
                         <div>
                             26 Апрель 2018

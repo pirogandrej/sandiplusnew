@@ -1,112 +1,140 @@
-
 /*content block ----------------------------------------*/
+
 #screens-list.blog .screen .hr-color {
-    padding: 20px;
-    border-radius: 20px;
+  padding: 20px;
+  border-radius: 20px;
 }
+
 #screens-list.blog .screen .hr-color.yellow {
-    background: #FFD003;
+  background: #FFD003;
 }
+
 #screens-list.blog .screen .hr-color.blue {
-    background: #4784EF;
-;
+  background: #4784EF;
 }
+
 #screens-list.blog .screen .hr-color.green {
-    background: #78C3AC;
+  background: #78C3AC;
 }
-#screens-list.blog .screen .postDate div{
-    display: inline-block;
+
+#screens-list.blog .screen .postDate div {
+  display: inline-block;
 }
+
 #screens-list.blog .screen .postDate .iconTime {
-    color: darkgray;
-    padding-right: 1.5%;
+  color: darkgray;
+  padding-right: 1.5%;
 }
+
 #screens-list.blog .screen .blockVideo {
-    position: relative;
-    padding-bottom: 56.25%;
-    padding-top: 0;
-    height: 0;
-    overflow: hidden;
-    margin-bottom: 5vw;
+  position: relative;
+  padding-bottom: 56.25%;
+  padding-top: 0;
+  height: 0;
+  overflow: hidden;
+  margin-bottom: 5vw;
 }
-#screens-list.blog .screen .blockVideo iframe{
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+
+#screens-list.blog .screen .blockVideo iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }
 
 /*side-bar left right --------------------------------------*/
+
 #screens-list.blog .screen .arrowPointer a:hover {
-    text-decoration: none;
-}
-#screens-list.blog .screen .arrowPointer span {
-    color: black;
-}
-#screens-list.blog .screen .arrowPointer span.arrow{
-    font-size: 1.3vw;
-}
-#screens-list.blog .screen .arrowPointer span.text{
-    font-size: 0.9vw;
-}
-#screens-list.blog .screen .arrowPointer span:nth-child(1) {
-    padding-right: 2vw;
-}
-#screens-list.blog .screen .block-fix {
-    width: 27%;
-    padding-top: 9%;
-}
-#screens-list.blog .screen .block-fix.left {
-    padding-left: calc(11% - 15px);
-}
-#screens-list.blog .screen .block-fix.right {
-    padding-right: calc(11% - 15px);
-}
-#screens-list.blog .screen .block-fix.right .arrowPointer{
-    text-align: right;
-}
-#screens-list.blog .screen .morePostsInterest {
-    padding-top: 17%;
-    padding-right: 5%;
-}
-#screens-list.blog .screen .morePostsInterest .title {
-    font-size: 1.1vw;
-    font-weight: 700;
-    padding-bottom: 5%;
-}
-#screens-list.blog .screen .morePostsInterest .hr-color {
-    border-radius: 20px;
-    padding: 13px;
-    width: 33%;
-}
-#screens-list.blog .screen .morePostsInterest .titlePost {
-    padding-top: 0.5rem;
-}
-#screens-list.blog .screen .morePostsInterest .titlePost a{
-    font-size: 0.9vw;
-    color: #000;
-}
-#screens-list.blog .screen .morePostsInterest .titlePost a:hover{
-    text-decoration: none;
-}
-#screens-list.blog .screen .nextPostTitle {
-    width: 33%;
-    padding-top: 5%;
-    float: right;
-}
-#screens-list.blog .screen .nextPostTitle a {
-    font-size: 1vw;
-    line-height: 1.1;
-    text-decoration: underline;
-    text-decoration-color: #adadad;
-    color: #000;
-    font-weight: 500;
+  text-decoration: none;
 }
 
-.item-masonry {
-    padding: 10px;
+#screens-list.blog .screen .arrowPointer span {
+  color: black;
 }
-.percent-size {
-    width: 33%;
+
+#screens-list.blog .screen .arrowPointer span.arrow {
+  font-size: 1.3vw;
 }
+
+#screens-list.blog .screen .arrowPointer span.text {
+  font-size: 0.9vw;
+}
+
+#screens-list.blog .screen .arrowPointer span:nth-child(1) {
+  padding-right: 2vw;
+}
+
+#screens-list.blog .screen .block-fix {
+  width: 27%;
+  padding-top: 9%;
+}
+
+#screens-list.blog .screen .block-fix.left {
+  padding-left: calc(11% - 15px);
+}
+
+#screens-list.blog .screen .block-fix.right {
+  padding-right: calc(11% - 15px);
+}
+
+#screens-list.blog .screen .block-fix.right .arrowPointer {
+  text-align: right;
+}
+
+#screens-list.blog .screen .morePostsInterest {
+  padding-top: 17%;
+  padding-right: 5%;
+}
+
+#screens-list.blog .screen .morePostsInterest .title {
+  font-size: 1.1vw;
+  font-weight: 700;
+  padding-bottom: 5%;
+}
+
+#screens-list.blog .screen .morePostsInterest .hr-color {
+  border-radius: 20px;
+  padding: 13px;
+  width: 33%;
+}
+
+#screens-list.blog .screen .morePostsInterest .titlePost {
+  padding-top: 0.5rem;
+}
+
+#screens-list.blog .screen .morePostsInterest .titlePost a {
+  font-size: 0.9vw;
+  color: #000;
+}
+
+#screens-list.blog .screen .morePostsInterest .titlePost a:hover {
+  text-decoration: none;
+}
+
+#screens-list.blog .screen .nextPostTitle {
+  width: 33%;
+  padding-top: 5%;
+  float: right;
+}
+
+#screens-list.blog .screen .nextPostTitle a {
+  font-size: 1vw;
+  line-height: 1.1;
+  text-decoration: underline;
+  -webkit-text-decoration-color: #adadad;
+          text-decoration-color: #adadad;
+  color: #000;
+  font-weight: 500;
+}
+
+/*gallery-masonry -----------------------------------------*/
+
+#screens-list.blog .item-masonry {
+  padding: 10px;
+}
+
+#screens-list.blog .percent-size {
+  width: 33%;
+}
+

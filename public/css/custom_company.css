@@ -1,69 +1,85 @@
-
 /*block left menu ---------------------------------*/
+
 .block-left {
-    position: fixed;
-    width: 30.733vw;
-    height: 100vh;
-    top: 26vh;
-    left: 0;
-    padding-left: 11vw;
-    z-index: 9;
+  position: fixed;
+  width: 30.733vw;
+  height: 100vh;
+  top: 26vh;
+  left: 0;
+  padding-left: 11vw;
+  z-index: 9;
 }
-.block-left .row{
-    margin-bottom: 3vh;
+
+.block-left .row {
+  margin-bottom: 3vh;
 }
-.block-left .row:nth-child(5){
-    margin-bottom: 7vh;
+
+.block-left .row:nth-child(5) {
+  margin-bottom: 7vh;
 }
+
 .block-left .row div {
-    text-align: left;
-    padding-left: 0;
+  text-align: left;
+  padding-left: 0;
 }
-.block-left .row div a{
-    font-size: 0.9vw;
-    color: #aeacad;
-    text-decoration: none;
+
+.block-left .row div a {
+  font-size: 0.9vw;
+  color: #aeacad;
+  text-decoration: none;
 }
-.block-left .row.active a{
-    color: #000000;
+
+.block-left .row.active a {
+  color: #000000;
 }
-.block-left .row:nth-child(6) a{
-    color: #000000;
+
+.block-left .row:nth-child(6) a {
+  color: #000000;
 }
-.block-left .row:nth-child(7) a{
-    color: #000000;
+
+.block-left .row:nth-child(7) a {
+  color: #000000;
 }
 
 /*block scroll indication ------------------------*/
+
 #scroll-indication {
-    position: fixed;
-    top: 40vh;
-    z-index: 9;
-    right: 0;
+  position: fixed;
+  top: 40vh;
+  z-index: 9;
+  right: 0;
 }
-#scroll-indication .item {
-    margin-bottom: 4vh;
+
+#scroll-indication div {
+  margin-bottom: 4vh;
 }
+
 #scroll-indication hr {
-    border: none;
-    color: #635E7C;
-    background-color: #635E7C;
-    height: 1px;
-    width: 50px;
-    margin-right: 0;
-    transition-duration: 1s;
+  border: none;
+  color: #635E7C;
+  background-color: #635E7C;
+  height: 1px;
+  width: 50px;
+  margin-right: 0;
+  -webkit-transition-duration: 1s;
+          transition-duration: 1s;
 }
+
 #scroll-indication hr.active {
-    color: red;
-    height: 1px;
-    width: 100px;
-    background-image: linear-gradient(90deg, #390C2D, #B51B27, #381184);
-    transition-duration: 1s;
+  color: red;
+  height: 1px;
+  width: 100px;
+  background-image: -webkit-gradient(linear, left top, right top, from(#390C2D), color-stop(#B51B27), to(#381184));
+  background-image: linear-gradient(90deg, #390C2D, #B51B27, #381184);
+  -webkit-transition-duration: 1s;
+          transition-duration: 1s;
 }
 
 /*content block -------------------------------*/
-#screens-list.company .div_bottom{
-    background-color: #FAFAFA;
-    margin: 0 -12.5%;
-    width: 125%;
+
+#screens-list.company .div_bottom {
+  background-color: #FAFAFA;
+  margin: 0 -12.5%;
+  width: 125%;
 }
+

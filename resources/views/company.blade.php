@@ -1,7 +1,6 @@
 @extends('layouts.template')
 
 @section('styles')
-    <link rel="stylesheet" href="{{ asset('css/custom_company.css') }}">
 @endsection
 
 @section('content')

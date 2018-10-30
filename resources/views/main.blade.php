@@ -1,7 +1,6 @@
 @extends('layouts.template')
 
 @section('styles')
-    <link rel="stylesheet" href="{{ asset('css/custom_main.css') }}">
 @endsection
 
 @section('content')
@@ -12,7 +11,7 @@
 
     <div id="fullpage" class="dark">
 
-        <div id="screen-1" class="screen">
+        <div class="screen dark">
             <div class="content">
                 <div class="item1">
                     <img src="{{ asset( 'img/icon-quotes-1.svg' ) }}" alt="">
@@ -28,7 +27,7 @@
             @include('components.footer')
         </div>
 
-        <div id="screen-2" class="screen">
+        <div class="screen light">
 
             @include('components.contentMobile')
 

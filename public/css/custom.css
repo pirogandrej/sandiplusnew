@@ -79,7 +79,6 @@ body.pages #menu-bar {
   left: 11.3vw;
   width: 120px;
   padding: 0;
-  opacity: 0.9;
 }
 
 .menu-brand img {
@@ -297,11 +296,11 @@ body.blog .scroll-pointer {
           box-sizing: border-box;
 }
 
-#screen-1 .scroll-pointer a span {
+#fullpage .screen.dark .scroll-pointer a span {
   border: 2px solid #fff;
 }
 
-#screen-2 .scroll-pointer a span {
+#fullpage .screen.light .scroll-pointer a span {
   border: 2px solid #000;
 }
 
@@ -322,13 +321,13 @@ body.pages .scroll-pointer a span {
           box-sizing: border-box;
 }
 
-#screen-1 .scroll-pointer a span::before {
+#fullpage .screen.dark .scroll-pointer a span::before {
   background-color: #fff;
   animation: sdp 2s infinite;
   -webkit-animation: sdp 2s infinite;
 }
 
-#screen-2 .scroll-pointer a span::before {
+#fullpage .screen.light .scroll-pointer a span::before {
   background-color: #000;
   animation: sup 2s infinite;
   -webkit-animation: sup 2s infinite;
@@ -469,7 +468,7 @@ body.blog #div-social {
   font-size: 12px;
 }
 
-#screen-2 #div-social a {
+#fullpage .screen.light #div-social a {
   color: black;
 }
 

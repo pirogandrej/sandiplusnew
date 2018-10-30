@@ -77,7 +77,6 @@ body.pages #menu-bar {
   left: $indentLeftRight;
   width: 120px;
   padding: 0;
-  opacity: 0.9;
 }
 .menu-brand img {
   width: 100%;
@@ -277,10 +276,10 @@ body.blog .scroll-pointer{
   border-radius: 50px;
   box-sizing: border-box;
 }
-#screen-1 .scroll-pointer a span {
+#fullpage .screen.dark .scroll-pointer a span {
   border: 2px solid #fff;
 }
-#screen-2 .scroll-pointer a span {
+#fullpage .screen.light .scroll-pointer a span {
   border: 2px solid #000;
 }
 body.pages .scroll-pointer a span {
@@ -297,12 +296,12 @@ body.pages .scroll-pointer a span {
   border-radius: 100%;
   box-sizing: border-box;
 }
-#screen-1 .scroll-pointer a span::before {
+#fullpage .screen.dark .scroll-pointer a span::before {
   background-color: #fff;
   animation: sdp 2s infinite;
   -webkit-animation: sdp 2s infinite;
 }
-#screen-2 .scroll-pointer a span::before {
+#fullpage .screen.light .scroll-pointer a span::before {
   background-color: #000;
   animation: sup 2s infinite;
   -webkit-animation: sup 2s infinite;
@@ -416,7 +415,7 @@ body.blog #div-social {
   position: absolute;
   font-size: 12px;
 }
-#screen-2 #div-social a {
+#fullpage .screen.light #div-social a {
   color: black;
 }
 body.pages #div-social a{
