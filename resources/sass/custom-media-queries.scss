@@ -17,8 +17,8 @@ $indentLeftRightTablet: 4%; //отступ слева и справа для п�
         right: $indentLeftRightTablet;
     }
     #fullpage .screen.dark {
-        background-position: 100% 136%;
-        background-size: 165%;
+        background-position: 86% 155%;
+        background-size: 209%;
     }
     #fullpage .screen.dark .content {
         top: 36%;
@@ -44,11 +44,14 @@ $indentLeftRightTablet: 4%; //отступ слева и справа для п�
         font-size: 3vw;
         font-style: italic;
     }
+    #fullpage .screen.dark .footer{
+        bottom: 6vh;
+    }
+    #fullpage .screen.dark .footer .dots-pointer{
+        display: block;
+    }
     .scroll-pointer {
         display: none;
-    }
-    .dots-pointer{
-        display: block;
     }
     #div-social {
         display: none;
@@ -148,9 +151,6 @@ $indentLeftRightTablet: 4%; //отступ слева и справа для п�
     .scroll-pointer {
         display: none;
     }
-    .dots-pointer{
-        display: block;
-    }
     #div-social {
         display: none;
     }
@@ -184,7 +184,7 @@ $indentLeftRightTablet: 4%; //отступ слева и справа для п�
     }
 }
 
-@media (min-width: 330px) and (max-width: 767px) and (orientation:portrait) {
+@media (min-width: 330px) and (max-width: 767px) and ( orientation:portrait ) {
     .menu-brand {
         left: $indentLeftRightTablet;
     }
@@ -199,8 +199,8 @@ $indentLeftRightTablet: 4%; //отступ слева и справа для п�
         right: $indentLeftRightTablet;
     }
     #fullpage .screen.dark {
-        background-position: 100% 136%;
-        background-size: 165%;
+        background-position: 85% 163%;
+        background-size: 213%;
     }
     #fullpage .screen.dark .content {
         top: 36%;
@@ -229,7 +229,10 @@ $indentLeftRightTablet: 4%; //отступ слева и справа для п�
     .scroll-pointer {
         display: none;
     }
-    .dots-pointer{
+    #fullpage .screen.dark .footer{
+        bottom: 6vh;
+    }
+    #fullpage .screen.dark .footer .dots-pointer{
         display: block;
     }
     #div-social {
@@ -268,6 +271,13 @@ $indentLeftRightTablet: 4%; //отступ слева и справа для п�
     }
 }
 
+@media (min-width: 330px) and (max-width: 767px) and (min-height: 768px) and (orientation:portrait) {
+    #fullpage .screen.dark {
+        background-position: 85% 120%;
+        background-size: 213%;
+    }
+}
+
 @media (min-width: 330px) and (max-width: 767px) and (orientation:landscape) {
     #pull-out-menu .menu {
         margin-top: 70px;
@@ -301,7 +311,7 @@ $indentLeftRightTablet: 4%; //отступ слева и справа для п�
     }
     #fullpage .screen.dark {
         background-position: 100% 15%;
-        background-size: 135%;
+        background-size: 108%;
     }
     #fullpage .screen.dark .content {
         top: 36%;
@@ -329,9 +339,6 @@ $indentLeftRightTablet: 4%; //отступ слева и справа для п�
     }
     .scroll-pointer {
         display: none;
-    }
-    .dots-pointer{
-        display: block;
     }
     #div-social {
         display: none;
@@ -448,17 +455,14 @@ $indentLeftRightTablet: 4%; //отступ слева и справа для п�
         right: $indentLeftRightTablet;
     }
     #fullpage .screen.dark {
-        background-position: 100% 15%;
-        background-size: 135%;
+        background-position: 100% 39%;
+        background-size: 104%;
     }
     #fullpage .screen.dark .content {
         left: $indentLeftRightTablet;
     }
     .scroll-pointer {
         display: none;
-    }
-    .dots-pointer{
-        display: block;
     }
     #div-social {
         right: $indentLeftRightTablet;

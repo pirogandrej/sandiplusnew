@@ -4,7 +4,6 @@ var number_page;
 var number_screen;
 var old_number_screen;
 var new_number_screen;
-var current_index;
 
 function func_test_size() {
     wwin = $(window).width();
@@ -13,7 +12,6 @@ function func_test_size() {
 
 function detectPage() {
     var numDetectPage;
-
     if ($('#fullpage').length) {
         numDetectPage = 0;
     }
@@ -27,6 +25,17 @@ function detectPage() {
         }
     }
     return numDetectPage;
+}
+
+function detectScreen() {
+    var numDetectScreen = '';
+    $("#screens-list .mainBlock .screen").each(function (i) {
+        if ( $(this).hasClass('active') ) {
+            numDetectScreen = i;
+        }
+    });
+    numDetectScreen++;
+    return numDetectScreen;
 }
 
 function func_init() {
@@ -44,8 +53,8 @@ function func_init() {
         old_number_screen = 1;
         $('body').addClass('company');
         $('.block-left div.row:nth-child(' + old_number_screen + ')').addClass('active');
-        $('#scroll-indication div:nth-child(' + old_number_screen + ') hr').addClass('active');
-        $('#screens-list').find('.screen').eq(old_number_screen - 1).siblings().css("display","none");
+        $('#scroll-indication div:nth-child(' + old_number_screen + ')').addClass('active');
+        $('#screens-list .mainBlock div.screen:nth-child(' + old_number_screen + ')').addClass('active');
     }
     if (number_page == 2){
         $('body').addClass('blog');
@@ -102,22 +111,16 @@ function func_masonry_init() {
 
 function animate_to_position(position) {
     new_number_screen = position;
-
-    $('#scroll-indication div:nth-child(' + old_number_screen + ') hr').removeClass('active');
     $('.block-left div.row:nth-child(' + old_number_screen + ')').removeClass('active');
-
-    $('#screens-list .screen:nth-child(' + old_number_screen + ')').fadeOut(500);
-
-    $('#scroll-indication div:nth-child(' + new_number_screen + ') hr').addClass('active');
+    $('#scroll-indication div:nth-child(' + old_number_screen + ')').removeClass('active');
+    $('#screens-list .screen:nth-child(' + old_number_screen + ')').fadeOut(400).removeClass('active');
     $('.block-left div.row:nth-child(' + new_number_screen + ')').addClass('active');
-
-    $('#screens-list .screen:nth-child(' + new_number_screen + ')').fadeIn(500);
-
+    $('#scroll-indication div:nth-child(' + new_number_screen + ')').addClass('active');
     setTimeout(function () {
         $( "html, body" ).scrollTop( 0 );
-    }, 100);
-
-    old_number_screen = new_number_screen;
+        $('#screens-list .screen:nth-child(' + new_number_screen + ')').fadeIn(400).addClass('active');
+        old_number_screen = new_number_screen;
+    }, 400);
 }
 
 (function($) {
@@ -162,25 +165,31 @@ function animate_to_position(position) {
         $('.block-left .row').click(function(event) {
             event.preventDefault();
             var new_number_item = parseInt($('.block-left .row').index(this)) + 1;
-            if(new_number_item <= number_screen){
+            if((new_number_item <= number_screen) && (new_number_item != old_number_screen)){
                 animate_to_position(new_number_item);
             }
         });
 
         $('.scroll-pointer').click(function(event) {
-            if($('html').hasClass('fp-enabled')){
-                var fpObj = fullpage_api.getActiveSection();
-                if(fpObj.index == 0){
-                    fullpage_api.moveSectionDown();
-                }
-                if(fpObj.index == 1){
-                    fullpage_api.moveSectionUp();
-                }
-            }
+            event.preventDefault();
             switch (number_page){
+                case 0:
+                    var fpObj = fullpage_api.getActiveSection();
+                    if(fpObj.index == 0){
+                        fullpage_api.moveSectionDown();
+                    }
+                    if(fpObj.index == 1){
+                        fullpage_api.moveSectionUp();
+                    }
+                    break;
                 case 1:
-                    event.preventDefault();
-                    animate_to_position(2);
+                    var num = detectScreen();
+                    if(num < number_screen) {
+                        animate_to_position( num + 1 );
+                    }
+                    else {
+                        animate_to_position( 1 );
+                    }
                     break;
             }
             return false;

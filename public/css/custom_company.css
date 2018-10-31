@@ -48,34 +48,36 @@
   top: 40vh;
   z-index: 9;
   right: 0;
+  width: 100px;
 }
 
 #scroll-indication div {
-  margin-bottom: 4vh;
-}
-
-#scroll-indication hr {
-  border: none;
-  color: #635E7C;
+  position: relative;
+  margin-bottom: 50px;
+  height: 1px;
   background-color: #635E7C;
-  height: 1px;
-  width: 50px;
-  margin-right: 0;
-  -webkit-transition-duration: 1s;
-          transition-duration: 1s;
+  width: 50%;
+  margin-left: 50px;
+  -webkit-transition-duration: 600ms;
+          transition-duration: 600ms;
 }
 
-#scroll-indication hr.active {
-  color: red;
-  height: 1px;
-  width: 100px;
+#scroll-indication div.active {
   background-image: -webkit-gradient(linear, left top, right top, from(#390C2D), color-stop(#B51B27), to(#381184));
   background-image: linear-gradient(90deg, #390C2D, #B51B27, #381184);
-  -webkit-transition-duration: 1s;
-          transition-duration: 1s;
+  width: 100%;
+  margin-left: 0;
 }
 
 /*content block -------------------------------*/
+
+#screens-list.company div.screen {
+  display: none;
+}
+
+#screens-list.company div.screen.active {
+  display: block;
+}
 
 #screens-list.company .div_bottom {
   background-color: #FAFAFA;

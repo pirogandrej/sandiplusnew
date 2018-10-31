@@ -6,6 +6,11 @@
         </a>
     </div>
 
+    <div class="dots-pointer">
+        <span></span>
+        <span></span>
+    </div>
+
     <div id='div-social' class="row">
         <div id="facebook" class="col social">
             <a href="https://www.facebook.com/sandipluscomua" target="_blank">facebook</a>

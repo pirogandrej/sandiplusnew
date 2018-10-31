@@ -426,14 +426,14 @@ body.pages .scroll-pointer a span::before {
 .dots-pointer {
   display: none;
   text-align: center;
-  left: calc(50% - 5px);
-  bottom: 40px;
+  left: calc(50% - 4px);
+  bottom: 0;
   position: absolute;
 }
 
 .dots-pointer span {
-  height: 10px;
-  width: 10px;
+  height: 8px;
+  width: 8px;
   background-color: #bbb;
   border-radius: 50%;
   display: block;
@@ -441,7 +441,7 @@ body.pages .scroll-pointer a span::before {
 }
 
 .dots-pointer span:nth-child(2) {
-  opacity: 0.7;
+  opacity: 0.65;
 }
 
 #div-social {
