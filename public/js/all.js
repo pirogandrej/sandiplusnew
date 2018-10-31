@@ -24106,7 +24106,7 @@ function animate_to_position(position) {
         $( window ).resize(function() {
             func_test_size();
             if ($('#fullpage').length) {
-                fullpage_api.reBuild();
+                $.fn.fullpage.reBuild();
                 if($('#button-toggle').hasClass('open')){
                     fullpage_api.setAllowScrolling(true, 'all');
                 }
