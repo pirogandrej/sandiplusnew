@@ -4,6 +4,7 @@ var number_page;
 var number_screen;
 var old_number_screen;
 var new_number_screen;
+var numberMenuItems = 5;
 
 function func_test_size() {
     wwin = $(window).width();
@@ -44,10 +45,10 @@ function func_init() {
         $('body').addClass('main');
         $('#menu-bar').addClass('dark');
     }
-    if ((number_page >= 1) && (number_page <= 5)){
+    if ((number_page >= 1) && (number_page <= numberMenuItems)){
         $('body').addClass('pages');
         $('#menu-bar').addClass('light');
-        $('#main-menu ul li:nth-child(' + number_page + ') a').css({'background-color':'black','color':'white'});
+        $('#main-menu ul li:nth-child(' + number_page + ')').addClass('active');
     }
     if (number_page == 1){
         old_number_screen = 1;

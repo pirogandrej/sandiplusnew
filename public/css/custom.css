@@ -137,16 +137,22 @@ body.pages .menu-brand.light {
   font-weight: 600;
 }
 
-#menu-bar.dark #main-menu a {
+body.main #menu-bar.dark #main-menu a {
   color: #ffffff;
 }
 
-#menu-bar.light #main-menu a {
+body.main #menu-bar.light #main-menu a {
   color: #000000;
 }
 
-body.pages #main-menu a {
+body.pages #main-menu li a {
+  background-color: white;
   color: black;
+}
+
+body.pages #main-menu li.active a {
+  background-color: black;
+  color: white;
 }
 
 #menu-bar .lang {
