@@ -115,12 +115,12 @@
                     </div>
 
                     <div id="gallery" class="unitegallery pb-4">
-                        <img src="{{ asset( 'img/blog/gallery/2.png' ) }}" alt="">
                         <img src="{{ asset( 'img/blog/gallery/1.png' ) }}" alt="">
-                        <img src="{{ asset( 'img/blog/gallery/6.png' ) }}" alt="">
+                        <img src="{{ asset( 'img/blog/gallery/2.png' ) }}" alt="">
                         <img src="{{ asset( 'img/blog/gallery/3.png' ) }}" alt="">
                         <img src="{{ asset( 'img/blog/gallery/4.png' ) }}" alt="">
                         <img src="{{ asset( 'img/blog/gallery/5.png' ) }}" alt="">
+                        <img src="{{ asset( 'img/blog/gallery/6.png' ) }}" alt="">
                         <img src="{{ asset( 'img/blog/gallery/7.png' ) }}" alt="">
                         <img src="{{ asset( 'img/blog/gallery/8.png' ) }}" alt="">
                         <img src="{{ asset( 'img/blog/gallery/9.png' ) }}" alt="">
