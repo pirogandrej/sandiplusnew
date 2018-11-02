@@ -104,7 +104,7 @@ function func_unitegallery_init() {
         function() {
             $(this).unitegallery({
                 gallery_theme: "tiles",
-                tiles_space_between_cols: 3,
+                tiles_space_between_cols: 5,
                 tile_overlay_opacity: 0.2,
                 lightbox_type: "compact",
                 lightbox_slider_image_border_radius: 10
