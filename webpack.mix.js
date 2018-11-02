@@ -22,6 +22,8 @@ mix
 
     .scripts([
         'public/js/app.js',
+        'public/plagins/unitegallery/unitegallery.js',
+        'public/plagins/unitegallery/ug-theme-tiles.js',
         'public/js/custom.js'
         ],
         'public/js/all.js')

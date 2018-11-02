@@ -28,6 +28,7 @@
         "jquery-bridget": "^2.0.1",
         "masonry-layout": "^4.2.2",
         "popper.js": "^1.14.4",
-        "scrollmagic": "^2.0.5"
+        "scrollmagic": "^2.0.5",
+        "unitegallery": "^1.7.28"
     }
 }

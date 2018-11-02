@@ -114,15 +114,17 @@
                         План поездки был такой: встреча с нашими турецкими бизнес-партнерами, экскурсия на завод Daikin, экскурсия по этому самобытному городу. Мы узнали историю развития компании, с чего все начиналось, какие планы у топ-менеджеров Daikin на будущее, какой путь усовершенствования котлов TM Airfel. Сам завод впечатлил всех нас своими масштабами, автоматизацией и высоким качеством работы всех процессов.
                     </div>
 
-                    <div class="gallery-masonry pb-4">
-                        <img src="{{ asset( 'img/blog/gallery/1.png' ) }}" class="item-masonry percent-size" alt="">
-                        <img src="{{ asset( 'img/blog/gallery/2.png' ) }}" class="item-masonry percent-size" alt="">
-                        <img src="{{ asset( 'img/blog/gallery/3.png' ) }}" class="item-masonry percent-size" alt="">
-                        <img src="{{ asset( 'img/blog/gallery/4.png' ) }}" class="item-masonry percent-size" alt="">
-                        <img src="{{ asset( 'img/blog/gallery/5.png' ) }}" class="item-masonry percent-size" alt="">
-                        <img src="{{ asset( 'img/blog/gallery/6.png' ) }}" class="item-masonry percent-size" alt="">
-                        <img src="{{ asset( 'img/blog/gallery/7.png' ) }}" class="item-masonry percent-size" alt="">
-                        <img src="{{ asset( 'img/blog/gallery/8.png' ) }}" class="item-masonry percent-size" alt="">
+                    <div id="gallery" class="unitegallery pb-4">
+                        <img src="{{ asset( 'img/blog/gallery/2.png' ) }}" alt="">
+                        <img src="{{ asset( 'img/blog/gallery/1.png' ) }}" alt="">
+                        <img src="{{ asset( 'img/blog/gallery/6.png' ) }}" alt="">
+                        <img src="{{ asset( 'img/blog/gallery/3.png' ) }}" alt="">
+                        <img src="{{ asset( 'img/blog/gallery/4.png' ) }}" alt="">
+                        <img src="{{ asset( 'img/blog/gallery/5.png' ) }}" alt="">
+                        <img src="{{ asset( 'img/blog/gallery/7.png' ) }}" alt="">
+                        <img src="{{ asset( 'img/blog/gallery/8.png' ) }}" alt="">
+                        <img src="{{ asset( 'img/blog/gallery/9.png' ) }}" alt="">
+                        <img src="{{ asset( 'img/blog/gallery/10.png' ) }}" alt="">
                     </div>
 
                     <div class="txt-normal pb-5">

@@ -128,13 +128,9 @@
   font-weight: 500;
 }
 
-/*gallery-masonry -----------------------------------------*/
+/*gallery-unite -----------------------------------------*/
 
-#screens-list.blog .item-masonry {
-  padding: 10px;
-}
-
-#screens-list.blog .percent-size {
-  width: 33%;
+.unitegallery {
+  display: none;
 }
 

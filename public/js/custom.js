@@ -99,15 +99,18 @@ function func_fullpage_init() {
     });
 }
 
-function func_masonry_init() {
-    var containerGallery = $('.gallery-masonry');
-    containerGallery.imagesLoaded(function () {
-        containerGallery.masonry({
-            itemSelector: '.item-masonry',
-            columnWidth: '.percent-size',
-            percentPosition: true
-        })
-    });
+function func_unitegallery_init() {
+    jQuery(".unitegallery").each(
+        function() {
+            $(this).unitegallery({
+                gallery_theme: "tiles",
+                tiles_space_between_cols: 3,
+                tile_overlay_opacity: 0.2,
+                lightbox_type: "compact",
+                lightbox_slider_image_border_radius: 10
+            });
+        }
+    );
 }
 
 function animate_to_position(position) {
@@ -217,10 +220,9 @@ function animate_to_position(position) {
             func_test_size();
             func_init();
             func_fullpage_init();
-            func_masonry_init();
+            func_unitegallery_init();
         });
+
     })
 })(jQuery);
-
-
 
