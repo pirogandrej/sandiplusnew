@@ -157,7 +157,6 @@
     </div>
 
     @include('components.footer')
-
 @endsection
 
 @section('scripts')
