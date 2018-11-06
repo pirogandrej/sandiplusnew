@@ -52,6 +52,10 @@
 #fullpage .screen.light .content .item {
     text-align: center;
 }
+#fullpage .screen.light .content .item #sphere canvas{
+    margin-top: 35px;
+}
+
 
 .figure-mobile {
     display: none;

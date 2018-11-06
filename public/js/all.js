@@ -46545,6 +46545,18 @@ var old_number_screen;
 var new_number_screen;
 var numberMenuItems = 5;
 
+var paddingFigure = 35;
+var wItemSphere;
+var hItemSphere;
+var containerSphere;
+var rendererSphere;
+var cameraSphere;
+var sceneSphere;
+var sphere_geometry;
+var sphere_texture;
+var sphere;
+
+
 function func_test_size() {
     wwin = $(window).width();
     hwin = $(window).height();
@@ -46643,13 +46655,104 @@ function func_unitegallery_init() {
         function() {
             $(this).unitegallery({
                 gallery_theme: "tiles",
-                tiles_space_between_cols: 5, //padding photo
+                tiles_space_between_cols: 5,
                 tile_overlay_opacity: 0.2,
                 lightbox_type: "compact",
                 lightbox_slider_image_border_radius: 10
             });
         }
     );
+}
+
+function func_threejs_init() {
+    wItemSphere = $('#sphere').width();
+    hItemSphere = wItemSphere;
+    $('#sphere').height(hItemSphere);
+    $('#sphere').css('border','1px solid black');
+
+    containerSphere = document.getElementById('sphere');
+
+    rendererSphere = new THREE.WebGLRenderer();
+    rendererSphere.setSize( wItemSphere - paddingFigure*2 ,hItemSphere - paddingFigure*2);
+    $('#fullpage .screen.light .content .item #sphere canvas').css('margin-top', paddingFigure*2 + 'px' );
+
+    cameraSphere = new THREE.PerspectiveCamera(45, wItemSphere/hItemSphere , 0.1, 1000);
+    cameraSphere.position.y = 0;
+    cameraSphere.position.z = 300;
+
+    sceneSphere = new THREE.Scene();
+    sceneSphere.background = new THREE.Color( 0xdddddd );
+
+    sphere_geometry = new THREE.SphereGeometry( 100, 8, 6 );
+    sphere_texture =  new THREE.MeshBasicMaterial({
+        color: 0x888888,
+        wireframe: true
+    });
+    sphere = new THREE.Mesh(sphere_geometry,sphere_texture);
+    sphere.position.x = 0;
+    sceneSphere.add(sphere);
+
+    // var cube_geometry = new THREE.CubeGeometry(100,100,100);
+    // var cube_texture =  new THREE.MeshBasicMaterial({
+    //     color: 0x888888,
+    //     wireframe: true
+    // });
+    // var cube = new THREE.Mesh(cube_geometry,cube_texture);
+    // cube.position.x = 300;
+    // scene.add(cube);
+
+    // var cylinder_geometry = new THREE.CylinderGeometry(50,50,200);
+    // var cylinder_texture = new THREE.MeshNormalMaterial();
+    // var cylinder = new THREE.Mesh(cylinder_geometry,cylinder_texture);
+    // cylinder.position.x = -250;
+    // cylinder.position.z = 0;
+    // scene.add(cylinder);
+
+    // var poly_geometry = new THREE.IcosahedronGeometry(100);
+    // var poly_texture =  new THREE.MeshBasicMaterial({
+    //     color: 0x888888,
+    //     wireframe: true
+    // });
+    // var poly = new THREE.Mesh(poly_geometry,poly_texture);
+    // poly.position.x = 0;
+    // scene.add(poly);
+
+    func_threejs_animation();
+}
+
+function func_threejs_resize() {
+    wItemSphere = $('#fullpage .screen.light .content .item').width();
+    hItemSphere = wItemSphere;
+    console.log('w = ' + wItemSphere);
+    console.log('h = ' + hItemSphere);
+    $('#sphere').height(hItemSphere);
+    cameraSphere.aspect = wItemSphere / hItemSphere;
+    cameraSphere.updateProjectionMatrix();
+    rendererSphere.setSize( wItemSphere - paddingFigure*2, hItemSphere - paddingFigure*2 );
+    $('#fullpage .screen.light .content .item #sphere canvas').css('margin-top', paddingFigure*2 + 'px' );
+}
+
+function func_threejs_animation() {
+    requestAnimationFrame(func_threejs_animation);
+
+    sphere.rotation.x += 0.002;
+    sphere.rotation.y += 0.002;
+    sphere.rotation.z += 0.002;
+
+//            cube.rotation.x += 0.005;
+//            cube.rotation.y += 0.005;
+//            cube.rotation.z += 0.005;
+//
+//            poly.rotation.x += 0.005;
+//            poly.rotation.y += 0.005;
+//            poly.rotation.z += 0.005;
+//
+//            cylinder.rotation.y += 180/Math.PI*0.00001;
+//            cylinder.rotation.z += 180/Math.PI*0.00001;
+//            cylinder.position.y += 0.5;
+
+    rendererSphere.render(sceneSphere,cameraSphere);
+    containerSphere.appendChild(rendererSphere.domElement);
 }
 
 function animate_to_position(position) {
@@ -46741,7 +46844,10 @@ function animate_to_position(position) {
         $( window ).resize(function() {
             func_test_size();
             if ($('#fullpage').length) {
+                // $.fn.fullpage.destroy('all');
                 // $.fn.fullpage.reBuild();
+                // func_fullpage_init();
+                $('#fullpage').fullpage.reBuild();
                 if($('#button-toggle').hasClass('open')){
                     fullpage_api.setAllowScrolling(true, 'all');
                 }
@@ -46753,6 +46859,7 @@ function animate_to_position(position) {
                 $('#main-menu').css('display','none');
                 $('#button-toggle').css({'display':'block','right':'calc(50% - 18px)'});
             }
+            func_threejs_resize();
         });
 
         $( document ).ready(function(){
@@ -46760,6 +46867,7 @@ function animate_to_position(position) {
             func_init();
             func_fullpage_init();
             func_unitegallery_init();
+            func_threejs_init();
         });
 
     })
