@@ -46741,12 +46741,11 @@ function animate_to_position(position) {
         $( window ).resize(function() {
             func_test_size();
             if ($('#fullpage').length) {
-                $.fn.fullpage.reBuild();
                 if($('#button-toggle').hasClass('open')){
-                    fullpage_api.setAllowScrolling(true, 'all');
+                    fullpage_api.setAllowScrolling(false, 'all');
                 }
                 else{
-                    fullpage_api.setAllowScrolling(false, 'all');
+                    fullpage_api.setAllowScrolling(true, 'all');
                 }
             }
             if ((wwin >= 1200) && ($('#button-toggle').hasClass("open"))) {
