@@ -39,11 +39,13 @@
                         <a href="/company">КОМПАНИЯ</a>
                     </div>
                     <div class="col-lg-12 col-xl-4 item">
-                        <img src="{{ asset( 'img/figure-2.svg' ) }}" alt="">
+                        {{--<img src="{{ asset( 'img/figure-2.svg' ) }}" alt="">--}}
+                        <div id="poly" class="w-100"></div>
                         <a href="/blog">БЛОГ</a>
                     </div>
                     <div class="col-lg-12 col-xl-4 item">
-                        <img src="{{ asset( 'img/figure-3.svg' ) }}" alt="">
+                        {{--<img src="{{ asset( 'img/figure-3.svg' ) }}" alt="">--}}
+                        <div id="cube" class="w-100"></div>
                         <a href="#">КАРЬЕРА</a>
                     </div>
                 </div>

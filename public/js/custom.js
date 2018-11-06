@@ -7,8 +7,9 @@ var new_number_screen;
 var numberMenuItems = 5;
 
 var paddingFigure = 35;
-var wItemSphere;
-var hItemSphere;
+var wItemFigure;
+var hItemFigure;
+
 var containerSphere;
 var rendererSphere;
 var cameraSphere;
@@ -16,6 +17,36 @@ var sceneSphere;
 var sphere_geometry;
 var sphere_texture;
 var sphere;
+
+var containerPoly;
+var rendererPoly;
+var cameraPoly;
+var scenePoly;
+var poly_geometry;
+var poly_texture;
+var poly;
+
+var containerCube;
+var rendererCube;
+var cameraCube;
+var sceneCube;
+var cube_geometry;
+var cube_texture;
+var cube;
+
+var mouseXSphere;
+var mouseYSphere;
+var mouseXPoly;
+var mouseYPoly;
+var mouseXCube;
+var mouseYCube;
+var isOverSphere = false;
+var isOverPoly = false;
+var isOverCube = false;
+// var deltaX;
+// var deltaY;
+// var oldX;
+// var oldY;
 
 
 function func_test_size() {
@@ -56,6 +87,8 @@ function func_init() {
     if (number_page == 0){
         $('body').addClass('main');
         $('#menu-bar').addClass('dark');
+        func_fullpage_init();
+        func_threejs_init();
     }
     if ((number_page >= 1) && (number_page <= numberMenuItems)){
         $('body').addClass('pages');
@@ -126,23 +159,48 @@ function func_unitegallery_init() {
 }
 
 function func_threejs_init() {
-    wItemSphere = $('#sphere').width();
-    hItemSphere = wItemSphere;
-    $('#sphere').height(hItemSphere);
-    $('#sphere').css('border','1px solid black');
-
-    containerSphere = document.getElementById('sphere');
-
-    rendererSphere = new THREE.WebGLRenderer();
-    rendererSphere.setSize( wItemSphere - paddingFigure*2 ,hItemSphere - paddingFigure*2);
-    $('#fullpage .screen.light .content .item #sphere canvas').css('margin-top', paddingFigure*2 + 'px' );
-
-    cameraSphere = new THREE.PerspectiveCamera(45, wItemSphere/hItemSphere , 0.1, 1000);
-    cameraSphere.position.y = 0;
-    cameraSphere.position.z = 300;
+    var bg_color = '#ffffff';
+    wItemFigure = $('#fullpage .screen.light .content .item div').width();
+    hItemFigure = wItemFigure;
+    $('#fullpage .screen.light .content .item div').height(hItemFigure);
+    // $('#fullpage .screen.light .content .item div').css('border','1px solid black');
 
     sceneSphere = new THREE.Scene();
-    sceneSphere.background = new THREE.Color( 0xdddddd );
+    scenePoly = new THREE.Scene();
+    sceneCube = new THREE.Scene();
+
+    sceneSphere.background = new THREE.Color( bg_color );
+    scenePoly.background = new THREE.Color( bg_color );
+    sceneCube.background = new THREE.Color( bg_color );
+
+    cameraSphere = new THREE.PerspectiveCamera(45, wItemFigure/hItemFigure , 0.1, 1000);
+    cameraPoly = new THREE.PerspectiveCamera(45, wItemFigure/hItemFigure , 0.1, 1000);
+    cameraCube = new THREE.PerspectiveCamera(45, wItemFigure/hItemFigure , 0.1, 1000);
+
+    cameraSphere.position.y = 0;
+    cameraPoly.position.y = 0;
+    cameraCube.position.y = 0;
+
+    cameraSphere.position.z = 300;
+    cameraPoly.position.z = 300;
+    cameraCube.position.z = 250;
+
+    rendererSphere = new THREE.WebGLRenderer();
+    rendererPoly = new THREE.WebGLRenderer();
+    rendererCube = new THREE.WebGLRenderer();
+
+    rendererSphere.setSize( wItemFigure - paddingFigure*2 ,hItemFigure - paddingFigure*2);
+    rendererPoly.setSize( wItemFigure - paddingFigure*2 ,hItemFigure - paddingFigure*2);
+    rendererCube.setSize( wItemFigure - paddingFigure*2 ,hItemFigure - paddingFigure*2);
+
+    containerSphere = document.getElementById('sphere');
+    containerPoly = document.getElementById('poly');
+    containerCube = document.getElementById('cube');
+
+    containerSphere.appendChild( rendererSphere.domElement );
+    containerPoly.appendChild( rendererPoly.domElement );
+    containerCube.appendChild( rendererCube.domElement );
+    $('#fullpage .screen.light .content .item canvas').css('margin-top', paddingFigure + 'px' );
 
     sphere_geometry = new THREE.SphereGeometry( 100, 8, 6 );
     sphere_texture =  new THREE.MeshBasicMaterial({
@@ -153,67 +211,89 @@ function func_threejs_init() {
     sphere.position.x = 0;
     sceneSphere.add(sphere);
 
-    // var cube_geometry = new THREE.CubeGeometry(100,100,100);
-    // var cube_texture =  new THREE.MeshBasicMaterial({
-    //     color: 0x888888,
-    //     wireframe: true
-    // });
-    // var cube = new THREE.Mesh(cube_geometry,cube_texture);
-    // cube.position.x = 300;
-    // scene.add(cube);
+    poly_geometry = new THREE.IcosahedronGeometry(100);
+    poly_texture =  new THREE.MeshBasicMaterial({
+        color: 0x888888,
+        wireframe: true
+    });
+    poly = new THREE.Mesh(poly_geometry,poly_texture);
+    poly.position.x = 0;
+    scenePoly.add(poly);
 
-    // var cylinder_geometry = new THREE.CylinderGeometry(50,50,200);
-    // var cylinder_texture = new THREE.MeshNormalMaterial();
-    // var cylinder = new THREE.Mesh(cylinder_geometry,cylinder_texture);
-    // cylinder.position.x = -250;
-    // cylinder.position.z = 0;
-    // scene.add(cylinder);
-
-    // var poly_geometry = new THREE.IcosahedronGeometry(100);
-    // var poly_texture =  new THREE.MeshBasicMaterial({
-    //     color: 0x888888,
-    //     wireframe: true
-    // });
-    // var poly = new THREE.Mesh(poly_geometry,poly_texture);
-    // poly.position.x = 0;
-    // scene.add(poly);
+    cube_geometry = new THREE.CubeGeometry(100,100,100,4,4,4);
+    cube_texture =  new THREE.MeshBasicMaterial({
+        color: 0x888888,
+        wireframe: true
+    });
+    cube = new THREE.Mesh(cube_geometry,cube_texture);
+    cube.position.x = 0;
+    sceneCube.add(cube);
 
     func_threejs_animation();
 }
 
 function func_threejs_resize() {
-    wItemSphere = $('#fullpage .screen.light .content .item').width();
-    hItemSphere = wItemSphere;
-    console.log('w = ' + wItemSphere);
-    console.log('h = ' + hItemSphere);
-    $('#sphere').height(hItemSphere);
-    cameraSphere.aspect = wItemSphere / hItemSphere;
+    wItemFigure = $('#fullpage .screen.light .content .item').width();
+    hItemFigure = wItemFigure;
+    $('#fullpage .screen.light .content .item div').height(hItemFigure);
+
+    cameraSphere.aspect = wItemFigure / hItemFigure;
     cameraSphere.updateProjectionMatrix();
-    rendererSphere.setSize( wItemSphere - paddingFigure*2, hItemSphere - paddingFigure*2 );
-    $('#fullpage .screen.light .content .item #sphere canvas').css('margin-top', paddingFigure*2 + 'px' );
+    rendererSphere.setSize( wItemFigure - paddingFigure*2, hItemFigure - paddingFigure*2 );
+
+    cameraPoly.aspect = wItemFigure / hItemFigure;
+    cameraPoly.updateProjectionMatrix();
+    rendererPoly.setSize( wItemFigure - paddingFigure*2, hItemFigure - paddingFigure*2 );
+
+    cameraCube.aspect = wItemFigure / hItemFigure;
+    cameraCube.updateProjectionMatrix();
+    rendererCube.setSize( wItemFigure - paddingFigure*2, hItemFigure - paddingFigure*2 );
 }
 
 function func_threejs_animation() {
-    requestAnimationFrame(func_threejs_animation);
+    requestAnimationFrame( func_threejs_animation );
 
-    sphere.rotation.x += 0.002;
-    sphere.rotation.y += 0.002;
-    sphere.rotation.z += 0.002;
+    // console.log('x = ' + sphere.rotation.x);
+    // console.log('y = ' + sphere.rotation.y);
 
-//            cube.rotation.x += 0.005;
-//            cube.rotation.y += 0.005;
-//            cube.rotation.z += 0.005;
-//
-//            poly.rotation.x += 0.005;
-//            poly.rotation.y += 0.005;
-//            poly.rotation.z += 0.005;
-//
+    if( isOverSphere ){
+        sphere.rotation.x += mouseYSphere*0.00008;
+        sphere.rotation.y += mouseXSphere*0.00008;
+    }
+    else{
+        sphere.rotation.x += 0.001;
+        sphere.rotation.y += 0.001;
+        sphere.rotation.z += 0.001;
+    }
+
+    if( isOverPoly ){
+        poly.rotation.x += mouseYPoly*0.00008;
+        poly.rotation.y += mouseXPoly*0.00008;
+    }
+    else{
+        poly.rotation.x += 0.001;
+        poly.rotation.y += 0.001;
+        poly.rotation.z += 0.001;
+    }
+
+    if( isOverCube ){
+        cube.rotation.x += mouseYCube*0.00008;
+        cube.rotation.y += mouseXCube*0.00008;
+    }
+    else{
+        cube.rotation.x += 0.001;
+        cube.rotation.y += 0.001;
+        cube.rotation.z += 0.001;
+    }
+
+
 //            cylinder.rotation.y += 180/Math.PI*0.00001;
 //            cylinder.rotation.z += 180/Math.PI*0.00001;
 //            cylinder.position.y += 0.5;
 
     rendererSphere.render(sceneSphere,cameraSphere);
-    containerSphere.appendChild(rendererSphere.domElement);
+    rendererPoly.render(scenePoly,cameraPoly);
+    rendererCube.render(sceneCube,cameraCube);
 }
 
 function animate_to_position(position) {
@@ -302,18 +382,91 @@ function animate_to_position(position) {
             return false;
         });
 
+        $('#sphere').on('mousemove', function (e) {
+            mouseXSphere = e.offsetX;
+            mouseYSphere = e.offsetY;
+            // console.log('oldX = ' + oldX + ' | oldY = ' + oldY + ' | mX = ' + mouseX + ' | mY = ' + mouseY + ' | dX = ' + deltaX + ' | dY = ' + deltaY);
+            // deltaX = oldX - mouseX;
+            // deltaY = oldY - mouseY;
+            // oldX = mouseX;
+            // oldY = mouseY;
+        });
+        $('#poly').on('mousemove', function (e) {
+            mouseXPoly = e.offsetX;
+            mouseYPoly = e.offsetY;
+        });
+        $('#cube').on('mousemove', function (e) {
+            mouseXCube = e.offsetX;
+            mouseYCube = e.offsetY;
+        });
+
+        $( "#sphere" )
+            .mouseenter(function() {
+                if(isOverSphere){
+                    // deltaX += (mouseX - oldX);
+                    // deltaY += (mouseY - oldY);
+                }
+                else{
+                    isOverSphere = true;
+                    // deltaX = 0;
+                    // deltaY = 0;
+                }
+                // oldX = mouseX;
+                // oldY = mouseY;
+            })
+            .mouseleave(function() {
+                isOverSphere = false;
+                // deltaX = 0;
+                // deltaY = 0;
+            });
+
+        $( "#poly" )
+            .mouseenter(function() {
+                if(isOverPoly){
+                    // deltaX += (mouseX - oldX);
+                    // deltaY += (mouseY - oldY);
+                }
+                else{
+                    isOverPoly = true;
+                    // deltaX = 0;
+                    // deltaY = 0;
+                }
+                // oldX = mouseX;
+                // oldY = mouseY;
+            })
+            .mouseleave(function() {
+                isOverPoly = false;
+                // deltaX = 0;
+                // deltaY = 0;
+            });
+        $( "#cube" )
+            .mouseenter(function() {
+                if(isOverCube){
+                    // deltaX += (mouseX - oldX);
+                    // deltaY += (mouseY - oldY);
+                }
+                else{
+                    isOverCube = true;
+                    // deltaX = 0;
+                    // deltaY = 0;
+                }
+                // oldX = mouseX;
+                // oldY = mouseY;
+            })
+            .mouseleave(function() {
+                isOverCube = false;
+                // deltaX = 0;
+                // deltaY = 0;
+            });
+
         $( window ).resize(function() {
             func_test_size();
             if ($('#fullpage').length) {
-                // $.fn.fullpage.destroy('all');
-                // $.fn.fullpage.reBuild();
-                // func_fullpage_init();
-                $('#fullpage').fullpage.reBuild();
                 if($('#button-toggle').hasClass('open')){
-                    fullpage_api.setAllowScrolling(true, 'all');
+                    fullpage_api.setAllowScrolling(false, 'all');
                 }
                 else{
-                    fullpage_api.setAllowScrolling(false, 'all');
+                    fullpage_api.setAllowScrolling(true, 'all');
                 }
             }
             if ((wwin >= 1200) && ($('#button-toggle').hasClass("open"))) {
@@ -326,9 +479,7 @@ function animate_to_position(position) {
         $( document ).ready(function(){
             func_test_size();
             func_init();
-            func_fullpage_init();
             func_unitegallery_init();
-            func_threejs_init();
         });
 
     })
