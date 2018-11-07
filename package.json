@@ -29,6 +29,7 @@
         "masonry-layout": "^4.2.2",
         "popper.js": "^1.14.4",
         "scrollmagic": "^2.0.5",
+        "three": "^0.98.0",
         "unitegallery": "^1.7.28"
     }
 }

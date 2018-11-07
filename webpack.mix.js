@@ -24,7 +24,8 @@ mix
         'public/js/app.js',
         'public/plagins/unitegallery/unitegallery.js',
         'public/plagins/unitegallery/ug-theme-tiles.js',
-        'public/js/custom.js'
+        'public/js/custom.js',
+        'public/js/custom-three.js'
         ],
         'public/js/all.js')
 
