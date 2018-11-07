@@ -31,6 +31,9 @@
 
             @include('components.contentMobile')
 
+            {{--sphere - шар--}}
+            {{--poly   - многоугольник--}}
+            {{--cube   - куб--}}
             <div class="container content">
                 <div class="row">
                     <div class="col-lg-12 col-xl-4 item">

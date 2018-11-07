@@ -25,12 +25,21 @@ function func_threejs_init() {
     heightFigure = widthFigure;
     $('#fullpage .screen.light .content .item div').height(heightFigure);
 
-    arrayFigure[0].name = 'sphere';
-    arrayFigure[0].geometry = new THREE.SphereGeometry( 100, 8, 6 );
-    arrayFigure[1].name = 'poly';
-    arrayFigure[1].geometry = new THREE.IcosahedronGeometry(100);
-    arrayFigure[2].name = 'cube';
-    arrayFigure[2].geometry = new THREE.CubeGeometry(100,100,100,4,4,4);
+    $('#fullpage .screen.light .content .item div').each(function(i,elem) {
+        var idFigure = elem.id;
+        arrayFigure[i].name = idFigure;
+        switch (idFigure){
+            case 'sphere':
+                arrayFigure[i].geometry = new THREE.SphereGeometry( 100, 8, 6 );
+                break;
+            case 'poly':
+                arrayFigure[i].geometry = new THREE.IcosahedronGeometry(100);
+                break;
+            case 'cube':
+                arrayFigure[i].geometry = new THREE.BoxGeometry(100,100,100,4,4,4);
+                break;
+        }
+    });
 
     arrayFigure.forEach(function(item, i, arrayFigure) {
         arrayFigure[i].scene = new THREE.Scene();
@@ -93,16 +102,8 @@ function func_threejs_animation() {
     $(function() {
 
         if ($('#fullpage').length) {
-            arrayFigure[0].name = 'sphere';
-            arrayFigure[1].name = 'poly';
-            arrayFigure[2].name = 'cube';
+            func_threejs_init();
         }
-
-        $( document ).ready(function(){
-            if ($('#fullpage').length) {
-                func_threejs_init();
-            }
-        });
 
         $( window ).resize(function() {
             if ($('#fullpage').length) {
@@ -115,7 +116,7 @@ function func_threejs_animation() {
             $( '#' + arrayFigure[i].name )
                 .mousemove(function (e) {
                     arrayFigure[i].mouseX = e.offsetX;
-                    arrayFigure[i].mouseY = e.offsetX;
+                    arrayFigure[i].mouseY = e.offsetY;
                 })
                 .mouseenter(function () {
                     arrayFigure[i].isOver = '1';
