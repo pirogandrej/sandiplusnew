@@ -94794,7 +94794,7 @@ function UGTheme_tiles(){
 	
 }
 
-//custom.js
+//custom.js ------------------------------
 
 var wwin;
 var hwin;
@@ -95023,6 +95023,8 @@ function animate_to_position(position) {
     })
 })(jQuery);
 
+
+//custom-three.js
 
 var bgColorFigure = '#ffffff';
 var paddingFigure = 35;
