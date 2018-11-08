@@ -1,3 +1,5 @@
+//custom-three.js
+
 var bgColorFigure = '#ffffff';
 var paddingFigure = 35;
 var widthFigure;
