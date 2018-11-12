@@ -77,47 +77,57 @@ function func_threejs_init() {
                 // arrayFigure[i].mesh.renderOrder = 1;
                 // arrayFigure[i].scene.add( arrayFigure[i].mesh );
 
-
-
-
-
-
-
-
-
-
-
-
-
                 arrayFigure[i].scene = new THREE.Scene();
                 arrayFigure[i].scene.background = new THREE.Color( bgColorFigure );
                 arrayFigure[i].camera = new THREE.PerspectiveCamera(40, widthFigure/heightFigure , 0.1, 1000);
-                arrayFigure[i].camera.position.set( 0, 0, 50);
+                arrayFigure[i].camera.position.set( 0, 0, 350);
                 arrayFigure[i].renderer = new THREE.WebGLRenderer({ antialias: true });
                 arrayFigure[i].renderer.setSize( widthFigure - paddingFigure*2 ,heightFigure - paddingFigure*2);
                 arrayFigure[i].container = document.getElementById(arrayFigure[i].name);
                 arrayFigure[i].container.appendChild( arrayFigure[i].renderer.domElement );
 
-                arrayFigure[i].controls = new THREE.OrbitControls(arrayFigure[i].camera, arrayFigure[i].renderer.domElement);
+                // arrayFigure[i].controls = new THREE.OrbitControls(arrayFigure[i].camera, arrayFigure[i].renderer.domElement);
 
                 arrayFigure[i].light = new THREE.DirectionalLight( 0xffffff, 1);
                 arrayFigure[i].light.position.set(100, 100, 100);
                 arrayFigure[i].scene.add(arrayFigure[i].light);
-                arrayFigure[i].ambLight = new THREE.AmbientLight( 0x909090);
+
+                arrayFigure[i].ambLight = new THREE.AmbientLight( 0xffffff);
                 arrayFigure[i].scene.add(arrayFigure[i].ambLight);
 
-                arrayFigure[i].dodecahedronGeom = new THREE.DodecahedronGeometry(10);
-                arrayFigure[i].dodecahedron = new THREE.Mesh(arrayFigure[i].dodecahedronGeom, new THREE.MeshLambertMaterial({color: "white", transparent: true, opacity: .75}));
+
+
+
+                // var verticesOfCube = [
+                //     -1,-1,-1,    1,-1,-1,    1, 1,-1,    -1, 1,-1,
+                //     -1,-1, 1,    1,-1, 1,    1, 1, 1,    -1, 1, 1,
+                // ];
+                //
+                // var indicesOfFaces = [
+                //     2,1,0,    0,3,2,
+                //     0,4,7,    7,3,0,
+                //     0,1,5,    5,4,0,
+                //     1,2,6,    6,5,1,
+                //     2,3,7,    7,6,2,
+                //     4,5,6,    6,7,4
+                // ];
+                //
+                // arrayFigure[i].dodecahedronGeom = new THREE.PolyhedronGeometry( verticesOfCube, indicesOfFaces, 100, 2 );
+
+                arrayFigure[i].dodecahedronGeom = new THREE.SphereGeometry( 100, 10, 8 );
+                // arrayFigure[i].dodecahedronGeom = new THREE.DodecahedronGeometry(100);
+
+                arrayFigure[i].dodecahedron = new THREE.Mesh(arrayFigure[i].dodecahedronGeom, new THREE.MeshLambertMaterial({color: "white", transparent: true, opacity: .6}));
                 arrayFigure[i].scene.add(arrayFigure[i].dodecahedron);
+
                 arrayFigure[i].edgesGeom = new THREE.EdgesGeometry(arrayFigure[i].dodecahedronGeom);
-                console.log(arrayFigure[i].edgesGeom);
-                arrayFigure[i].edges = new THREE.LineSegments(arrayFigure[i].edgesGeom, new THREE.LineBasicMaterial({color: "red"}));
+                arrayFigure[i].edges = new THREE.LineSegments(arrayFigure[i].edgesGeom, new THREE.LineBasicMaterial({color: "0x000000"}));
                 arrayFigure[i].scene.add(arrayFigure[i].edges);
 
-                arrayFigure[i].thickness = 0.25;
+                arrayFigure[i].thickness = 0.4;
 
                 for (var l = 0; l < arrayFigure[i].edgesGeom.attributes.position.count; l++){
-                    arrayFigure[i].sphere = new THREE.Mesh(new THREE.SphereBufferGeometry(arrayFigure[i].thickness * 2, 16,8), new THREE.MeshStandardMaterial({color: "red"}));
+                    arrayFigure[i].sphere = new THREE.Mesh(new THREE.SphereBufferGeometry(arrayFigure[i].thickness * 4, 16, 8), new THREE.MeshStandardMaterial({color: "black"}));
                     arrayFigure[i].sphere.position.set(
                         arrayFigure[i].edgesGeom.attributes.position.array[(l * 3) + 0],
                         arrayFigure[i].edgesGeom.attributes.position.array[(l * 3) + 1],
@@ -143,7 +153,7 @@ function func_threejs_init() {
                     arrayFigure[i].cylGeom = new THREE.CylinderBufferGeometry(arrayFigure[i].thickness, arrayFigure[i].thickness, arrayFigure[i].cylLength, 16);
                     arrayFigure[i].cylGeom.translate(0, arrayFigure[i].cylLength / 2, 0);
                     arrayFigure[i].cylGeom.rotateX(Math.PI / 2);
-                    arrayFigure[i].cyl = new THREE.Mesh(arrayFigure[i].cylGeom, new THREE.MeshLambertMaterial({color: "blue"}));
+                    arrayFigure[i].cyl = new THREE.Mesh(arrayFigure[i].cylGeom, new THREE.MeshLambertMaterial({color: "black"}));
                     arrayFigure[i].cyl.position.copy(arrayFigure[i].startPoint);
                     arrayFigure[i].cyl.lookAt(arrayFigure[i].endPoint);
                     arrayFigure[i].scene.add(arrayFigure[i].cyl);
@@ -155,31 +165,96 @@ function func_threejs_init() {
             case 'poly':
 
                 // arrayFigure[i].geometry = new THREE.IcosahedronGeometry(100);
-
-                arrayFigure[i].scene = new THREE.Scene();
-                arrayFigure[i].scene.background = new THREE.Color( bgColorFigure );
-                arrayFigure[i].camera = new THREE.PerspectiveCamera(45, widthFigure/heightFigure , 0.1, 1000);
-                arrayFigure[i].camera.position.z = 600;
-                arrayFigure[i].renderer = new THREE.WebGLRenderer();
-                arrayFigure[i].renderer.setSize( widthFigure - paddingFigure*2 ,heightFigure - paddingFigure*2);
-                arrayFigure[i].container = document.getElementById(arrayFigure[i].name);
-                arrayFigure[i].container.appendChild( arrayFigure[i].renderer.domElement );
-
-                arrayFigure[i].geometry = new THREE.PlaneGeometry(200, 200, 200,100);
-
-                arrayFigure[i].material = new THREE.MeshLambertMaterial({color:0xff0000,opacity:0.2,transparent:true,overdraw:0.5});
-
+                //
+                // arrayFigure[i].scene = new THREE.Scene();
+                // arrayFigure[i].scene.background = new THREE.Color( bgColorFigure );
+                // arrayFigure[i].camera = new THREE.PerspectiveCamera(45, widthFigure/heightFigure , 0.1, 1000);
+                // arrayFigure[i].camera.position.z = 300;
+                // arrayFigure[i].renderer = new THREE.WebGLRenderer();
+                // arrayFigure[i].renderer.setSize( widthFigure - paddingFigure*2 ,heightFigure - paddingFigure*2);
+                // arrayFigure[i].container = document.getElementById(arrayFigure[i].name);
+                // arrayFigure[i].container.appendChild( arrayFigure[i].renderer.domElement );
+                //
+                // // arrayFigure[i].geometry = new THREE.PlaneGeometry(200, 200, 200,100);
+                //
+                // // arrayFigure[i].material = new THREE.MeshLambertMaterial({color:0xff0000,opacity:0.2,transparent:true,overdraw:0.5});
+                //
                 // arrayFigure[i].material =
                 //     new THREE.MeshBasicMaterial({
                 //         color: 0x888888,
                 //         wireframe: true
                 //     });
                 //
+                //
+                // arrayFigure[i].mesh = new THREE.Mesh(arrayFigure[i].geometry, arrayFigure[i].material);
+                //
+                // arrayFigure[i].mesh.position.x = 0;
+                // arrayFigure[i].scene.add( arrayFigure[i].mesh );
 
-                arrayFigure[i].mesh = new THREE.Mesh(arrayFigure[i].geometry, arrayFigure[i].material);
+                arrayFigure[i].scene = new THREE.Scene();
+                arrayFigure[i].scene.background = new THREE.Color( bgColorFigure );
+                arrayFigure[i].camera = new THREE.PerspectiveCamera(40, widthFigure/heightFigure , 0.1, 1000);
+                arrayFigure[i].camera.position.set( 0, 0, 350);
+                arrayFigure[i].renderer = new THREE.WebGLRenderer({ antialias: true });
+                arrayFigure[i].renderer.setSize( widthFigure - paddingFigure*2 ,heightFigure - paddingFigure*2);
+                arrayFigure[i].container = document.getElementById(arrayFigure[i].name);
+                arrayFigure[i].container.appendChild( arrayFigure[i].renderer.domElement );
 
-                arrayFigure[i].mesh.position.x = 0;
-                arrayFigure[i].scene.add( arrayFigure[i].mesh );
+                // arrayFigure[i].controls = new THREE.OrbitControls(arrayFigure[i].camera, arrayFigure[i].renderer.domElement);
+
+                arrayFigure[i].light = new THREE.DirectionalLight( 0xffffff, 1);
+                arrayFigure[i].light.position.set(100, 100, 100);
+                arrayFigure[i].scene.add(arrayFigure[i].light);
+
+                arrayFigure[i].ambLight = new THREE.AmbientLight( 0xffffff);
+                arrayFigure[i].scene.add(arrayFigure[i].ambLight);
+
+                arrayFigure[i].dodecahedronGeom = new THREE.IcosahedronGeometry(100);
+                // arrayFigure[i].dodecahedronGeom = new THREE.DodecahedronGeometry(100);
+
+                arrayFigure[i].dodecahedron = new THREE.Mesh(arrayFigure[i].dodecahedronGeom, new THREE.MeshLambertMaterial({color: "white", transparent: true, opacity: .6}));
+                arrayFigure[i].scene.add(arrayFigure[i].dodecahedron);
+
+                arrayFigure[i].edgesGeom = new THREE.EdgesGeometry(arrayFigure[i].dodecahedronGeom);
+                arrayFigure[i].edges = new THREE.LineSegments(arrayFigure[i].edgesGeom, new THREE.LineBasicMaterial({color: "0x000000"}));
+                arrayFigure[i].scene.add(arrayFigure[i].edges);
+
+                arrayFigure[i].thickness = 0.4;
+
+                for (var l = 0; l < arrayFigure[i].edgesGeom.attributes.position.count; l++){
+                    arrayFigure[i].sphere = new THREE.Mesh(new THREE.SphereBufferGeometry(arrayFigure[i].thickness * 4, 16, 8), new THREE.MeshStandardMaterial({color: "black"}));
+                    arrayFigure[i].sphere.position.set(
+                        arrayFigure[i].edgesGeom.attributes.position.array[(l * 3) + 0],
+                        arrayFigure[i].edgesGeom.attributes.position.array[(l * 3) + 1],
+                        arrayFigure[i].edgesGeom.attributes.position.array[(l * 3) + 2]
+                    );
+                    arrayFigure[i].scene.add(arrayFigure[i].sphere);
+                }
+
+                for (var k = 0; k < arrayFigure[i].edgesGeom.attributes.position.count - 1; k+=2){
+
+                    arrayFigure[i].startPoint = new THREE.Vector3(
+                        arrayFigure[i].edgesGeom.attributes.position.array[k * 3 + 0],
+                        arrayFigure[i].edgesGeom.attributes.position.array[k * 3 + 1],
+                        arrayFigure[i].edgesGeom.attributes.position.array[k * 3 + 2]
+                    );
+                    arrayFigure[i].endPoint = new THREE.Vector3(
+                        arrayFigure[i].edgesGeom.attributes.position.array[k * 3 + 3],
+                        arrayFigure[i].edgesGeom.attributes.position.array[k * 3 + 4],
+                        arrayFigure[i].edgesGeom.attributes.position.array[k * 3 + 5]
+                    );
+
+                    arrayFigure[i].cylLength = new THREE.Vector3().subVectors(arrayFigure[i].endPoint, arrayFigure[i].startPoint).length();
+                    arrayFigure[i].cylGeom = new THREE.CylinderBufferGeometry(arrayFigure[i].thickness, arrayFigure[i].thickness, arrayFigure[i].cylLength, 16);
+                    arrayFigure[i].cylGeom.translate(0, arrayFigure[i].cylLength / 2, 0);
+                    arrayFigure[i].cylGeom.rotateX(Math.PI / 2);
+                    arrayFigure[i].cyl = new THREE.Mesh(arrayFigure[i].cylGeom, new THREE.MeshLambertMaterial({color: "black"}));
+                    arrayFigure[i].cyl.position.copy(arrayFigure[i].startPoint);
+                    arrayFigure[i].cyl.lookAt(arrayFigure[i].endPoint);
+                    arrayFigure[i].scene.add(arrayFigure[i].cyl);
+                }
+
+
 
                 break;
 
@@ -251,7 +326,7 @@ function func_threejs_init() {
                 arrayFigure[i].scene = new THREE.Scene();
                 arrayFigure[i].scene.background = new THREE.Color( bgColorFigure );
                 arrayFigure[i].camera = new THREE.PerspectiveCamera(45, widthFigure/heightFigure , 0.1, 1000);
-                arrayFigure[i].camera.position.z = 250;
+                arrayFigure[i].camera.position.z = 220;
                 arrayFigure[i].renderer = new THREE.WebGLRenderer();
                 arrayFigure[i].renderer.setSize( widthFigure - paddingFigure*2 ,heightFigure - paddingFigure*2);
                 arrayFigure[i].container = document.getElementById(arrayFigure[i].name);
@@ -309,7 +384,7 @@ function func_threejs_animation() {
                 arrayFigure[i].scene.rotation.y += arrayFigure[i].mouseX*0.00008;
             }
             if( arrayFigure[i].name == 'cube' ){
-                arrayFigure[i].scene.rotation.x += arrayFigure[i].mouseY*0.00008;
+                // arrayFigure[i].scene.rotation.x += arrayFigure[i].mouseY*0.00008;
                 arrayFigure[i].scene.rotation.y += arrayFigure[i].mouseX*0.00008;
             }
         }
@@ -325,9 +400,9 @@ function func_threejs_animation() {
                 arrayFigure[i].scene.rotation.z += 0.0025;
             }
             if( arrayFigure[i].name == 'cube' ){
-                arrayFigure[i].scene.rotation.x += 0.0025;
+                // arrayFigure[i].scene.rotation.x += 0.0025;
                 arrayFigure[i].scene.rotation.y += 0.0025;
-                arrayFigure[i].scene.rotation.z += 0.0025;
+                // arrayFigure[i].scene.rotation.z += 0.0025;
             }
         }
 
