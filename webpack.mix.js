@@ -24,6 +24,9 @@ mix
         'public/js/app.js',
         'public/plagins/unitegallery/unitegallery.js',
         'public/plagins/unitegallery/ug-theme-tiles.js',
+        'public/plagins/threejs/ConvexGeometry.js',
+        'public/plagins/threejs/QuickHull.js',
+        'public/plagins/threejs/OrbitControls.js',
         'public/js/custom.js',
         'public/js/custom-three.js'
         ],

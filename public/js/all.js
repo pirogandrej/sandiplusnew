@@ -94794,6 +94794,2358 @@ function UGTheme_tiles(){
 	
 }
 
+/**
+ * @author Mugen87 / https://github.com/Mugen87
+ */
+
+( function () {
+
+	// ConvexGeometry
+
+	function ConvexGeometry( points ) {
+
+		THREE.Geometry.call( this );
+
+		this.fromBufferGeometry( new ConvexBufferGeometry( points ) );
+		this.mergeVertices();
+
+	}
+
+	ConvexGeometry.prototype = Object.create( THREE.Geometry.prototype );
+	ConvexGeometry.prototype.constructor = ConvexGeometry;
+
+	// ConvexBufferGeometry
+
+	function ConvexBufferGeometry( points ) {
+
+		THREE.BufferGeometry.call( this );
+
+		// buffers
+
+		var vertices = [];
+		var normals = [];
+
+		// execute QuickHull
+
+		if ( THREE.QuickHull === undefined ) {
+
+			console.error( 'THREE.ConvexBufferGeometry: ConvexBufferGeometry relies on THREE.QuickHull' );
+
+		}
+
+		var quickHull = new THREE.QuickHull().setFromPoints( points );
+
+		// generate vertices and normals
+
+		var faces = quickHull.faces;
+
+		for ( var i = 0; i < faces.length; i ++ ) {
+
+			var face = faces[ i ];
+			var edge = face.edge;
+
+			// we move along a doubly-connected edge list to access all face points (see HalfEdge docs)
+
+			do {
+
+				var point = edge.head().point;
+
+				vertices.push( point.x, point.y, point.z );
+				normals.push( face.normal.x, face.normal.y, face.normal.z );
+
+				edge = edge.next;
+
+			} while ( edge !== face.edge );
+
+		}
+
+		// build geometry
+
+		this.addAttribute( 'position', new THREE.Float32BufferAttribute( vertices, 3 ) );
+		this.addAttribute( 'normal', new THREE.Float32BufferAttribute( normals, 3 ) );
+
+	}
+
+	ConvexBufferGeometry.prototype = Object.create( THREE.BufferGeometry.prototype );
+	ConvexBufferGeometry.prototype.constructor = ConvexBufferGeometry;
+
+	// export
+
+	THREE.ConvexGeometry = ConvexGeometry;
+	THREE.ConvexBufferGeometry = ConvexBufferGeometry;
+
+} )();
+
+/**
+ * @author Mugen87 / https://github.com/Mugen87
+ *
+ * Ported from: https://github.com/maurizzzio/quickhull3d/ by Mauricio Poppe (https://github.com/maurizzzio)
+ *
+ */
+
+( function () {
+
+	var Visible = 0;
+	var Deleted = 1;
+
+	function QuickHull() {
+
+		this.tolerance = - 1;
+
+		this.faces = []; // the generated faces of the convex hull
+		this.newFaces = []; // this array holds the faces that are generated within a single iteration
+
+		// the vertex lists work as follows:
+		//
+		// let 'a' and 'b' be 'Face' instances
+		// let 'v' be points wrapped as instance of 'Vertex'
+		//
+		//     [v, v, ..., v, v, v, ...]
+		//      ^             ^
+		//      |             |
+		//  a.outside     b.outside
+		//
+		this.assigned = new VertexList();
+		this.unassigned = new VertexList();
+
+		this.vertices = []; 	// vertices of the hull (internal representation of given geometry data)
+
+	}
+
+	Object.assign( QuickHull.prototype, {
+
+		setFromPoints: function ( points ) {
+
+			if ( Array.isArray( points ) !== true ) {
+
+				console.error( 'THREE.QuickHull: Points parameter is not an array.' );
+
+			}
+
+			if ( points.length < 4 ) {
+
+				console.error( 'THREE.QuickHull: The algorithm needs at least four points.' );
+
+			}
+
+			this.makeEmpty();
+
+			for ( var i = 0, l = points.length; i < l; i ++ ) {
+
+				this.vertices.push( new VertexNode( points[ i ] ) );
+
+			}
+
+			this.compute();
+
+			return this;
+
+		},
+
+		setFromObject: function ( object ) {
+
+			var points = [];
+
+			object.updateMatrixWorld( true );
+
+			object.traverse( function ( node ) {
+
+				var i, l, point;
+
+				var geometry = node.geometry;
+
+				if ( geometry !== undefined ) {
+
+					if ( geometry.isGeometry ) {
+
+						var vertices = geometry.vertices;
+
+						for ( i = 0, l = vertices.length; i < l; i ++ ) {
+
+							point = vertices[ i ].clone();
+							point.applyMatrix4( node.matrixWorld );
+
+							points.push( point );
+
+						}
+
+					} else if ( geometry.isBufferGeometry ) {
+
+						var attribute = geometry.attributes.position;
+
+						if ( attribute !== undefined ) {
+
+							for ( i = 0, l = attribute.count; i < l; i ++ ) {
+
+								point = new THREE.Vector3();
+
+								point.fromBufferAttribute( attribute, i ).applyMatrix4( node.matrixWorld );
+
+								points.push( point );
+
+							}
+
+						}
+
+					}
+
+				}
+
+			} );
+
+			return this.setFromPoints( points );
+
+		},
+
+		makeEmpty: function () {
+
+			this.faces = [];
+			this.vertices = [];
+
+			return this;
+
+		},
+
+		// Adds a vertex to the 'assigned' list of vertices and assigns it to the given face
+
+		addVertexToFace: function ( vertex, face ) {
+
+			vertex.face = face;
+
+			if ( face.outside === null ) {
+
+				this.assigned.append( vertex );
+
+			} else {
+
+				this.assigned.insertBefore( face.outside, vertex );
+
+			}
+
+			face.outside = vertex;
+
+			return this;
+
+		},
+
+		// Removes a vertex from the 'assigned' list of vertices and from the given face
+
+		removeVertexFromFace: function ( vertex, face ) {
+
+			if ( vertex === face.outside ) {
+
+				// fix face.outside link
+
+				if ( vertex.next !== null && vertex.next.face === face ) {
+
+					// face has at least 2 outside vertices, move the 'outside' reference
+
+					face.outside = vertex.next;
+
+				} else {
+
+					// vertex was the only outside vertex that face had
+
+					face.outside = null;
+
+				}
+
+			}
+
+			this.assigned.remove( vertex );
+
+			return this;
+
+		},
+
+		// Removes all the visible vertices that a given face is able to see which are stored in the 'assigned' vertext list
+
+		removeAllVerticesFromFace: function ( face ) {
+
+			if ( face.outside !== null ) {
+
+				// reference to the first and last vertex of this face
+
+				var start = face.outside;
+				var end = face.outside;
+
+				while ( end.next !== null && end.next.face === face ) {
+
+					end = end.next;
+
+				}
+
+				this.assigned.removeSubList( start, end );
+
+				// fix references
+
+				start.prev = end.next = null;
+				face.outside = null;
+
+				return start;
+
+			}
+
+		},
+
+		// Removes all the visible vertices that 'face' is able to see
+
+		deleteFaceVertices: function ( face, absorbingFace ) {
+
+			var faceVertices = this.removeAllVerticesFromFace( face );
+
+			if ( faceVertices !== undefined ) {
+
+				if ( absorbingFace === undefined ) {
+
+					// mark the vertices to be reassigned to some other face
+
+					this.unassigned.appendChain( faceVertices );
+
+
+				} else {
+
+					// if there's an absorbing face try to assign as many vertices as possible to it
+
+					var vertex = faceVertices;
+
+					do {
+
+						// we need to buffer the subsequent vertex at this point because the 'vertex.next' reference
+						// will be changed by upcoming method calls
+
+						var nextVertex = vertex.next;
+
+						var distance = absorbingFace.distanceToPoint( vertex.point );
+
+						// check if 'vertex' is able to see 'absorbingFace'
+
+						if ( distance > this.tolerance ) {
+
+							this.addVertexToFace( vertex, absorbingFace );
+
+						} else {
+
+							this.unassigned.append( vertex );
+
+						}
+
+						// now assign next vertex
+
+						vertex = nextVertex;
+
+					} while ( vertex !== null );
+
+				}
+
+			}
+
+			return this;
+
+		},
+
+		// Reassigns as many vertices as possible from the unassigned list to the new faces
+
+		resolveUnassignedPoints: function ( newFaces ) {
+
+			if ( this.unassigned.isEmpty() === false ) {
+
+				var vertex = this.unassigned.first();
+
+				do {
+
+					// buffer 'next' reference, see .deleteFaceVertices()
+
+					var nextVertex = vertex.next;
+
+					var maxDistance = this.tolerance;
+
+					var maxFace = null;
+
+					for ( var i = 0; i < newFaces.length; i ++ ) {
+
+						var face = newFaces[ i ];
+
+						if ( face.mark === Visible ) {
+
+							var distance = face.distanceToPoint( vertex.point );
+
+							if ( distance > maxDistance ) {
+
+								maxDistance = distance;
+								maxFace = face;
+
+							}
+
+							if ( maxDistance > 1000 * this.tolerance ) break;
+
+						}
+
+					}
+
+					// 'maxFace' can be null e.g. if there are identical vertices
+
+					if ( maxFace !== null ) {
+
+						this.addVertexToFace( vertex, maxFace );
+
+					}
+
+					vertex = nextVertex;
+
+				} while ( vertex !== null );
+
+			}
+
+			return this;
+
+		},
+
+		// Computes the extremes of a simplex which will be the initial hull
+
+		computeExtremes: function () {
+
+			var min = new THREE.Vector3();
+			var max = new THREE.Vector3();
+
+			var minVertices = [];
+			var maxVertices = [];
+
+			var i, l, j;
+
+			// initially assume that the first vertex is the min/max
+
+			for ( i = 0; i < 3; i ++ ) {
+
+				minVertices[ i ] = maxVertices[ i ] = this.vertices[ 0 ];
+
+			}
+
+			min.copy( this.vertices[ 0 ].point );
+			max.copy( this.vertices[ 0 ].point );
+
+			// compute the min/max vertex on all six directions
+
+			for ( i = 0, l = this.vertices.length; i < l; i ++ ) {
+
+				var vertex = this.vertices[ i ];
+				var point = vertex.point;
+
+				// update the min coordinates
+
+				for ( j = 0; j < 3; j ++ ) {
+
+					if ( point.getComponent( j ) < min.getComponent( j ) ) {
+
+						min.setComponent( j, point.getComponent( j ) );
+						minVertices[ j ] = vertex;
+
+					}
+
+				}
+
+				// update the max coordinates
+
+				for ( j = 0; j < 3; j ++ ) {
+
+					if ( point.getComponent( j ) > max.getComponent( j ) ) {
+
+						max.setComponent( j, point.getComponent( j ) );
+						maxVertices[ j ] = vertex;
+
+					}
+
+				}
+
+			}
+
+			// use min/max vectors to compute an optimal epsilon
+
+			this.tolerance = 3 * Number.EPSILON * (
+				Math.max( Math.abs( min.x ), Math.abs( max.x ) ) +
+				Math.max( Math.abs( min.y ), Math.abs( max.y ) ) +
+				Math.max( Math.abs( min.z ), Math.abs( max.z ) )
+			);
+
+			return { min: minVertices, max: maxVertices };
+
+		},
+
+		// Computes the initial simplex assigning to its faces all the points
+		// that are candidates to form part of the hull
+
+		computeInitialHull: function () {
+
+			var line3, plane, closestPoint;
+
+			return function computeInitialHull() {
+
+				if ( line3 === undefined ) {
+
+					line3 = new THREE.Line3();
+					plane = new THREE.Plane();
+					closestPoint = new THREE.Vector3();
+
+				}
+
+				var vertex, vertices = this.vertices;
+				var extremes = this.computeExtremes();
+				var min = extremes.min;
+				var max = extremes.max;
+
+				var v0, v1, v2, v3;
+				var i, l, j;
+
+				// 1. Find the two vertices 'v0' and 'v1' with the greatest 1d separation
+				// (max.x - min.x)
+				// (max.y - min.y)
+				// (max.z - min.z)
+
+				var distance, maxDistance = 0;
+				var index = 0;
+
+				for ( i = 0; i < 3; i ++ ) {
+
+					distance = max[ i ].point.getComponent( i ) - min[ i ].point.getComponent( i );
+
+					if ( distance > maxDistance ) {
+
+						maxDistance = distance;
+						index = i;
+
+					}
+
+				}
+
+				v0 = min[ index ];
+				v1 = max[ index ];
+
+				// 2. The next vertex 'v2' is the one farthest to the line formed by 'v0' and 'v1'
+
+				maxDistance = 0;
+				line3.set( v0.point, v1.point );
+
+				for ( i = 0, l = this.vertices.length; i < l; i ++ ) {
+
+					vertex = vertices[ i ];
+
+					if ( vertex !== v0 && vertex !== v1 ) {
+
+						line3.closestPointToPoint( vertex.point, true, closestPoint );
+
+						distance = closestPoint.distanceToSquared( vertex.point );
+
+						if ( distance > maxDistance ) {
+
+							maxDistance = distance;
+							v2 = vertex;
+
+						}
+
+					}
+
+				}
+
+				// 3. The next vertex 'v3' is the one farthest to the plane 'v0', 'v1', 'v2'
+
+				maxDistance = - 1;
+				plane.setFromCoplanarPoints( v0.point, v1.point, v2.point );
+
+				for ( i = 0, l = this.vertices.length; i < l; i ++ ) {
+
+					vertex = vertices[ i ];
+
+					if ( vertex !== v0 && vertex !== v1 && vertex !== v2 ) {
+
+						distance = Math.abs( plane.distanceToPoint( vertex.point ) );
+
+						if ( distance > maxDistance ) {
+
+							maxDistance = distance;
+							v3 = vertex;
+
+						}
+
+					}
+
+				}
+
+				var faces = [];
+
+				if ( plane.distanceToPoint( v3.point ) < 0 ) {
+
+					// the face is not able to see the point so 'plane.normal' is pointing outside the tetrahedron
+
+					faces.push(
+						Face.create( v0, v1, v2 ),
+						Face.create( v3, v1, v0 ),
+						Face.create( v3, v2, v1 ),
+						Face.create( v3, v0, v2 )
+					);
+
+					// set the twin edge
+
+					for ( i = 0; i < 3; i ++ ) {
+
+						j = ( i + 1 ) % 3;
+
+						// join face[ i ] i > 0, with the first face
+
+						faces[ i + 1 ].getEdge( 2 ).setTwin( faces[ 0 ].getEdge( j ) );
+
+						// join face[ i ] with face[ i + 1 ], 1 <= i <= 3
+
+						faces[ i + 1 ].getEdge( 1 ).setTwin( faces[ j + 1 ].getEdge( 0 ) );
+
+					}
+
+				} else {
+
+					// the face is able to see the point so 'plane.normal' is pointing inside the tetrahedron
+
+					faces.push(
+						Face.create( v0, v2, v1 ),
+						Face.create( v3, v0, v1 ),
+						Face.create( v3, v1, v2 ),
+						Face.create( v3, v2, v0 )
+					);
+
+					// set the twin edge
+
+					for ( i = 0; i < 3; i ++ ) {
+
+						j = ( i + 1 ) % 3;
+
+						// join face[ i ] i > 0, with the first face
+
+						faces[ i + 1 ].getEdge( 2 ).setTwin( faces[ 0 ].getEdge( ( 3 - i ) % 3 ) );
+
+						// join face[ i ] with face[ i + 1 ]
+
+						faces[ i + 1 ].getEdge( 0 ).setTwin( faces[ j + 1 ].getEdge( 1 ) );
+
+					}
+
+				}
+
+				// the initial hull is the tetrahedron
+
+				for ( i = 0; i < 4; i ++ ) {
+
+					this.faces.push( faces[ i ] );
+
+				}
+
+				// initial assignment of vertices to the faces of the tetrahedron
+
+				for ( i = 0, l = vertices.length; i < l; i ++ ) {
+
+					vertex = vertices[ i ];
+
+					if ( vertex !== v0 && vertex !== v1 && vertex !== v2 && vertex !== v3 ) {
+
+						maxDistance = this.tolerance;
+						var maxFace = null;
+
+						for ( j = 0; j < 4; j ++ ) {
+
+							distance = this.faces[ j ].distanceToPoint( vertex.point );
+
+							if ( distance > maxDistance ) {
+
+								maxDistance = distance;
+								maxFace = this.faces[ j ];
+
+							}
+
+						}
+
+						if ( maxFace !== null ) {
+
+							this.addVertexToFace( vertex, maxFace );
+
+						}
+
+					}
+
+				}
+
+				return this;
+
+			};
+
+		}(),
+
+		// Removes inactive faces
+
+		reindexFaces: function () {
+
+			var activeFaces = [];
+
+			for ( var i = 0; i < this.faces.length; i ++ ) {
+
+				var face = this.faces[ i ];
+
+				if ( face.mark === Visible ) {
+
+					activeFaces.push( face );
+
+				}
+
+			}
+
+			this.faces = activeFaces;
+
+			return this;
+
+		},
+
+		// Finds the next vertex to create faces with the current hull
+
+		nextVertexToAdd: function () {
+
+			// if the 'assigned' list of vertices is empty, no vertices are left. return with 'undefined'
+
+			if ( this.assigned.isEmpty() === false ) {
+
+				var eyeVertex, maxDistance = 0;
+
+				// grap the first available face and start with the first visible vertex of that face
+
+				var eyeFace = this.assigned.first().face;
+				var vertex = eyeFace.outside;
+
+				// now calculate the farthest vertex that face can see
+
+				do {
+
+					var distance = eyeFace.distanceToPoint( vertex.point );
+
+					if ( distance > maxDistance ) {
+
+						maxDistance = distance;
+						eyeVertex = vertex;
+
+					}
+
+					vertex = vertex.next;
+
+				} while ( vertex !== null && vertex.face === eyeFace );
+
+				return eyeVertex;
+
+			}
+
+		},
+
+		// Computes a chain of half edges in CCW order called the 'horizon'.
+		// For an edge to be part of the horizon it must join a face that can see
+		// 'eyePoint' and a face that cannot see 'eyePoint'.
+
+		computeHorizon: function ( eyePoint, crossEdge, face, horizon ) {
+
+			// moves face's vertices to the 'unassigned' vertex list
+
+			this.deleteFaceVertices( face );
+
+			face.mark = Deleted;
+
+			var edge;
+
+			if ( crossEdge === null ) {
+
+				edge = crossEdge = face.getEdge( 0 );
+
+			} else {
+
+				// start from the next edge since 'crossEdge' was already analyzed
+				// (actually 'crossEdge.twin' was the edge who called this method recursively)
+
+				edge = crossEdge.next;
+
+			}
+
+			do {
+
+				var twinEdge = edge.twin;
+				var oppositeFace = twinEdge.face;
+
+				if ( oppositeFace.mark === Visible ) {
+
+					if ( oppositeFace.distanceToPoint( eyePoint ) > this.tolerance ) {
+
+						// the opposite face can see the vertex, so proceed with next edge
+
+						this.computeHorizon( eyePoint, twinEdge, oppositeFace, horizon );
+
+					} else {
+
+						// the opposite face can't see the vertex, so this edge is part of the horizon
+
+						horizon.push( edge );
+
+					}
+
+				}
+
+				edge = edge.next;
+
+			} while ( edge !== crossEdge );
+
+			return this;
+
+		},
+
+		// Creates a face with the vertices 'eyeVertex.point', 'horizonEdge.tail' and 'horizonEdge.head' in CCW order
+
+		addAdjoiningFace: function ( eyeVertex, horizonEdge ) {
+
+			// all the half edges are created in ccw order thus the face is always pointing outside the hull
+
+			var face = Face.create( eyeVertex, horizonEdge.tail(), horizonEdge.head() );
+
+			this.faces.push( face );
+
+			// join face.getEdge( - 1 ) with the horizon's opposite edge face.getEdge( - 1 ) = face.getEdge( 2 )
+
+			face.getEdge( - 1 ).setTwin( horizonEdge.twin );
+
+			return face.getEdge( 0 ); // the half edge whose vertex is the eyeVertex
+
+
+		},
+
+		//  Adds 'horizon.length' faces to the hull, each face will be linked with the
+		//  horizon opposite face and the face on the left/right
+
+		addNewFaces: function ( eyeVertex, horizon ) {
+
+			this.newFaces = [];
+
+			var firstSideEdge = null;
+			var previousSideEdge = null;
+
+			for ( var i = 0; i < horizon.length; i ++ ) {
+
+				var horizonEdge = horizon[ i ];
+
+				// returns the right side edge
+
+				var sideEdge = this.addAdjoiningFace( eyeVertex, horizonEdge );
+
+				if ( firstSideEdge === null ) {
+
+					firstSideEdge = sideEdge;
+
+				} else {
+
+					// joins face.getEdge( 1 ) with previousFace.getEdge( 0 )
+
+					sideEdge.next.setTwin( previousSideEdge );
+
+				}
+
+				this.newFaces.push( sideEdge.face );
+				previousSideEdge = sideEdge;
+
+			}
+
+			// perform final join of new faces
+
+			firstSideEdge.next.setTwin( previousSideEdge );
+
+			return this;
+
+		},
+
+		// Adds a vertex to the hull
+
+		addVertexToHull: function ( eyeVertex ) {
+
+			var horizon = [];
+
+			this.unassigned.clear();
+
+			// remove 'eyeVertex' from 'eyeVertex.face' so that it can't be added to the 'unassigned' vertex list
+
+			this.removeVertexFromFace( eyeVertex, eyeVertex.face );
+
+			this.computeHorizon( eyeVertex.point, null, eyeVertex.face, horizon );
+
+			this.addNewFaces( eyeVertex, horizon );
+
+			// reassign 'unassigned' vertices to the new faces
+
+			this.resolveUnassignedPoints( this.newFaces );
+
+			return	this;
+
+		},
+
+		cleanup: function () {
+
+			this.assigned.clear();
+			this.unassigned.clear();
+			this.newFaces = [];
+
+			return this;
+
+		},
+
+		compute: function () {
+
+			var vertex;
+
+			this.computeInitialHull();
+
+			// add all available vertices gradually to the hull
+
+			while ( ( vertex = this.nextVertexToAdd() ) !== undefined ) {
+
+				this.addVertexToHull( vertex );
+
+			}
+
+			this.reindexFaces();
+
+			this.cleanup();
+
+			return this;
+
+		}
+
+	} );
+
+	//
+
+	function Face() {
+
+		this.normal = new THREE.Vector3();
+		this.midpoint = new THREE.Vector3();
+		this.area = 0;
+
+		this.constant = 0; // signed distance from face to the origin
+		this.outside = null; // reference to a vertex in a vertex list this face can see
+		this.mark = Visible;
+		this.edge = null;
+
+	}
+
+	Object.assign( Face, {
+
+		create: function ( a, b, c ) {
+
+			var face = new Face();
+
+			var e0 = new HalfEdge( a, face );
+			var e1 = new HalfEdge( b, face );
+			var e2 = new HalfEdge( c, face );
+
+			// join edges
+
+			e0.next = e2.prev = e1;
+			e1.next = e0.prev = e2;
+			e2.next = e1.prev = e0;
+
+			// main half edge reference
+
+			face.edge = e0;
+
+			return face.compute();
+
+		}
+
+	} );
+
+	Object.assign( Face.prototype, {
+
+		getEdge: function ( i ) {
+
+			var edge = this.edge;
+
+			while ( i > 0 ) {
+
+				edge = edge.next;
+				i --;
+
+			}
+
+			while ( i < 0 ) {
+
+				edge = edge.prev;
+				i ++;
+
+			}
+
+			return edge;
+
+		},
+
+		compute: function () {
+
+			var triangle;
+
+			return function compute() {
+
+				if ( triangle === undefined ) triangle = new THREE.Triangle();
+
+				var a = this.edge.tail();
+				var b = this.edge.head();
+				var c = this.edge.next.head();
+
+				triangle.set( a.point, b.point, c.point );
+
+				triangle.getNormal( this.normal );
+				triangle.getMidpoint( this.midpoint );
+				this.area = triangle.getArea();
+
+				this.constant = this.normal.dot( this.midpoint );
+
+				return this;
+
+			};
+
+		}(),
+
+		distanceToPoint: function ( point ) {
+
+			return this.normal.dot( point ) - this.constant;
+
+		}
+
+	} );
+
+	// Entity for a Doubly-Connected Edge List (DCEL).
+
+	function HalfEdge( vertex, face ) {
+
+		this.vertex = vertex;
+		this.prev = null;
+		this.next = null;
+		this.twin = null;
+		this.face = face;
+
+	}
+
+	Object.assign( HalfEdge.prototype, {
+
+		head: function () {
+
+			return this.vertex;
+
+		},
+
+		tail: function () {
+
+			return this.prev ? this.prev.vertex : null;
+
+		},
+
+		length: function () {
+
+			var head = this.head();
+			var tail = this.tail();
+
+			if ( tail !== null ) {
+
+				return tail.point.distanceTo( head.point );
+
+			}
+
+			return - 1;
+
+		},
+
+		lengthSquared: function () {
+
+			var head = this.head();
+			var tail = this.tail();
+
+			if ( tail !== null ) {
+
+				return tail.point.distanceToSquared( head.point );
+
+			}
+
+			return - 1;
+
+		},
+
+		setTwin: function ( edge ) {
+
+			this.twin = edge;
+			edge.twin = this;
+
+			return this;
+
+		}
+
+	} );
+
+	// A vertex as a double linked list node.
+
+	function VertexNode( point ) {
+
+		this.point = point;
+		this.prev = null;
+		this.next = null;
+		this.face = null; // the face that is able to see this vertex
+
+	}
+
+	// A double linked list that contains vertex nodes.
+
+	function VertexList() {
+
+		this.head = null;
+		this.tail = null;
+
+	}
+
+	Object.assign( VertexList.prototype, {
+
+		first: function () {
+
+			return this.head;
+
+		},
+
+		last: function () {
+
+			return this.tail;
+
+		},
+
+		clear: function () {
+
+			this.head = this.tail = null;
+
+			return this;
+
+		},
+
+		// Inserts a vertex before the target vertex
+
+		insertBefore: function ( target, vertex ) {
+
+			vertex.prev = target.prev;
+			vertex.next = target;
+
+			if ( vertex.prev === null ) {
+
+				this.head = vertex;
+
+			} else {
+
+				vertex.prev.next = vertex;
+
+			}
+
+			target.prev = vertex;
+
+			return this;
+
+		},
+
+		// Inserts a vertex after the target vertex
+
+		insertAfter: function ( target, vertex ) {
+
+			vertex.prev = target;
+			vertex.next = target.next;
+
+			if ( vertex.next === null ) {
+
+				this.tail = vertex;
+
+			} else {
+
+				vertex.next.prev = vertex;
+
+			}
+
+			target.next = vertex;
+
+			return this;
+
+		},
+
+		// Appends a vertex to the end of the linked list
+
+		append: function ( vertex ) {
+
+			if ( this.head === null ) {
+
+				this.head = vertex;
+
+			} else {
+
+				this.tail.next = vertex;
+
+			}
+
+			vertex.prev = this.tail;
+			vertex.next = null; // the tail has no subsequent vertex
+
+			this.tail = vertex;
+
+			return this;
+
+		},
+
+		// Appends a chain of vertices where 'vertex' is the head.
+
+		appendChain: function ( vertex ) {
+
+			if ( this.head === null ) {
+
+				this.head = vertex;
+
+			} else {
+
+				this.tail.next = vertex;
+
+			}
+
+			vertex.prev = this.tail;
+
+			// ensure that the 'tail' reference points to the last vertex of the chain
+
+			while ( vertex.next !== null ) {
+
+				vertex = vertex.next;
+
+			}
+
+			this.tail = vertex;
+
+			return this;
+
+		},
+
+		// Removes a vertex from the linked list
+
+		remove: function ( vertex ) {
+
+			if ( vertex.prev === null ) {
+
+				this.head = vertex.next;
+
+			} else {
+
+				vertex.prev.next = vertex.next;
+
+			}
+
+			if ( vertex.next === null ) {
+
+				this.tail = vertex.prev;
+
+			} else {
+
+				vertex.next.prev = vertex.prev;
+
+			}
+
+			return this;
+
+		},
+
+		// Removes a list of vertices whose 'head' is 'a' and whose 'tail' is b
+
+		removeSubList: function ( a, b ) {
+
+			if ( a.prev === null ) {
+
+				this.head = b.next;
+
+			} else {
+
+				a.prev.next = b.next;
+
+			}
+
+			if ( b.next === null ) {
+
+				this.tail = a.prev;
+
+			} else {
+
+				b.next.prev = a.prev;
+
+			}
+
+			return this;
+
+		},
+
+		isEmpty: function () {
+
+			return this.head === null;
+
+		}
+
+	} );
+
+	// export
+
+	THREE.QuickHull = QuickHull;
+
+
+} )();
+
+/**
+ * @author qiao / https://github.com/qiao
+ * @author mrdoob / http://mrdoob.com
+ * @author alteredq / http://alteredqualia.com/
+ * @author WestLangley / http://github.com/WestLangley
+ * @author erich666 / http://erichaines.com
+ */
+
+// This set of controls performs orbiting, dollying (zooming), and panning.
+// Unlike TrackballControls, it maintains the "up" direction object.up (+Y by default).
+//
+//    Orbit - left mouse / touch: one-finger move
+//    Zoom - middle mouse, or mousewheel / touch: two-finger spread or squish
+//    Pan - right mouse, or left mouse + ctrl/meta/shiftKey, or arrow keys / touch: two-finger move
+
+THREE.OrbitControls = function ( object, domElement ) {
+
+	this.object = object;
+
+	this.domElement = ( domElement !== undefined ) ? domElement : document;
+
+	// Set to false to disable this control
+	this.enabled = true;
+
+	// "target" sets the location of focus, where the object orbits around
+	this.target = new THREE.Vector3();
+
+	// How far you can dolly in and out ( PerspectiveCamera only )
+	this.minDistance = 0;
+	this.maxDistance = Infinity;
+
+	// How far you can zoom in and out ( OrthographicCamera only )
+	this.minZoom = 0;
+	this.maxZoom = Infinity;
+
+	// How far you can orbit vertically, upper and lower limits.
+	// Range is 0 to Math.PI radians.
+	this.minPolarAngle = 0; // radians
+	this.maxPolarAngle = Math.PI; // radians
+
+	// How far you can orbit horizontally, upper and lower limits.
+	// If set, must be a sub-interval of the interval [ - Math.PI, Math.PI ].
+	this.minAzimuthAngle = - Infinity; // radians
+	this.maxAzimuthAngle = Infinity; // radians
+
+	// Set to true to enable damping (inertia)
+	// If damping is enabled, you must call controls.update() in your animation loop
+	this.enableDamping = false;
+	this.dampingFactor = 0.25;
+
+	// This option actually enables dollying in and out; left as "zoom" for backwards compatibility.
+	// Set to false to disable zooming
+	this.enableZoom = true;
+	this.zoomSpeed = 1.0;
+
+	// Set to false to disable rotating
+	this.enableRotate = true;
+	this.rotateSpeed = 1.0;
+
+	// Set to false to disable panning
+	this.enablePan = true;
+	this.panSpeed = 1.0;
+	this.screenSpacePanning = false; // if true, pan in screen-space
+	this.keyPanSpeed = 7.0;	// pixels moved per arrow key push
+
+	// Set to true to automatically rotate around the target
+	// If auto-rotate is enabled, you must call controls.update() in your animation loop
+	this.autoRotate = false;
+	this.autoRotateSpeed = 2.0; // 30 seconds per round when fps is 60
+
+	// Set to false to disable use of the keys
+	this.enableKeys = true;
+
+	// The four arrow keys
+	this.keys = { LEFT: 37, UP: 38, RIGHT: 39, BOTTOM: 40 };
+
+	// Mouse buttons
+	this.mouseButtons = { LEFT: THREE.MOUSE.LEFT, MIDDLE: THREE.MOUSE.MIDDLE, RIGHT: THREE.MOUSE.RIGHT };
+
+	// for reset
+	this.target0 = this.target.clone();
+	this.position0 = this.object.position.clone();
+	this.zoom0 = this.object.zoom;
+
+	//
+	// public methods
+	//
+
+	this.getPolarAngle = function () {
+
+		return spherical.phi;
+
+	};
+
+	this.getAzimuthalAngle = function () {
+
+		return spherical.theta;
+
+	};
+
+	this.saveState = function () {
+
+		scope.target0.copy( scope.target );
+		scope.position0.copy( scope.object.position );
+		scope.zoom0 = scope.object.zoom;
+
+	};
+
+	this.reset = function () {
+
+		scope.target.copy( scope.target0 );
+		scope.object.position.copy( scope.position0 );
+		scope.object.zoom = scope.zoom0;
+
+		scope.object.updateProjectionMatrix();
+		scope.dispatchEvent( changeEvent );
+
+		scope.update();
+
+		state = STATE.NONE;
+
+	};
+
+	// this method is exposed, but perhaps it would be better if we can make it private...
+	this.update = function () {
+
+		var offset = new THREE.Vector3();
+
+		// so camera.up is the orbit axis
+		var quat = new THREE.Quaternion().setFromUnitVectors( object.up, new THREE.Vector3( 0, 1, 0 ) );
+		var quatInverse = quat.clone().inverse();
+
+		var lastPosition = new THREE.Vector3();
+		var lastQuaternion = new THREE.Quaternion();
+
+		return function update() {
+
+			var position = scope.object.position;
+
+			offset.copy( position ).sub( scope.target );
+
+			// rotate offset to "y-axis-is-up" space
+			offset.applyQuaternion( quat );
+
+			// angle from z-axis around y-axis
+			spherical.setFromVector3( offset );
+
+			if ( scope.autoRotate && state === STATE.NONE ) {
+
+				rotateLeft( getAutoRotationAngle() );
+
+			}
+
+			spherical.theta += sphericalDelta.theta;
+			spherical.phi += sphericalDelta.phi;
+
+			// restrict theta to be between desired limits
+			spherical.theta = Math.max( scope.minAzimuthAngle, Math.min( scope.maxAzimuthAngle, spherical.theta ) );
+
+			// restrict phi to be between desired limits
+			spherical.phi = Math.max( scope.minPolarAngle, Math.min( scope.maxPolarAngle, spherical.phi ) );
+
+			spherical.makeSafe();
+
+
+			spherical.radius *= scale;
+
+			// restrict radius to be between desired limits
+			spherical.radius = Math.max( scope.minDistance, Math.min( scope.maxDistance, spherical.radius ) );
+
+			// move target to panned location
+			scope.target.add( panOffset );
+
+			offset.setFromSpherical( spherical );
+
+			// rotate offset back to "camera-up-vector-is-up" space
+			offset.applyQuaternion( quatInverse );
+
+			position.copy( scope.target ).add( offset );
+
+			scope.object.lookAt( scope.target );
+
+			if ( scope.enableDamping === true ) {
+
+				sphericalDelta.theta *= ( 1 - scope.dampingFactor );
+				sphericalDelta.phi *= ( 1 - scope.dampingFactor );
+
+				panOffset.multiplyScalar( 1 - scope.dampingFactor );
+
+			} else {
+
+				sphericalDelta.set( 0, 0, 0 );
+
+				panOffset.set( 0, 0, 0 );
+
+			}
+
+			scale = 1;
+
+			// update condition is:
+			// min(camera displacement, camera rotation in radians)^2 > EPS
+			// using small-angle approximation cos(x/2) = 1 - x^2 / 8
+
+			if ( zoomChanged ||
+				lastPosition.distanceToSquared( scope.object.position ) > EPS ||
+				8 * ( 1 - lastQuaternion.dot( scope.object.quaternion ) ) > EPS ) {
+
+				scope.dispatchEvent( changeEvent );
+
+				lastPosition.copy( scope.object.position );
+				lastQuaternion.copy( scope.object.quaternion );
+				zoomChanged = false;
+
+				return true;
+
+			}
+
+			return false;
+
+		};
+
+	}();
+
+	this.dispose = function () {
+
+		scope.domElement.removeEventListener( 'contextmenu', onContextMenu, false );
+		scope.domElement.removeEventListener( 'mousedown', onMouseDown, false );
+		scope.domElement.removeEventListener( 'wheel', onMouseWheel, false );
+
+		scope.domElement.removeEventListener( 'touchstart', onTouchStart, false );
+		scope.domElement.removeEventListener( 'touchend', onTouchEnd, false );
+		scope.domElement.removeEventListener( 'touchmove', onTouchMove, false );
+
+		document.removeEventListener( 'mousemove', onMouseMove, false );
+		document.removeEventListener( 'mouseup', onMouseUp, false );
+
+		window.removeEventListener( 'keydown', onKeyDown, false );
+
+		//scope.dispatchEvent( { type: 'dispose' } ); // should this be added here?
+
+	};
+
+	//
+	// internals
+	//
+
+	var scope = this;
+
+	var changeEvent = { type: 'change' };
+	var startEvent = { type: 'start' };
+	var endEvent = { type: 'end' };
+
+	var STATE = { NONE: - 1, ROTATE: 0, DOLLY: 1, PAN: 2, TOUCH_ROTATE: 3, TOUCH_DOLLY_PAN: 4 };
+
+	var state = STATE.NONE;
+
+	var EPS = 0.000001;
+
+	// current position in spherical coordinates
+	var spherical = new THREE.Spherical();
+	var sphericalDelta = new THREE.Spherical();
+
+	var scale = 1;
+	var panOffset = new THREE.Vector3();
+	var zoomChanged = false;
+
+	var rotateStart = new THREE.Vector2();
+	var rotateEnd = new THREE.Vector2();
+	var rotateDelta = new THREE.Vector2();
+
+	var panStart = new THREE.Vector2();
+	var panEnd = new THREE.Vector2();
+	var panDelta = new THREE.Vector2();
+
+	var dollyStart = new THREE.Vector2();
+	var dollyEnd = new THREE.Vector2();
+	var dollyDelta = new THREE.Vector2();
+
+	function getAutoRotationAngle() {
+
+		return 2 * Math.PI / 60 / 60 * scope.autoRotateSpeed;
+
+	}
+
+	function getZoomScale() {
+
+		return Math.pow( 0.95, scope.zoomSpeed );
+
+	}
+
+	function rotateLeft( angle ) {
+
+		sphericalDelta.theta -= angle;
+
+	}
+
+	function rotateUp( angle ) {
+
+		sphericalDelta.phi -= angle;
+
+	}
+
+	var panLeft = function () {
+
+		var v = new THREE.Vector3();
+
+		return function panLeft( distance, objectMatrix ) {
+
+			v.setFromMatrixColumn( objectMatrix, 0 ); // get X column of objectMatrix
+			v.multiplyScalar( - distance );
+
+			panOffset.add( v );
+
+		};
+
+	}();
+
+	var panUp = function () {
+
+		var v = new THREE.Vector3();
+
+		return function panUp( distance, objectMatrix ) {
+
+			if ( scope.screenSpacePanning === true ) {
+
+				v.setFromMatrixColumn( objectMatrix, 1 );
+
+			} else {
+
+				v.setFromMatrixColumn( objectMatrix, 0 );
+				v.crossVectors( scope.object.up, v );
+
+			}
+
+			v.multiplyScalar( distance );
+
+			panOffset.add( v );
+
+		};
+
+	}();
+
+	// deltaX and deltaY are in pixels; right and down are positive
+	var pan = function () {
+
+		var offset = new THREE.Vector3();
+
+		return function pan( deltaX, deltaY ) {
+
+			var element = scope.domElement === document ? scope.domElement.body : scope.domElement;
+
+			if ( scope.object.isPerspectiveCamera ) {
+
+				// perspective
+				var position = scope.object.position;
+				offset.copy( position ).sub( scope.target );
+				var targetDistance = offset.length();
+
+				// half of the fov is center to top of screen
+				targetDistance *= Math.tan( ( scope.object.fov / 2 ) * Math.PI / 180.0 );
+
+				// we use only clientHeight here so aspect ratio does not distort speed
+				panLeft( 2 * deltaX * targetDistance / element.clientHeight, scope.object.matrix );
+				panUp( 2 * deltaY * targetDistance / element.clientHeight, scope.object.matrix );
+
+			} else if ( scope.object.isOrthographicCamera ) {
+
+				// orthographic
+				panLeft( deltaX * ( scope.object.right - scope.object.left ) / scope.object.zoom / element.clientWidth, scope.object.matrix );
+				panUp( deltaY * ( scope.object.top - scope.object.bottom ) / scope.object.zoom / element.clientHeight, scope.object.matrix );
+
+			} else {
+
+				// camera neither orthographic nor perspective
+				console.warn( 'WARNING: OrbitControls.js encountered an unknown camera type - pan disabled.' );
+				scope.enablePan = false;
+
+			}
+
+		};
+
+	}();
+
+	function dollyIn( dollyScale ) {
+
+		if ( scope.object.isPerspectiveCamera ) {
+
+			scale /= dollyScale;
+
+		} else if ( scope.object.isOrthographicCamera ) {
+
+			scope.object.zoom = Math.max( scope.minZoom, Math.min( scope.maxZoom, scope.object.zoom * dollyScale ) );
+			scope.object.updateProjectionMatrix();
+			zoomChanged = true;
+
+		} else {
+
+			console.warn( 'WARNING: OrbitControls.js encountered an unknown camera type - dolly/zoom disabled.' );
+			scope.enableZoom = false;
+
+		}
+
+	}
+
+	function dollyOut( dollyScale ) {
+
+		if ( scope.object.isPerspectiveCamera ) {
+
+			scale *= dollyScale;
+
+		} else if ( scope.object.isOrthographicCamera ) {
+
+			scope.object.zoom = Math.max( scope.minZoom, Math.min( scope.maxZoom, scope.object.zoom / dollyScale ) );
+			scope.object.updateProjectionMatrix();
+			zoomChanged = true;
+
+		} else {
+
+			console.warn( 'WARNING: OrbitControls.js encountered an unknown camera type - dolly/zoom disabled.' );
+			scope.enableZoom = false;
+
+		}
+
+	}
+
+	//
+	// event callbacks - update the object state
+	//
+
+	function handleMouseDownRotate( event ) {
+
+		//console.log( 'handleMouseDownRotate' );
+
+		rotateStart.set( event.clientX, event.clientY );
+
+	}
+
+	function handleMouseDownDolly( event ) {
+
+		//console.log( 'handleMouseDownDolly' );
+
+		dollyStart.set( event.clientX, event.clientY );
+
+	}
+
+	function handleMouseDownPan( event ) {
+
+		//console.log( 'handleMouseDownPan' );
+
+		panStart.set( event.clientX, event.clientY );
+
+	}
+
+	function handleMouseMoveRotate( event ) {
+
+		//console.log( 'handleMouseMoveRotate' );
+
+		rotateEnd.set( event.clientX, event.clientY );
+
+		rotateDelta.subVectors( rotateEnd, rotateStart ).multiplyScalar( scope.rotateSpeed );
+
+		var element = scope.domElement === document ? scope.domElement.body : scope.domElement;
+
+		rotateLeft( 2 * Math.PI * rotateDelta.x / element.clientHeight ); // yes, height
+
+		rotateUp( 2 * Math.PI * rotateDelta.y / element.clientHeight );
+
+		rotateStart.copy( rotateEnd );
+
+		scope.update();
+
+	}
+
+	function handleMouseMoveDolly( event ) {
+
+		//console.log( 'handleMouseMoveDolly' );
+
+		dollyEnd.set( event.clientX, event.clientY );
+
+		dollyDelta.subVectors( dollyEnd, dollyStart );
+
+		if ( dollyDelta.y > 0 ) {
+
+			dollyIn( getZoomScale() );
+
+		} else if ( dollyDelta.y < 0 ) {
+
+			dollyOut( getZoomScale() );
+
+		}
+
+		dollyStart.copy( dollyEnd );
+
+		scope.update();
+
+	}
+
+	function handleMouseMovePan( event ) {
+
+		//console.log( 'handleMouseMovePan' );
+
+		panEnd.set( event.clientX, event.clientY );
+
+		panDelta.subVectors( panEnd, panStart ).multiplyScalar( scope.panSpeed );
+
+		pan( panDelta.x, panDelta.y );
+
+		panStart.copy( panEnd );
+
+		scope.update();
+
+	}
+
+	function handleMouseUp( event ) {
+
+		// console.log( 'handleMouseUp' );
+
+	}
+
+	function handleMouseWheel( event ) {
+
+		// console.log( 'handleMouseWheel' );
+
+		if ( event.deltaY < 0 ) {
+
+			dollyOut( getZoomScale() );
+
+		} else if ( event.deltaY > 0 ) {
+
+			dollyIn( getZoomScale() );
+
+		}
+
+		scope.update();
+
+	}
+
+	function handleKeyDown( event ) {
+
+		//console.log( 'handleKeyDown' );
+
+		switch ( event.keyCode ) {
+
+			case scope.keys.UP:
+				pan( 0, scope.keyPanSpeed );
+				scope.update();
+				break;
+
+			case scope.keys.BOTTOM:
+				pan( 0, - scope.keyPanSpeed );
+				scope.update();
+				break;
+
+			case scope.keys.LEFT:
+				pan( scope.keyPanSpeed, 0 );
+				scope.update();
+				break;
+
+			case scope.keys.RIGHT:
+				pan( - scope.keyPanSpeed, 0 );
+				scope.update();
+				break;
+
+		}
+
+	}
+
+	function handleTouchStartRotate( event ) {
+
+		//console.log( 'handleTouchStartRotate' );
+
+		rotateStart.set( event.touches[ 0 ].pageX, event.touches[ 0 ].pageY );
+
+	}
+
+	function handleTouchStartDollyPan( event ) {
+
+		//console.log( 'handleTouchStartDollyPan' );
+
+		if ( scope.enableZoom ) {
+
+			var dx = event.touches[ 0 ].pageX - event.touches[ 1 ].pageX;
+			var dy = event.touches[ 0 ].pageY - event.touches[ 1 ].pageY;
+
+			var distance = Math.sqrt( dx * dx + dy * dy );
+
+			dollyStart.set( 0, distance );
+
+		}
+
+		if ( scope.enablePan ) {
+
+			var x = 0.5 * ( event.touches[ 0 ].pageX + event.touches[ 1 ].pageX );
+			var y = 0.5 * ( event.touches[ 0 ].pageY + event.touches[ 1 ].pageY );
+
+			panStart.set( x, y );
+
+		}
+
+	}
+
+	function handleTouchMoveRotate( event ) {
+
+		//console.log( 'handleTouchMoveRotate' );
+
+		rotateEnd.set( event.touches[ 0 ].pageX, event.touches[ 0 ].pageY );
+
+		rotateDelta.subVectors( rotateEnd, rotateStart ).multiplyScalar( scope.rotateSpeed );
+
+		var element = scope.domElement === document ? scope.domElement.body : scope.domElement;
+
+		rotateLeft( 2 * Math.PI * rotateDelta.x / element.clientHeight ); // yes, height
+
+		rotateUp( 2 * Math.PI * rotateDelta.y / element.clientHeight );
+
+		rotateStart.copy( rotateEnd );
+
+		scope.update();
+
+	}
+
+	function handleTouchMoveDollyPan( event ) {
+
+		//console.log( 'handleTouchMoveDollyPan' );
+
+		if ( scope.enableZoom ) {
+
+			var dx = event.touches[ 0 ].pageX - event.touches[ 1 ].pageX;
+			var dy = event.touches[ 0 ].pageY - event.touches[ 1 ].pageY;
+
+			var distance = Math.sqrt( dx * dx + dy * dy );
+
+			dollyEnd.set( 0, distance );
+
+			dollyDelta.set( 0, Math.pow( dollyEnd.y / dollyStart.y, scope.zoomSpeed ) );
+
+			dollyIn( dollyDelta.y );
+
+			dollyStart.copy( dollyEnd );
+
+		}
+
+		if ( scope.enablePan ) {
+
+			var x = 0.5 * ( event.touches[ 0 ].pageX + event.touches[ 1 ].pageX );
+			var y = 0.5 * ( event.touches[ 0 ].pageY + event.touches[ 1 ].pageY );
+
+			panEnd.set( x, y );
+
+			panDelta.subVectors( panEnd, panStart ).multiplyScalar( scope.panSpeed );
+
+			pan( panDelta.x, panDelta.y );
+
+			panStart.copy( panEnd );
+
+		}
+
+		scope.update();
+
+	}
+
+	function handleTouchEnd( event ) {
+
+		//console.log( 'handleTouchEnd' );
+
+	}
+
+	//
+	// event handlers - FSM: listen for events and reset state
+	//
+
+	function onMouseDown( event ) {
+
+		if ( scope.enabled === false ) return;
+
+		event.preventDefault();
+
+		switch ( event.button ) {
+
+			case scope.mouseButtons.LEFT:
+
+				if ( event.ctrlKey || event.metaKey || event.shiftKey ) {
+
+					if ( scope.enablePan === false ) return;
+
+					handleMouseDownPan( event );
+
+					state = STATE.PAN;
+
+				} else {
+
+					if ( scope.enableRotate === false ) return;
+
+					handleMouseDownRotate( event );
+
+					state = STATE.ROTATE;
+
+				}
+
+				break;
+
+			case scope.mouseButtons.MIDDLE:
+
+				if ( scope.enableZoom === false ) return;
+
+				handleMouseDownDolly( event );
+
+				state = STATE.DOLLY;
+
+				break;
+
+			case scope.mouseButtons.RIGHT:
+
+				if ( scope.enablePan === false ) return;
+
+				handleMouseDownPan( event );
+
+				state = STATE.PAN;
+
+				break;
+
+		}
+
+		if ( state !== STATE.NONE ) {
+
+			document.addEventListener( 'mousemove', onMouseMove, false );
+			document.addEventListener( 'mouseup', onMouseUp, false );
+
+			scope.dispatchEvent( startEvent );
+
+		}
+
+	}
+
+	function onMouseMove( event ) {
+
+		if ( scope.enabled === false ) return;
+
+		event.preventDefault();
+
+		switch ( state ) {
+
+			case STATE.ROTATE:
+
+				if ( scope.enableRotate === false ) return;
+
+				handleMouseMoveRotate( event );
+
+				break;
+
+			case STATE.DOLLY:
+
+				if ( scope.enableZoom === false ) return;
+
+				handleMouseMoveDolly( event );
+
+				break;
+
+			case STATE.PAN:
+
+				if ( scope.enablePan === false ) return;
+
+				handleMouseMovePan( event );
+
+				break;
+
+		}
+
+	}
+
+	function onMouseUp( event ) {
+
+		if ( scope.enabled === false ) return;
+
+		handleMouseUp( event );
+
+		document.removeEventListener( 'mousemove', onMouseMove, false );
+		document.removeEventListener( 'mouseup', onMouseUp, false );
+
+		scope.dispatchEvent( endEvent );
+
+		state = STATE.NONE;
+
+	}
+
+	function onMouseWheel( event ) {
+
+		if ( scope.enabled === false || scope.enableZoom === false || ( state !== STATE.NONE && state !== STATE.ROTATE ) ) return;
+
+		event.preventDefault();
+		event.stopPropagation();
+
+		scope.dispatchEvent( startEvent );
+
+		handleMouseWheel( event );
+
+		scope.dispatchEvent( endEvent );
+
+	}
+
+	function onKeyDown( event ) {
+
+		if ( scope.enabled === false || scope.enableKeys === false || scope.enablePan === false ) return;
+
+		handleKeyDown( event );
+
+	}
+
+	function onTouchStart( event ) {
+
+		if ( scope.enabled === false ) return;
+
+		event.preventDefault();
+
+		switch ( event.touches.length ) {
+
+			case 1:	// one-fingered touch: rotate
+
+				if ( scope.enableRotate === false ) return;
+
+				handleTouchStartRotate( event );
+
+				state = STATE.TOUCH_ROTATE;
+
+				break;
+
+			case 2:	// two-fingered touch: dolly-pan
+
+				if ( scope.enableZoom === false && scope.enablePan === false ) return;
+
+				handleTouchStartDollyPan( event );
+
+				state = STATE.TOUCH_DOLLY_PAN;
+
+				break;
+
+			default:
+
+				state = STATE.NONE;
+
+		}
+
+		if ( state !== STATE.NONE ) {
+
+			scope.dispatchEvent( startEvent );
+
+		}
+
+	}
+
+	function onTouchMove( event ) {
+
+		if ( scope.enabled === false ) return;
+
+		event.preventDefault();
+		event.stopPropagation();
+
+		switch ( event.touches.length ) {
+
+			case 1: // one-fingered touch: rotate
+
+				if ( scope.enableRotate === false ) return;
+				if ( state !== STATE.TOUCH_ROTATE ) return; // is this needed?
+
+				handleTouchMoveRotate( event );
+
+				break;
+
+			case 2: // two-fingered touch: dolly-pan
+
+				if ( scope.enableZoom === false && scope.enablePan === false ) return;
+				if ( state !== STATE.TOUCH_DOLLY_PAN ) return; // is this needed?
+
+				handleTouchMoveDollyPan( event );
+
+				break;
+
+			default:
+
+				state = STATE.NONE;
+
+		}
+
+	}
+
+	function onTouchEnd( event ) {
+
+		if ( scope.enabled === false ) return;
+
+		handleTouchEnd( event );
+
+		scope.dispatchEvent( endEvent );
+
+		state = STATE.NONE;
+
+	}
+
+	function onContextMenu( event ) {
+
+		if ( scope.enabled === false ) return;
+
+		event.preventDefault();
+
+	}
+
+	//
+
+	scope.domElement.addEventListener( 'contextmenu', onContextMenu, false );
+
+	scope.domElement.addEventListener( 'mousedown', onMouseDown, false );
+	scope.domElement.addEventListener( 'wheel', onMouseWheel, false );
+
+	scope.domElement.addEventListener( 'touchstart', onTouchStart, false );
+	scope.domElement.addEventListener( 'touchend', onTouchEnd, false );
+	scope.domElement.addEventListener( 'touchmove', onTouchMove, false );
+
+	window.addEventListener( 'keydown', onKeyDown, false );
+
+	// force an update at start
+
+	this.update();
+
+};
+
+THREE.OrbitControls.prototype = Object.create( THREE.EventDispatcher.prototype );
+THREE.OrbitControls.prototype.constructor = THREE.OrbitControls;
+
+Object.defineProperties( THREE.OrbitControls.prototype, {
+
+	center: {
+
+		get: function () {
+
+			console.warn( 'THREE.OrbitControls: .center has been renamed to .target' );
+			return this.target;
+
+		}
+
+	},
+
+	// backward compatibility
+
+	noZoom: {
+
+		get: function () {
+
+			console.warn( 'THREE.OrbitControls: .noZoom has been deprecated. Use .enableZoom instead.' );
+			return ! this.enableZoom;
+
+		},
+
+		set: function ( value ) {
+
+			console.warn( 'THREE.OrbitControls: .noZoom has been deprecated. Use .enableZoom instead.' );
+			this.enableZoom = ! value;
+
+		}
+
+	},
+
+	noRotate: {
+
+		get: function () {
+
+			console.warn( 'THREE.OrbitControls: .noRotate has been deprecated. Use .enableRotate instead.' );
+			return ! this.enableRotate;
+
+		},
+
+		set: function ( value ) {
+
+			console.warn( 'THREE.OrbitControls: .noRotate has been deprecated. Use .enableRotate instead.' );
+			this.enableRotate = ! value;
+
+		}
+
+	},
+
+	noPan: {
+
+		get: function () {
+
+			console.warn( 'THREE.OrbitControls: .noPan has been deprecated. Use .enablePan instead.' );
+			return ! this.enablePan;
+
+		},
+
+		set: function ( value ) {
+
+			console.warn( 'THREE.OrbitControls: .noPan has been deprecated. Use .enablePan instead.' );
+			this.enablePan = ! value;
+
+		}
+
+	},
+
+	noKeys: {
+
+		get: function () {
+
+			console.warn( 'THREE.OrbitControls: .noKeys has been deprecated. Use .enableKeys instead.' );
+			return ! this.enableKeys;
+
+		},
+
+		set: function ( value ) {
+
+			console.warn( 'THREE.OrbitControls: .noKeys has been deprecated. Use .enableKeys instead.' );
+			this.enableKeys = ! value;
+
+		}
+
+	},
+
+	staticMoving: {
+
+		get: function () {
+
+			console.warn( 'THREE.OrbitControls: .staticMoving has been deprecated. Use .enableDamping instead.' );
+			return ! this.enableDamping;
+
+		},
+
+		set: function ( value ) {
+
+			console.warn( 'THREE.OrbitControls: .staticMoving has been deprecated. Use .enableDamping instead.' );
+			this.enableDamping = ! value;
+
+		}
+
+	},
+
+	dynamicDampingFactor: {
+
+		get: function () {
+
+			console.warn( 'THREE.OrbitControls: .dynamicDampingFactor has been renamed. Use .dampingFactor instead.' );
+			return this.dampingFactor;
+
+		},
+
+		set: function ( value ) {
+
+			console.warn( 'THREE.OrbitControls: .dynamicDampingFactor has been renamed. Use .dampingFactor instead.' );
+			this.dampingFactor = value;
+
+		}
+
+	}
+
+} );
+
 //custom.js ------------------------------
 
 var wwin;
@@ -95027,11 +97379,13 @@ function animate_to_position(position) {
 //custom-three.js
 
 var bgColorFigure = '#ffffff';
+var thicknessFigures = 0.3;
 var paddingFigure = 35;
 var widthFigure;
 var heightFigure;
 var arrayFigure = [];
 var numberFigure = $('#fullpage .screen.light .content .item').length;
+var j;
 
 for (var i = 0; i < numberFigure; i++) {
     arrayFigure[i]           = {};
@@ -95048,249 +97402,117 @@ for (var i = 0; i < numberFigure; i++) {
     arrayFigure[i].isOver    = "0";
 }
 
+function createFigure( figureItem, figureGeometry ) {
+
+    //Scene
+    figureItem.scene = new THREE.Scene();
+    figureItem.scene.background = new THREE.Color( bgColorFigure );
+
+    //Camera
+    figureItem.camera = new THREE.PerspectiveCamera( 40, widthFigure/heightFigure , 0.1, 1000 );
+    figureItem.camera.position.set( 0, 0, 350 );
+
+    //Renderer
+    figureItem.renderer = new THREE.WebGLRenderer({ antialias: true });
+    figureItem.renderer.setSize( widthFigure - paddingFigure * 2 , heightFigure - paddingFigure * 2 );
+
+    //Container
+    figureItem.container = document.getElementById( figureItem.name );
+    figureItem.container.appendChild( figureItem.renderer.domElement );
+
+    //Controls
+    // figureItem.controls = new THREE.OrbitControls( figureItem.camera, figureItem.renderer.domElement );
+
+    //Light
+    figureItem.light = new THREE.DirectionalLight( 0xffffff, 1 );
+    figureItem.light.position.set( 100, 100, 100 );
+    figureItem.scene.add( figureItem.light );
+
+    //AmbientLight
+    figureItem.ambLight = new THREE.AmbientLight( 0xffffff );
+    figureItem.scene.add( figureItem.ambLight );
+
+    //Geometry
+    figureItem.geometry = figureGeometry;
+
+    //Material
+    figureItem.material = new THREE.MeshLambertMaterial({
+        color: "white",
+        transparent: true,
+        opacity: .75
+    });
+
+    //Mesh
+    figureItem.mesh = new THREE.Mesh( figureItem.geometry, figureItem.material );
+    figureItem.scene.add( figureItem.mesh );
+
+    //Edges
+    figureItem.edgesGeometry = new THREE.EdgesGeometry( figureItem.geometry );
+    figureItem.edgesMaterial = new THREE.LineBasicMaterial({
+        color: "black"
+    });
+    figureItem.edges = new THREE.LineSegments( figureItem.edgesGeometry, figureItem.edgesMaterial );
+    figureItem.scene.add( figureItem.edges );
+
+    //Thickness
+    figureItem.thickness = thicknessFigures;
+
+    //Create array edges
+    for ( j = 0; j < figureItem.edgesGeometry.attributes.position.count; j++ ){
+        figureItem.sphereMesh = new THREE.Mesh(new THREE.SphereBufferGeometry(figureItem.thickness * 6, 16, 8), new THREE.MeshStandardMaterial({color: "black"}));
+        figureItem.sphereMesh.position.set(
+            figureItem.edgesGeometry.attributes.position.array[(j * 3) + 0],
+            figureItem.edgesGeometry.attributes.position.array[(j * 3) + 1],
+            figureItem.edgesGeometry.attributes.position.array[(j * 3) + 2]
+        );
+        figureItem.scene.add(figureItem.sphereMesh);
+    }
+
+    for ( j = 0; j < figureItem.edgesGeometry.attributes.position.count - 1; j+=2 ){
+
+        figureItem.startPoint = new THREE.Vector3(
+            figureItem.edgesGeometry.attributes.position.array[j * 3 + 0],
+            figureItem.edgesGeometry.attributes.position.array[j * 3 + 1],
+            figureItem.edgesGeometry.attributes.position.array[j * 3 + 2]
+        );
+        figureItem.endPoint = new THREE.Vector3(
+            figureItem.edgesGeometry.attributes.position.array[j * 3 + 3],
+            figureItem.edgesGeometry.attributes.position.array[j * 3 + 4],
+            figureItem.edgesGeometry.attributes.position.array[j * 3 + 5]
+        );
+
+        figureItem.cylLength = new THREE.Vector3().subVectors(figureItem.endPoint, figureItem.startPoint).length();
+        figureItem.cylGeom = new THREE.CylinderBufferGeometry(figureItem.thickness, figureItem.thickness, figureItem.cylLength, 16);
+        figureItem.cylGeom.translate(0, figureItem.cylLength / 2, 0);
+        figureItem.cylGeom.rotateX(Math.PI / 2);
+        figureItem.cyl = new THREE.Mesh(figureItem.cylGeom, new THREE.MeshLambertMaterial({color: "black"}));
+        figureItem.cyl.position.copy(figureItem.startPoint);
+        figureItem.cyl.lookAt(figureItem.endPoint);
+        figureItem.scene.add(figureItem.cyl);
+    }
+}
+
 function func_threejs_init() {
     widthFigure = $('#fullpage .screen.light .content .item div').width();
     heightFigure = widthFigure;
     $('#fullpage .screen.light .content .item div').height(heightFigure);
 
     $('#fullpage .screen.light .content .item div').each(function(i,elem) {
+
         var idFigure = elem.id;
         arrayFigure[i].name = idFigure;
+
         switch (idFigure){
             case 'sphere':
-                // arrayFigure[i].geometry = new THREE.SphereGeometry( 100, 8, 6 );
-
-                // arrayFigure[i].scene = new THREE.Scene();
-                // arrayFigure[i].scene.background = new THREE.Color( bgColorFigure );
-                // arrayFigure[i].camera = new THREE.PerspectiveCamera(40, widthFigure/heightFigure , 0.1, 1000);
-                // arrayFigure[i].camera.position.set( 0, 0, 350);
-                // arrayFigure[i].renderer = new THREE.WebGLRenderer({ antialias: true });
-                // arrayFigure[i].renderer.setPixelRatio( window.devicePixelRatio );
-                // arrayFigure[i].renderer.setSize( widthFigure - paddingFigure*2 ,heightFigure - paddingFigure*2);
-                // arrayFigure[i].container = document.getElementById(arrayFigure[i].name);
-                // arrayFigure[i].container.appendChild( arrayFigure[i].renderer.domElement );
-                //
-                // arrayFigure[i].scene.add( new THREE.AmbientLight( 0xaaaaaa ) );
-                // arrayFigure[i].light = new THREE.PointLight( 0x000000, 1 );
-                // arrayFigure[i].camera.add( arrayFigure[i].light );
-                //
-                // arrayFigure[i].geometry.vertices = new THREE.DodecahedronGeometry( 100 ).vertices;
-                // arrayFigure[i].pointsMaterial = new THREE.PointsMaterial( {
-                //     color: 0x999999,
-                //     size: 16,
-                //     alphaTest: 0.5
-                // } );
-                // arrayFigure[i].pointsGeometry = new THREE.BufferGeometry().setFromPoints( arrayFigure[i].geometry.vertices );
-                // arrayFigure[i].points = new THREE.Points( arrayFigure[i].pointsGeometry, arrayFigure[i].pointsMaterial );
-                // arrayFigure[i].scene.add( arrayFigure[i].points );
-                //
-                // arrayFigure[i].material = new THREE.MeshLambertMaterial( {
-                //     color: 0x00ee00,
-                //     opacity: 0.1,
-                //     transparent: true,
-                //     wireframe: true
-                // } );
-                //
-                // arrayFigure[i].geometry = new THREE.ConvexBufferGeometry( arrayFigure[i].geometry.vertices );
-                //
-                // arrayFigure[i].mesh = new THREE.Mesh(arrayFigure[i].geometry, arrayFigure[i].material);
-                // arrayFigure[i].mesh.material.side = THREE.BackSide;
-                // arrayFigure[i].mesh.renderOrder = 0;
-                // arrayFigure[i].scene.add( arrayFigure[i].mesh );
-                //
-                // arrayFigure[i].mesh = new THREE.Mesh( arrayFigure[i].geometry, arrayFigure[i].material.clone() );
-                // arrayFigure[i].mesh.material.side = THREE.FrontSide;
-                // arrayFigure[i].mesh.renderOrder = 1;
-                // arrayFigure[i].scene.add( arrayFigure[i].mesh );
-
-                arrayFigure[i].scene = new THREE.Scene();
-                arrayFigure[i].scene.background = new THREE.Color( bgColorFigure );
-                arrayFigure[i].camera = new THREE.PerspectiveCamera(40, widthFigure/heightFigure , 0.1, 1000);
-                arrayFigure[i].camera.position.set( 0, 0, 350);
-                arrayFigure[i].renderer = new THREE.WebGLRenderer({ antialias: true });
-                arrayFigure[i].renderer.setSize( widthFigure - paddingFigure*2 ,heightFigure - paddingFigure*2);
-                arrayFigure[i].container = document.getElementById(arrayFigure[i].name);
-                arrayFigure[i].container.appendChild( arrayFigure[i].renderer.domElement );
-
-                // arrayFigure[i].controls = new THREE.OrbitControls(arrayFigure[i].camera, arrayFigure[i].renderer.domElement);
-
-                arrayFigure[i].light = new THREE.DirectionalLight( 0xffffff, 1);
-                arrayFigure[i].light.position.set(100, 100, 100);
-                arrayFigure[i].scene.add(arrayFigure[i].light);
-
-                arrayFigure[i].ambLight = new THREE.AmbientLight( 0xffffff);
-                arrayFigure[i].scene.add(arrayFigure[i].ambLight);
-
-
-
-
-                // var verticesOfCube = [
-                //     -1,-1,-1,    1,-1,-1,    1, 1,-1,    -1, 1,-1,
-                //     -1,-1, 1,    1,-1, 1,    1, 1, 1,    -1, 1, 1,
-                // ];
-                //
-                // var indicesOfFaces = [
-                //     2,1,0,    0,3,2,
-                //     0,4,7,    7,3,0,
-                //     0,1,5,    5,4,0,
-                //     1,2,6,    6,5,1,
-                //     2,3,7,    7,6,2,
-                //     4,5,6,    6,7,4
-                // ];
-                //
-                // arrayFigure[i].dodecahedronGeom = new THREE.PolyhedronGeometry( verticesOfCube, indicesOfFaces, 100, 2 );
-
-                arrayFigure[i].dodecahedronGeom = new THREE.IcosahedronGeometry( 100, 1 );
-                // arrayFigure[i].dodecahedronGeom = new THREE.SphereGeometry( 100, 10, 8 );
-                // arrayFigure[i].dodecahedronGeom = new THREE.DodecahedronGeometry(100);
-
-                arrayFigure[i].dodecahedron = new THREE.Mesh(arrayFigure[i].dodecahedronGeom, new THREE.MeshLambertMaterial({color: "white", transparent: true, opacity: .6}));
-                arrayFigure[i].scene.add(arrayFigure[i].dodecahedron);
-
-                arrayFigure[i].edgesGeom = new THREE.EdgesGeometry(arrayFigure[i].dodecahedronGeom);
-                arrayFigure[i].edges = new THREE.LineSegments(arrayFigure[i].edgesGeom, new THREE.LineBasicMaterial({color: "0x000000"}));
-                arrayFigure[i].scene.add(arrayFigure[i].edges);
-
-                arrayFigure[i].thickness = 0.3;
-
-                for (var l = 0; l < arrayFigure[i].edgesGeom.attributes.position.count; l++){
-                    arrayFigure[i].sphere = new THREE.Mesh(new THREE.SphereBufferGeometry(arrayFigure[i].thickness * 6, 16, 8), new THREE.MeshStandardMaterial({color: "black"}));
-                    arrayFigure[i].sphere.position.set(
-                        arrayFigure[i].edgesGeom.attributes.position.array[(l * 3) + 0],
-                        arrayFigure[i].edgesGeom.attributes.position.array[(l * 3) + 1],
-                        arrayFigure[i].edgesGeom.attributes.position.array[(l * 3) + 2]
-                    );
-                    arrayFigure[i].scene.add(arrayFigure[i].sphere);
-                }
-
-                for (var k = 0; k < arrayFigure[i].edgesGeom.attributes.position.count - 1; k+=2){
-
-                    arrayFigure[i].startPoint = new THREE.Vector3(
-                        arrayFigure[i].edgesGeom.attributes.position.array[k * 3 + 0],
-                        arrayFigure[i].edgesGeom.attributes.position.array[k * 3 + 1],
-                        arrayFigure[i].edgesGeom.attributes.position.array[k * 3 + 2]
-                    );
-                    arrayFigure[i].endPoint = new THREE.Vector3(
-                        arrayFigure[i].edgesGeom.attributes.position.array[k * 3 + 3],
-                        arrayFigure[i].edgesGeom.attributes.position.array[k * 3 + 4],
-                        arrayFigure[i].edgesGeom.attributes.position.array[k * 3 + 5]
-                    );
-
-                    arrayFigure[i].cylLength = new THREE.Vector3().subVectors(arrayFigure[i].endPoint, arrayFigure[i].startPoint).length();
-                    arrayFigure[i].cylGeom = new THREE.CylinderBufferGeometry(arrayFigure[i].thickness, arrayFigure[i].thickness, arrayFigure[i].cylLength, 16);
-                    arrayFigure[i].cylGeom.translate(0, arrayFigure[i].cylLength / 2, 0);
-                    arrayFigure[i].cylGeom.rotateX(Math.PI / 2);
-                    arrayFigure[i].cyl = new THREE.Mesh(arrayFigure[i].cylGeom, new THREE.MeshLambertMaterial({color: "black"}));
-                    arrayFigure[i].cyl.position.copy(arrayFigure[i].startPoint);
-                    arrayFigure[i].cyl.lookAt(arrayFigure[i].endPoint);
-                    arrayFigure[i].scene.add(arrayFigure[i].cyl);
-                }
-
-
+                createFigure( arrayFigure[i], new THREE.IcosahedronGeometry(100, 1) );
                 break;
 
             case 'poly':
-
-                // arrayFigure[i].geometry = new THREE.IcosahedronGeometry(100);
-                //
-                // arrayFigure[i].scene = new THREE.Scene();
-                // arrayFigure[i].scene.background = new THREE.Color( bgColorFigure );
-                // arrayFigure[i].camera = new THREE.PerspectiveCamera(45, widthFigure/heightFigure , 0.1, 1000);
-                // arrayFigure[i].camera.position.z = 300;
-                // arrayFigure[i].renderer = new THREE.WebGLRenderer();
-                // arrayFigure[i].renderer.setSize( widthFigure - paddingFigure*2 ,heightFigure - paddingFigure*2);
-                // arrayFigure[i].container = document.getElementById(arrayFigure[i].name);
-                // arrayFigure[i].container.appendChild( arrayFigure[i].renderer.domElement );
-                //
-                // // arrayFigure[i].geometry = new THREE.PlaneGeometry(200, 200, 200,100);
-                //
-                // // arrayFigure[i].material = new THREE.MeshLambertMaterial({color:0xff0000,opacity:0.2,transparent:true,overdraw:0.5});
-                //
-                // arrayFigure[i].material =
-                //     new THREE.MeshBasicMaterial({
-                //         color: 0x888888,
-                //         wireframe: true
-                //     });
-                //
-                //
-                // arrayFigure[i].mesh = new THREE.Mesh(arrayFigure[i].geometry, arrayFigure[i].material);
-                //
-                // arrayFigure[i].mesh.position.x = 0;
-                // arrayFigure[i].scene.add( arrayFigure[i].mesh );
-
-                arrayFigure[i].scene = new THREE.Scene();
-                arrayFigure[i].scene.background = new THREE.Color( bgColorFigure );
-                arrayFigure[i].camera = new THREE.PerspectiveCamera(40, widthFigure/heightFigure , 0.1, 1000);
-                arrayFigure[i].camera.position.set( 0, 0, 350);
-                arrayFigure[i].renderer = new THREE.WebGLRenderer({ antialias: true });
-                arrayFigure[i].renderer.setSize( widthFigure - paddingFigure*2 ,heightFigure - paddingFigure*2);
-                arrayFigure[i].container = document.getElementById(arrayFigure[i].name);
-                arrayFigure[i].container.appendChild( arrayFigure[i].renderer.domElement );
-
-                // arrayFigure[i].controls = new THREE.OrbitControls(arrayFigure[i].camera, arrayFigure[i].renderer.domElement);
-
-                arrayFigure[i].light = new THREE.DirectionalLight( 0xffffff, 1);
-                arrayFigure[i].light.position.set(100, 100, 100);
-                arrayFigure[i].scene.add(arrayFigure[i].light);
-
-                arrayFigure[i].ambLight = new THREE.AmbientLight( 0xffffff);
-                arrayFigure[i].scene.add(arrayFigure[i].ambLight);
-
-                arrayFigure[i].dodecahedronGeom = new THREE.IcosahedronGeometry(100);
-                // arrayFigure[i].dodecahedronGeom = new THREE.DodecahedronGeometry(100);
-
-                arrayFigure[i].dodecahedron = new THREE.Mesh(arrayFigure[i].dodecahedronGeom, new THREE.MeshLambertMaterial({color: "white", transparent: true, opacity: .6}));
-                arrayFigure[i].scene.add(arrayFigure[i].dodecahedron);
-
-                arrayFigure[i].edgesGeom = new THREE.EdgesGeometry(arrayFigure[i].dodecahedronGeom);
-                arrayFigure[i].edges = new THREE.LineSegments(arrayFigure[i].edgesGeom, new THREE.LineBasicMaterial({color: "0x000000"}));
-                arrayFigure[i].scene.add(arrayFigure[i].edges);
-
-                arrayFigure[i].thickness = 0.3;
-
-                for (var l = 0; l < arrayFigure[i].edgesGeom.attributes.position.count; l++){
-                    arrayFigure[i].sphere = new THREE.Mesh(new THREE.SphereBufferGeometry(arrayFigure[i].thickness * 6, 16, 8), new THREE.MeshStandardMaterial({color: "black"}));
-                    arrayFigure[i].sphere.position.set(
-                        arrayFigure[i].edgesGeom.attributes.position.array[(l * 3) + 0],
-                        arrayFigure[i].edgesGeom.attributes.position.array[(l * 3) + 1],
-                        arrayFigure[i].edgesGeom.attributes.position.array[(l * 3) + 2]
-                    );
-                    arrayFigure[i].scene.add(arrayFigure[i].sphere);
-                }
-
-                for (var k = 0; k < arrayFigure[i].edgesGeom.attributes.position.count - 1; k+=2){
-
-                    arrayFigure[i].startPoint = new THREE.Vector3(
-                        arrayFigure[i].edgesGeom.attributes.position.array[k * 3 + 0],
-                        arrayFigure[i].edgesGeom.attributes.position.array[k * 3 + 1],
-                        arrayFigure[i].edgesGeom.attributes.position.array[k * 3 + 2]
-                    );
-                    arrayFigure[i].endPoint = new THREE.Vector3(
-                        arrayFigure[i].edgesGeom.attributes.position.array[k * 3 + 3],
-                        arrayFigure[i].edgesGeom.attributes.position.array[k * 3 + 4],
-                        arrayFigure[i].edgesGeom.attributes.position.array[k * 3 + 5]
-                    );
-
-                    arrayFigure[i].cylLength = new THREE.Vector3().subVectors(arrayFigure[i].endPoint, arrayFigure[i].startPoint).length();
-                    arrayFigure[i].cylGeom = new THREE.CylinderBufferGeometry(arrayFigure[i].thickness, arrayFigure[i].thickness, arrayFigure[i].cylLength, 16);
-                    arrayFigure[i].cylGeom.translate(0, arrayFigure[i].cylLength / 2, 0);
-                    arrayFigure[i].cylGeom.rotateX(Math.PI / 2);
-                    arrayFigure[i].cyl = new THREE.Mesh(arrayFigure[i].cylGeom, new THREE.MeshLambertMaterial({color: "black"}));
-                    arrayFigure[i].cyl.position.copy(arrayFigure[i].startPoint);
-                    arrayFigure[i].cyl.lookAt(arrayFigure[i].endPoint);
-                    arrayFigure[i].scene.add(arrayFigure[i].cyl);
-                }
-
-
-
+                createFigure( arrayFigure[i], new THREE.IcosahedronGeometry(100) );
                 break;
 
             case 'cube':
-                // cube primitive
-                // arrayFigure[i].geometry = new THREE.BoxGeometry(100,100,100,4,4,4);
 
-                // cube 4 sections
-                var j;
                 var arrayPoints = [50,25,0,-25,-50];
                 arrayFigure[i].geometry = new THREE.Geometry();
                 for( j=0; j<5; j++) {
@@ -95411,7 +97633,6 @@ function func_threejs_animation() {
                 arrayFigure[i].scene.rotation.y += arrayFigure[i].mouseX*0.00008;
             }
             if( arrayFigure[i].name == 'cube' ){
-                // arrayFigure[i].scene.rotation.x += arrayFigure[i].mouseY*0.00008;
                 arrayFigure[i].scene.rotation.y += arrayFigure[i].mouseX*0.00008;
             }
         }
@@ -95427,9 +97648,7 @@ function func_threejs_animation() {
                 arrayFigure[i].scene.rotation.z += 0.0025;
             }
             if( arrayFigure[i].name == 'cube' ){
-                // arrayFigure[i].scene.rotation.x += 0.0025;
                 arrayFigure[i].scene.rotation.y += 0.0025;
-                // arrayFigure[i].scene.rotation.z += 0.0025;
             }
         }
 
@@ -95468,1298 +97687,3 @@ function func_threejs_animation() {
     })
 })(jQuery);
 
-( function () {
-
-    // ConvexGeometry
-
-    function ConvexGeometry( points ) {
-
-        THREE.Geometry.call( this );
-
-        this.fromBufferGeometry( new ConvexBufferGeometry( points ) );
-        this.mergeVertices();
-
-    }
-
-    ConvexGeometry.prototype = Object.create( THREE.Geometry.prototype );
-    ConvexGeometry.prototype.constructor = ConvexGeometry;
-
-    // ConvexBufferGeometry
-
-    function ConvexBufferGeometry( points ) {
-
-        THREE.BufferGeometry.call( this );
-
-        // buffers
-
-        var vertices = [];
-        var normals = [];
-
-        // execute QuickHull
-
-        if ( THREE.QuickHull === undefined ) {
-
-            console.error( 'THREE.ConvexBufferGeometry: ConvexBufferGeometry relies on THREE.QuickHull' );
-
-        }
-
-        var quickHull = new THREE.QuickHull().setFromPoints( points );
-
-        // generate vertices and normals
-
-        var faces = quickHull.faces;
-
-        for ( var i = 0; i < faces.length; i ++ ) {
-
-            var face = faces[ i ];
-            var edge = face.edge;
-
-            // we move along a doubly-connected edge list to access all face points (see HalfEdge docs)
-
-            do {
-
-                var point = edge.head().point;
-
-                vertices.push( point.x, point.y, point.z );
-                normals.push( face.normal.x, face.normal.y, face.normal.z );
-
-                edge = edge.next;
-
-            } while ( edge !== face.edge );
-
-        }
-
-        // build geometry
-
-        this.addAttribute( 'position', new THREE.Float32BufferAttribute( vertices, 3 ) );
-        this.addAttribute( 'normal', new THREE.Float32BufferAttribute( normals, 3 ) );
-
-    }
-
-    ConvexBufferGeometry.prototype = Object.create( THREE.BufferGeometry.prototype );
-    ConvexBufferGeometry.prototype.constructor = ConvexBufferGeometry;
-
-    // export
-
-    THREE.ConvexGeometry = ConvexGeometry;
-    THREE.ConvexBufferGeometry = ConvexBufferGeometry;
-
-} )();
-
-/**
- * @author Mugen87 / https://github.com/Mugen87
- *
- * Ported from: https://github.com/maurizzzio/quickhull3d/ by Mauricio Poppe (https://github.com/maurizzzio)
- *
- */
-
-( function () {
-
-    var Visible = 0;
-    var Deleted = 1;
-
-    function QuickHull() {
-
-        this.tolerance = - 1;
-
-        this.faces = []; // the generated faces of the convex hull
-        this.newFaces = []; // this array holds the faces that are generated within a single iteration
-
-        // the vertex lists work as follows:
-        //
-        // let 'a' and 'b' be 'Face' instances
-        // let 'v' be points wrapped as instance of 'Vertex'
-        //
-        //     [v, v, ..., v, v, v, ...]
-        //      ^             ^
-        //      |             |
-        //  a.outside     b.outside
-        //
-        this.assigned = new VertexList();
-        this.unassigned = new VertexList();
-
-        this.vertices = []; 	// vertices of the hull (internal representation of given geometry data)
-
-    }
-
-    Object.assign( QuickHull.prototype, {
-
-        setFromPoints: function ( points ) {
-
-            if ( Array.isArray( points ) !== true ) {
-
-                console.error( 'THREE.QuickHull: Points parameter is not an array.' );
-
-            }
-
-            if ( points.length < 4 ) {
-
-                console.error( 'THREE.QuickHull: The algorithm needs at least four points.' );
-
-            }
-
-            this.makeEmpty();
-
-            for ( var i = 0, l = points.length; i < l; i ++ ) {
-
-                this.vertices.push( new VertexNode( points[ i ] ) );
-
-            }
-
-            this.compute();
-
-            return this;
-
-        },
-
-        setFromObject: function ( object ) {
-
-            var points = [];
-
-            object.updateMatrixWorld( true );
-
-            object.traverse( function ( node ) {
-
-                var i, l, point;
-
-                var geometry = node.geometry;
-
-                if ( geometry !== undefined ) {
-
-                    if ( geometry.isGeometry ) {
-
-                        var vertices = geometry.vertices;
-
-                        for ( i = 0, l = vertices.length; i < l; i ++ ) {
-
-                            point = vertices[ i ].clone();
-                            point.applyMatrix4( node.matrixWorld );
-
-                            points.push( point );
-
-                        }
-
-                    } else if ( geometry.isBufferGeometry ) {
-
-                        var attribute = geometry.attributes.position;
-
-                        if ( attribute !== undefined ) {
-
-                            for ( i = 0, l = attribute.count; i < l; i ++ ) {
-
-                                point = new THREE.Vector3();
-
-                                point.fromBufferAttribute( attribute, i ).applyMatrix4( node.matrixWorld );
-
-                                points.push( point );
-
-                            }
-
-                        }
-
-                    }
-
-                }
-
-            } );
-
-            return this.setFromPoints( points );
-
-        },
-
-        makeEmpty: function () {
-
-            this.faces = [];
-            this.vertices = [];
-
-            return this;
-
-        },
-
-        // Adds a vertex to the 'assigned' list of vertices and assigns it to the given face
-
-        addVertexToFace: function ( vertex, face ) {
-
-            vertex.face = face;
-
-            if ( face.outside === null ) {
-
-                this.assigned.append( vertex );
-
-            } else {
-
-                this.assigned.insertBefore( face.outside, vertex );
-
-            }
-
-            face.outside = vertex;
-
-            return this;
-
-        },
-
-        // Removes a vertex from the 'assigned' list of vertices and from the given face
-
-        removeVertexFromFace: function ( vertex, face ) {
-
-            if ( vertex === face.outside ) {
-
-                // fix face.outside link
-
-                if ( vertex.next !== null && vertex.next.face === face ) {
-
-                    // face has at least 2 outside vertices, move the 'outside' reference
-
-                    face.outside = vertex.next;
-
-                } else {
-
-                    // vertex was the only outside vertex that face had
-
-                    face.outside = null;
-
-                }
-
-            }
-
-            this.assigned.remove( vertex );
-
-            return this;
-
-        },
-
-        // Removes all the visible vertices that a given face is able to see which are stored in the 'assigned' vertext list
-
-        removeAllVerticesFromFace: function ( face ) {
-
-            if ( face.outside !== null ) {
-
-                // reference to the first and last vertex of this face
-
-                var start = face.outside;
-                var end = face.outside;
-
-                while ( end.next !== null && end.next.face === face ) {
-
-                    end = end.next;
-
-                }
-
-                this.assigned.removeSubList( start, end );
-
-                // fix references
-
-                start.prev = end.next = null;
-                face.outside = null;
-
-                return start;
-
-            }
-
-        },
-
-        // Removes all the visible vertices that 'face' is able to see
-
-        deleteFaceVertices: function ( face, absorbingFace ) {
-
-            var faceVertices = this.removeAllVerticesFromFace( face );
-
-            if ( faceVertices !== undefined ) {
-
-                if ( absorbingFace === undefined ) {
-
-                    // mark the vertices to be reassigned to some other face
-
-                    this.unassigned.appendChain( faceVertices );
-
-
-                } else {
-
-                    // if there's an absorbing face try to assign as many vertices as possible to it
-
-                    var vertex = faceVertices;
-
-                    do {
-
-                        // we need to buffer the subsequent vertex at this point because the 'vertex.next' reference
-                        // will be changed by upcoming method calls
-
-                        var nextVertex = vertex.next;
-
-                        var distance = absorbingFace.distanceToPoint( vertex.point );
-
-                        // check if 'vertex' is able to see 'absorbingFace'
-
-                        if ( distance > this.tolerance ) {
-
-                            this.addVertexToFace( vertex, absorbingFace );
-
-                        } else {
-
-                            this.unassigned.append( vertex );
-
-                        }
-
-                        // now assign next vertex
-
-                        vertex = nextVertex;
-
-                    } while ( vertex !== null );
-
-                }
-
-            }
-
-            return this;
-
-        },
-
-        // Reassigns as many vertices as possible from the unassigned list to the new faces
-
-        resolveUnassignedPoints: function ( newFaces ) {
-
-            if ( this.unassigned.isEmpty() === false ) {
-
-                var vertex = this.unassigned.first();
-
-                do {
-
-                    // buffer 'next' reference, see .deleteFaceVertices()
-
-                    var nextVertex = vertex.next;
-
-                    var maxDistance = this.tolerance;
-
-                    var maxFace = null;
-
-                    for ( var i = 0; i < newFaces.length; i ++ ) {
-
-                        var face = newFaces[ i ];
-
-                        if ( face.mark === Visible ) {
-
-                            var distance = face.distanceToPoint( vertex.point );
-
-                            if ( distance > maxDistance ) {
-
-                                maxDistance = distance;
-                                maxFace = face;
-
-                            }
-
-                            if ( maxDistance > 1000 * this.tolerance ) break;
-
-                        }
-
-                    }
-
-                    // 'maxFace' can be null e.g. if there are identical vertices
-
-                    if ( maxFace !== null ) {
-
-                        this.addVertexToFace( vertex, maxFace );
-
-                    }
-
-                    vertex = nextVertex;
-
-                } while ( vertex !== null );
-
-            }
-
-            return this;
-
-        },
-
-        // Computes the extremes of a simplex which will be the initial hull
-
-        computeExtremes: function () {
-
-            var min = new THREE.Vector3();
-            var max = new THREE.Vector3();
-
-            var minVertices = [];
-            var maxVertices = [];
-
-            var i, l, j;
-
-            // initially assume that the first vertex is the min/max
-
-            for ( i = 0; i < 3; i ++ ) {
-
-                minVertices[ i ] = maxVertices[ i ] = this.vertices[ 0 ];
-
-            }
-
-            min.copy( this.vertices[ 0 ].point );
-            max.copy( this.vertices[ 0 ].point );
-
-            // compute the min/max vertex on all six directions
-
-            for ( i = 0, l = this.vertices.length; i < l; i ++ ) {
-
-                var vertex = this.vertices[ i ];
-                var point = vertex.point;
-
-                // update the min coordinates
-
-                for ( j = 0; j < 3; j ++ ) {
-
-                    if ( point.getComponent( j ) < min.getComponent( j ) ) {
-
-                        min.setComponent( j, point.getComponent( j ) );
-                        minVertices[ j ] = vertex;
-
-                    }
-
-                }
-
-                // update the max coordinates
-
-                for ( j = 0; j < 3; j ++ ) {
-
-                    if ( point.getComponent( j ) > max.getComponent( j ) ) {
-
-                        max.setComponent( j, point.getComponent( j ) );
-                        maxVertices[ j ] = vertex;
-
-                    }
-
-                }
-
-            }
-
-            // use min/max vectors to compute an optimal epsilon
-
-            this.tolerance = 3 * Number.EPSILON * (
-                Math.max( Math.abs( min.x ), Math.abs( max.x ) ) +
-                Math.max( Math.abs( min.y ), Math.abs( max.y ) ) +
-                Math.max( Math.abs( min.z ), Math.abs( max.z ) )
-            );
-
-            return { min: minVertices, max: maxVertices };
-
-        },
-
-        // Computes the initial simplex assigning to its faces all the points
-        // that are candidates to form part of the hull
-
-        computeInitialHull: function () {
-
-            var line3, plane, closestPoint;
-
-            return function computeInitialHull() {
-
-                if ( line3 === undefined ) {
-
-                    line3 = new THREE.Line3();
-                    plane = new THREE.Plane();
-                    closestPoint = new THREE.Vector3();
-
-                }
-
-                var vertex, vertices = this.vertices;
-                var extremes = this.computeExtremes();
-                var min = extremes.min;
-                var max = extremes.max;
-
-                var v0, v1, v2, v3;
-                var i, l, j;
-
-                // 1. Find the two vertices 'v0' and 'v1' with the greatest 1d separation
-                // (max.x - min.x)
-                // (max.y - min.y)
-                // (max.z - min.z)
-
-                var distance, maxDistance = 0;
-                var index = 0;
-
-                for ( i = 0; i < 3; i ++ ) {
-
-                    distance = max[ i ].point.getComponent( i ) - min[ i ].point.getComponent( i );
-
-                    if ( distance > maxDistance ) {
-
-                        maxDistance = distance;
-                        index = i;
-
-                    }
-
-                }
-
-                v0 = min[ index ];
-                v1 = max[ index ];
-
-                // 2. The next vertex 'v2' is the one farthest to the line formed by 'v0' and 'v1'
-
-                maxDistance = 0;
-                line3.set( v0.point, v1.point );
-
-                for ( i = 0, l = this.vertices.length; i < l; i ++ ) {
-
-                    vertex = vertices[ i ];
-
-                    if ( vertex !== v0 && vertex !== v1 ) {
-
-                        line3.closestPointToPoint( vertex.point, true, closestPoint );
-
-                        distance = closestPoint.distanceToSquared( vertex.point );
-
-                        if ( distance > maxDistance ) {
-
-                            maxDistance = distance;
-                            v2 = vertex;
-
-                        }
-
-                    }
-
-                }
-
-                // 3. The next vertex 'v3' is the one farthest to the plane 'v0', 'v1', 'v2'
-
-                maxDistance = - 1;
-                plane.setFromCoplanarPoints( v0.point, v1.point, v2.point );
-
-                for ( i = 0, l = this.vertices.length; i < l; i ++ ) {
-
-                    vertex = vertices[ i ];
-
-                    if ( vertex !== v0 && vertex !== v1 && vertex !== v2 ) {
-
-                        distance = Math.abs( plane.distanceToPoint( vertex.point ) );
-
-                        if ( distance > maxDistance ) {
-
-                            maxDistance = distance;
-                            v3 = vertex;
-
-                        }
-
-                    }
-
-                }
-
-                var faces = [];
-
-                if ( plane.distanceToPoint( v3.point ) < 0 ) {
-
-                    // the face is not able to see the point so 'plane.normal' is pointing outside the tetrahedron
-
-                    faces.push(
-                        Face.create( v0, v1, v2 ),
-                        Face.create( v3, v1, v0 ),
-                        Face.create( v3, v2, v1 ),
-                        Face.create( v3, v0, v2 )
-                    );
-
-                    // set the twin edge
-
-                    for ( i = 0; i < 3; i ++ ) {
-
-                        j = ( i + 1 ) % 3;
-
-                        // join face[ i ] i > 0, with the first face
-
-                        faces[ i + 1 ].getEdge( 2 ).setTwin( faces[ 0 ].getEdge( j ) );
-
-                        // join face[ i ] with face[ i + 1 ], 1 <= i <= 3
-
-                        faces[ i + 1 ].getEdge( 1 ).setTwin( faces[ j + 1 ].getEdge( 0 ) );
-
-                    }
-
-                } else {
-
-                    // the face is able to see the point so 'plane.normal' is pointing inside the tetrahedron
-
-                    faces.push(
-                        Face.create( v0, v2, v1 ),
-                        Face.create( v3, v0, v1 ),
-                        Face.create( v3, v1, v2 ),
-                        Face.create( v3, v2, v0 )
-                    );
-
-                    // set the twin edge
-
-                    for ( i = 0; i < 3; i ++ ) {
-
-                        j = ( i + 1 ) % 3;
-
-                        // join face[ i ] i > 0, with the first face
-
-                        faces[ i + 1 ].getEdge( 2 ).setTwin( faces[ 0 ].getEdge( ( 3 - i ) % 3 ) );
-
-                        // join face[ i ] with face[ i + 1 ]
-
-                        faces[ i + 1 ].getEdge( 0 ).setTwin( faces[ j + 1 ].getEdge( 1 ) );
-
-                    }
-
-                }
-
-                // the initial hull is the tetrahedron
-
-                for ( i = 0; i < 4; i ++ ) {
-
-                    this.faces.push( faces[ i ] );
-
-                }
-
-                // initial assignment of vertices to the faces of the tetrahedron
-
-                for ( i = 0, l = vertices.length; i < l; i ++ ) {
-
-                    vertex = vertices[ i ];
-
-                    if ( vertex !== v0 && vertex !== v1 && vertex !== v2 && vertex !== v3 ) {
-
-                        maxDistance = this.tolerance;
-                        var maxFace = null;
-
-                        for ( j = 0; j < 4; j ++ ) {
-
-                            distance = this.faces[ j ].distanceToPoint( vertex.point );
-
-                            if ( distance > maxDistance ) {
-
-                                maxDistance = distance;
-                                maxFace = this.faces[ j ];
-
-                            }
-
-                        }
-
-                        if ( maxFace !== null ) {
-
-                            this.addVertexToFace( vertex, maxFace );
-
-                        }
-
-                    }
-
-                }
-
-                return this;
-
-            };
-
-        }(),
-
-        // Removes inactive faces
-
-        reindexFaces: function () {
-
-            var activeFaces = [];
-
-            for ( var i = 0; i < this.faces.length; i ++ ) {
-
-                var face = this.faces[ i ];
-
-                if ( face.mark === Visible ) {
-
-                    activeFaces.push( face );
-
-                }
-
-            }
-
-            this.faces = activeFaces;
-
-            return this;
-
-        },
-
-        // Finds the next vertex to create faces with the current hull
-
-        nextVertexToAdd: function () {
-
-            // if the 'assigned' list of vertices is empty, no vertices are left. return with 'undefined'
-
-            if ( this.assigned.isEmpty() === false ) {
-
-                var eyeVertex, maxDistance = 0;
-
-                // grap the first available face and start with the first visible vertex of that face
-
-                var eyeFace = this.assigned.first().face;
-                var vertex = eyeFace.outside;
-
-                // now calculate the farthest vertex that face can see
-
-                do {
-
-                    var distance = eyeFace.distanceToPoint( vertex.point );
-
-                    if ( distance > maxDistance ) {
-
-                        maxDistance = distance;
-                        eyeVertex = vertex;
-
-                    }
-
-                    vertex = vertex.next;
-
-                } while ( vertex !== null && vertex.face === eyeFace );
-
-                return eyeVertex;
-
-            }
-
-        },
-
-        // Computes a chain of half edges in CCW order called the 'horizon'.
-        // For an edge to be part of the horizon it must join a face that can see
-        // 'eyePoint' and a face that cannot see 'eyePoint'.
-
-        computeHorizon: function ( eyePoint, crossEdge, face, horizon ) {
-
-            // moves face's vertices to the 'unassigned' vertex list
-
-            this.deleteFaceVertices( face );
-
-            face.mark = Deleted;
-
-            var edge;
-
-            if ( crossEdge === null ) {
-
-                edge = crossEdge = face.getEdge( 0 );
-
-            } else {
-
-                // start from the next edge since 'crossEdge' was already analyzed
-                // (actually 'crossEdge.twin' was the edge who called this method recursively)
-
-                edge = crossEdge.next;
-
-            }
-
-            do {
-
-                var twinEdge = edge.twin;
-                var oppositeFace = twinEdge.face;
-
-                if ( oppositeFace.mark === Visible ) {
-
-                    if ( oppositeFace.distanceToPoint( eyePoint ) > this.tolerance ) {
-
-                        // the opposite face can see the vertex, so proceed with next edge
-
-                        this.computeHorizon( eyePoint, twinEdge, oppositeFace, horizon );
-
-                    } else {
-
-                        // the opposite face can't see the vertex, so this edge is part of the horizon
-
-                        horizon.push( edge );
-
-                    }
-
-                }
-
-                edge = edge.next;
-
-            } while ( edge !== crossEdge );
-
-            return this;
-
-        },
-
-        // Creates a face with the vertices 'eyeVertex.point', 'horizonEdge.tail' and 'horizonEdge.head' in CCW order
-
-        addAdjoiningFace: function ( eyeVertex, horizonEdge ) {
-
-            // all the half edges are created in ccw order thus the face is always pointing outside the hull
-
-            var face = Face.create( eyeVertex, horizonEdge.tail(), horizonEdge.head() );
-
-            this.faces.push( face );
-
-            // join face.getEdge( - 1 ) with the horizon's opposite edge face.getEdge( - 1 ) = face.getEdge( 2 )
-
-            face.getEdge( - 1 ).setTwin( horizonEdge.twin );
-
-            return face.getEdge( 0 ); // the half edge whose vertex is the eyeVertex
-
-
-        },
-
-        //  Adds 'horizon.length' faces to the hull, each face will be linked with the
-        //  horizon opposite face and the face on the left/right
-
-        addNewFaces: function ( eyeVertex, horizon ) {
-
-            this.newFaces = [];
-
-            var firstSideEdge = null;
-            var previousSideEdge = null;
-
-            for ( var i = 0; i < horizon.length; i ++ ) {
-
-                var horizonEdge = horizon[ i ];
-
-                // returns the right side edge
-
-                var sideEdge = this.addAdjoiningFace( eyeVertex, horizonEdge );
-
-                if ( firstSideEdge === null ) {
-
-                    firstSideEdge = sideEdge;
-
-                } else {
-
-                    // joins face.getEdge( 1 ) with previousFace.getEdge( 0 )
-
-                    sideEdge.next.setTwin( previousSideEdge );
-
-                }
-
-                this.newFaces.push( sideEdge.face );
-                previousSideEdge = sideEdge;
-
-            }
-
-            // perform final join of new faces
-
-            firstSideEdge.next.setTwin( previousSideEdge );
-
-            return this;
-
-        },
-
-        // Adds a vertex to the hull
-
-        addVertexToHull: function ( eyeVertex ) {
-
-            var horizon = [];
-
-            this.unassigned.clear();
-
-            // remove 'eyeVertex' from 'eyeVertex.face' so that it can't be added to the 'unassigned' vertex list
-
-            this.removeVertexFromFace( eyeVertex, eyeVertex.face );
-
-            this.computeHorizon( eyeVertex.point, null, eyeVertex.face, horizon );
-
-            this.addNewFaces( eyeVertex, horizon );
-
-            // reassign 'unassigned' vertices to the new faces
-
-            this.resolveUnassignedPoints( this.newFaces );
-
-            return	this;
-
-        },
-
-        cleanup: function () {
-
-            this.assigned.clear();
-            this.unassigned.clear();
-            this.newFaces = [];
-
-            return this;
-
-        },
-
-        compute: function () {
-
-            var vertex;
-
-            this.computeInitialHull();
-
-            // add all available vertices gradually to the hull
-
-            while ( ( vertex = this.nextVertexToAdd() ) !== undefined ) {
-
-                this.addVertexToHull( vertex );
-
-            }
-
-            this.reindexFaces();
-
-            this.cleanup();
-
-            return this;
-
-        }
-
-    } );
-
-    //
-
-    function Face() {
-
-        this.normal = new THREE.Vector3();
-        this.midpoint = new THREE.Vector3();
-        this.area = 0;
-
-        this.constant = 0; // signed distance from face to the origin
-        this.outside = null; // reference to a vertex in a vertex list this face can see
-        this.mark = Visible;
-        this.edge = null;
-
-    }
-
-    Object.assign( Face, {
-
-        create: function ( a, b, c ) {
-
-            var face = new Face();
-
-            var e0 = new HalfEdge( a, face );
-            var e1 = new HalfEdge( b, face );
-            var e2 = new HalfEdge( c, face );
-
-            // join edges
-
-            e0.next = e2.prev = e1;
-            e1.next = e0.prev = e2;
-            e2.next = e1.prev = e0;
-
-            // main half edge reference
-
-            face.edge = e0;
-
-            return face.compute();
-
-        }
-
-    } );
-
-    Object.assign( Face.prototype, {
-
-        getEdge: function ( i ) {
-
-            var edge = this.edge;
-
-            while ( i > 0 ) {
-
-                edge = edge.next;
-                i --;
-
-            }
-
-            while ( i < 0 ) {
-
-                edge = edge.prev;
-                i ++;
-
-            }
-
-            return edge;
-
-        },
-
-        compute: function () {
-
-            var triangle;
-
-            return function compute() {
-
-                if ( triangle === undefined ) triangle = new THREE.Triangle();
-
-                var a = this.edge.tail();
-                var b = this.edge.head();
-                var c = this.edge.next.head();
-
-                triangle.set( a.point, b.point, c.point );
-
-                triangle.getNormal( this.normal );
-                triangle.getMidpoint( this.midpoint );
-                this.area = triangle.getArea();
-
-                this.constant = this.normal.dot( this.midpoint );
-
-                return this;
-
-            };
-
-        }(),
-
-        distanceToPoint: function ( point ) {
-
-            return this.normal.dot( point ) - this.constant;
-
-        }
-
-    } );
-
-    // Entity for a Doubly-Connected Edge List (DCEL).
-
-    function HalfEdge( vertex, face ) {
-
-        this.vertex = vertex;
-        this.prev = null;
-        this.next = null;
-        this.twin = null;
-        this.face = face;
-
-    }
-
-    Object.assign( HalfEdge.prototype, {
-
-        head: function () {
-
-            return this.vertex;
-
-        },
-
-        tail: function () {
-
-            return this.prev ? this.prev.vertex : null;
-
-        },
-
-        length: function () {
-
-            var head = this.head();
-            var tail = this.tail();
-
-            if ( tail !== null ) {
-
-                return tail.point.distanceTo( head.point );
-
-            }
-
-            return - 1;
-
-        },
-
-        lengthSquared: function () {
-
-            var head = this.head();
-            var tail = this.tail();
-
-            if ( tail !== null ) {
-
-                return tail.point.distanceToSquared( head.point );
-
-            }
-
-            return - 1;
-
-        },
-
-        setTwin: function ( edge ) {
-
-            this.twin = edge;
-            edge.twin = this;
-
-            return this;
-
-        }
-
-    } );
-
-    // A vertex as a double linked list node.
-
-    function VertexNode( point ) {
-
-        this.point = point;
-        this.prev = null;
-        this.next = null;
-        this.face = null; // the face that is able to see this vertex
-
-    }
-
-    // A double linked list that contains vertex nodes.
-
-    function VertexList() {
-
-        this.head = null;
-        this.tail = null;
-
-    }
-
-    Object.assign( VertexList.prototype, {
-
-        first: function () {
-
-            return this.head;
-
-        },
-
-        last: function () {
-
-            return this.tail;
-
-        },
-
-        clear: function () {
-
-            this.head = this.tail = null;
-
-            return this;
-
-        },
-
-        // Inserts a vertex before the target vertex
-
-        insertBefore: function ( target, vertex ) {
-
-            vertex.prev = target.prev;
-            vertex.next = target;
-
-            if ( vertex.prev === null ) {
-
-                this.head = vertex;
-
-            } else {
-
-                vertex.prev.next = vertex;
-
-            }
-
-            target.prev = vertex;
-
-            return this;
-
-        },
-
-        // Inserts a vertex after the target vertex
-
-        insertAfter: function ( target, vertex ) {
-
-            vertex.prev = target;
-            vertex.next = target.next;
-
-            if ( vertex.next === null ) {
-
-                this.tail = vertex;
-
-            } else {
-
-                vertex.next.prev = vertex;
-
-            }
-
-            target.next = vertex;
-
-            return this;
-
-        },
-
-        // Appends a vertex to the end of the linked list
-
-        append: function ( vertex ) {
-
-            if ( this.head === null ) {
-
-                this.head = vertex;
-
-            } else {
-
-                this.tail.next = vertex;
-
-            }
-
-            vertex.prev = this.tail;
-            vertex.next = null; // the tail has no subsequent vertex
-
-            this.tail = vertex;
-
-            return this;
-
-        },
-
-        // Appends a chain of vertices where 'vertex' is the head.
-
-        appendChain: function ( vertex ) {
-
-            if ( this.head === null ) {
-
-                this.head = vertex;
-
-            } else {
-
-                this.tail.next = vertex;
-
-            }
-
-            vertex.prev = this.tail;
-
-            // ensure that the 'tail' reference points to the last vertex of the chain
-
-            while ( vertex.next !== null ) {
-
-                vertex = vertex.next;
-
-            }
-
-            this.tail = vertex;
-
-            return this;
-
-        },
-
-        // Removes a vertex from the linked list
-
-        remove: function ( vertex ) {
-
-            if ( vertex.prev === null ) {
-
-                this.head = vertex.next;
-
-            } else {
-
-                vertex.prev.next = vertex.next;
-
-            }
-
-            if ( vertex.next === null ) {
-
-                this.tail = vertex.prev;
-
-            } else {
-
-                vertex.next.prev = vertex.prev;
-
-            }
-
-            return this;
-
-        },
-
-        // Removes a list of vertices whose 'head' is 'a' and whose 'tail' is b
-
-        removeSubList: function ( a, b ) {
-
-            if ( a.prev === null ) {
-
-                this.head = b.next;
-
-            } else {
-
-                a.prev.next = b.next;
-
-            }
-
-            if ( b.next === null ) {
-
-                this.tail = a.prev;
-
-            } else {
-
-                b.next.prev = a.prev;
-
-            }
-
-            return this;
-
-        },
-
-        isEmpty: function () {
-
-            return this.head === null;
-
-        }
-
-    } );
-
-    // export
-
-    THREE.QuickHull = QuickHull;
-
-
-} )();
