@@ -124,10 +124,10 @@ function func_threejs_init() {
                 arrayFigure[i].edges = new THREE.LineSegments(arrayFigure[i].edgesGeom, new THREE.LineBasicMaterial({color: "0x000000"}));
                 arrayFigure[i].scene.add(arrayFigure[i].edges);
 
-                arrayFigure[i].thickness = 0.4;
+                arrayFigure[i].thickness = 0.3;
 
                 for (var l = 0; l < arrayFigure[i].edgesGeom.attributes.position.count; l++){
-                    arrayFigure[i].sphere = new THREE.Mesh(new THREE.SphereBufferGeometry(arrayFigure[i].thickness * 4, 16, 8), new THREE.MeshStandardMaterial({color: "black"}));
+                    arrayFigure[i].sphere = new THREE.Mesh(new THREE.SphereBufferGeometry(arrayFigure[i].thickness * 6, 16, 8), new THREE.MeshStandardMaterial({color: "black"}));
                     arrayFigure[i].sphere.position.set(
                         arrayFigure[i].edgesGeom.attributes.position.array[(l * 3) + 0],
                         arrayFigure[i].edgesGeom.attributes.position.array[(l * 3) + 1],
@@ -219,10 +219,10 @@ function func_threejs_init() {
                 arrayFigure[i].edges = new THREE.LineSegments(arrayFigure[i].edgesGeom, new THREE.LineBasicMaterial({color: "0x000000"}));
                 arrayFigure[i].scene.add(arrayFigure[i].edges);
 
-                arrayFigure[i].thickness = 0.4;
+                arrayFigure[i].thickness = 0.3;
 
                 for (var l = 0; l < arrayFigure[i].edgesGeom.attributes.position.count; l++){
-                    arrayFigure[i].sphere = new THREE.Mesh(new THREE.SphereBufferGeometry(arrayFigure[i].thickness * 4, 16, 8), new THREE.MeshStandardMaterial({color: "black"}));
+                    arrayFigure[i].sphere = new THREE.Mesh(new THREE.SphereBufferGeometry(arrayFigure[i].thickness * 6, 16, 8), new THREE.MeshStandardMaterial({color: "black"}));
                     arrayFigure[i].sphere.position.set(
                         arrayFigure[i].edgesGeom.attributes.position.array[(l * 3) + 0],
                         arrayFigure[i].edgesGeom.attributes.position.array[(l * 3) + 1],
