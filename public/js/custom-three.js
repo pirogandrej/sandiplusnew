@@ -114,7 +114,8 @@ function func_threejs_init() {
                 //
                 // arrayFigure[i].dodecahedronGeom = new THREE.PolyhedronGeometry( verticesOfCube, indicesOfFaces, 100, 2 );
 
-                arrayFigure[i].dodecahedronGeom = new THREE.SphereGeometry( 100, 10, 8 );
+                arrayFigure[i].dodecahedronGeom = new THREE.IcosahedronGeometry( 100, 1 );
+                // arrayFigure[i].dodecahedronGeom = new THREE.SphereGeometry( 100, 10, 8 );
                 // arrayFigure[i].dodecahedronGeom = new THREE.DodecahedronGeometry(100);
 
                 arrayFigure[i].dodecahedron = new THREE.Mesh(arrayFigure[i].dodecahedronGeom, new THREE.MeshLambertMaterial({color: "white", transparent: true, opacity: .6}));
