@@ -24,7 +24,7 @@ for (var i = 0; i < numberFigure; i++) {
     arrayFigure[i].isOver    = "0";
 }
 
-function createFigure( figureItem, figureGeometry ) {
+function createFigure( figureItem, figureGeometry, zoom ) {
 
     //Scene
     figureItem.scene = new THREE.Scene();
@@ -32,7 +32,7 @@ function createFigure( figureItem, figureGeometry ) {
 
     //Camera
     figureItem.camera = new THREE.PerspectiveCamera( 40, widthFigure/heightFigure , 0.1, 1000 );
-    figureItem.camera.position.set( 0, 0, 350 );
+    figureItem.camera.position.set( 0, 0, zoom );
 
     //Renderer
     figureItem.renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -126,16 +126,23 @@ function func_threejs_init() {
 
         switch (idFigure){
             case 'sphere':
-                createFigure( arrayFigure[i], new THREE.IcosahedronGeometry(100, 1) );
+                createFigure( arrayFigure[i], new THREE.IcosahedronGeometry(100, 1), 350 );
                 break;
 
             case 'poly':
-                createFigure( arrayFigure[i], new THREE.IcosahedronGeometry(100) );
+                createFigure( arrayFigure[i], new THREE.IcosahedronGeometry(100), 350 );
                 break;
 
             case 'cube':
 
-                createFigure( arrayFigure[i], new THREE.CubeGeometry(100,100,100) );
+                createFigure( arrayFigure[i], new THREE.CubeGeometry(100,100,100), 250 );
+
+
+
+
+
+
+
 
                 // var figureItem = arrayFigure[i];
                 // var figureGeometry = new THREE.CubeGeometry(100,100,100);
@@ -234,64 +241,52 @@ function func_threejs_init() {
 
 
 
-                // var arrayPoints = [5,2.5,0,-2.5,-5];
-                // arrayFigure[i].geometry = new THREE.Geometry();
-                // for( j=0; j<5; j++) {
-                //     arrayFigure[i].geometry.vertices.push(new THREE.Vector3( 5, arrayPoints[j], 5) );
-                //     arrayFigure[i].geometry.vertices.push(new THREE.Vector3( 5, arrayPoints[j], -5) );
-                //     arrayFigure[i].geometry.vertices.push(new THREE.Vector3( -5, arrayPoints[j], -5) );
-                //     arrayFigure[i].geometry.vertices.push(new THREE.Vector3( -5, arrayPoints[j], 5) );
-                //     arrayFigure[i].geometry.vertices.push(new THREE.Vector3( 5, arrayPoints[j], 5) );
-                //
-                //     arrayFigure[i].geometry.vertices.push(new THREE.Vector3( 2.5, arrayPoints[j], 5) );
-                //     arrayFigure[i].geometry.vertices.push(new THREE.Vector3( 2.5, arrayPoints[j], -5) );
-                //     arrayFigure[i].geometry.vertices.push(new THREE.Vector3( 0, arrayPoints[j], -5) );
-                //     arrayFigure[i].geometry.vertices.push(new THREE.Vector3( 0, arrayPoints[j], 5) );
-                //     arrayFigure[i].geometry.vertices.push(new THREE.Vector3( -2.5, arrayPoints[j], 5) );
-                //     arrayFigure[i].geometry.vertices.push(new THREE.Vector3( -2.5, arrayPoints[j], -5) );
-                //     arrayFigure[i].geometry.vertices.push(new THREE.Vector3( -5, arrayPoints[j], -5) );
-                //     arrayFigure[i].geometry.vertices.push(new THREE.Vector3( -5, arrayPoints[j], 5) );
-                //     arrayFigure[i].geometry.vertices.push(new THREE.Vector3( 5, arrayPoints[j], 5) );
-                // }
-                // for( j=0; j<5; j++) {
-                //     arrayFigure[i].geometry.vertices.push(new THREE.Vector3( 50, -50, arrayPoints[j] ));
-                //     arrayFigure[i].geometry.vertices.push(new THREE.Vector3( -50, -50, arrayPoints[j] ));
-                //     arrayFigure[i].geometry.vertices.push(new THREE.Vector3( -50, 50, arrayPoints[j] ));
-                //     arrayFigure[i].geometry.vertices.push(new THREE.Vector3( 50, 50, arrayPoints[j] ));
-                //     arrayFigure[i].geometry.vertices.push(new THREE.Vector3( 50, -50, arrayPoints[j] ));
-                //
-                //     arrayFigure[i].geometry.vertices.push(new THREE.Vector3( 25, -50, arrayPoints[j] ));
-                //     arrayFigure[i].geometry.vertices.push(new THREE.Vector3( 25, 50, arrayPoints[j] ));
-                //     arrayFigure[i].geometry.vertices.push(new THREE.Vector3( 0, 50, arrayPoints[j] ));
-                //     arrayFigure[i].geometry.vertices.push(new THREE.Vector3( 0, -50, arrayPoints[j] ));
-                //     arrayFigure[i].geometry.vertices.push(new THREE.Vector3( -25, -50, arrayPoints[j] ));
-                //     arrayFigure[i].geometry.vertices.push(new THREE.Vector3( -25, 50, arrayPoints[j] ));
-                //     arrayFigure[i].geometry.vertices.push(new THREE.Vector3( -50, 50, arrayPoints[j] ));
-                //     arrayFigure[i].geometry.vertices.push(new THREE.Vector3( -50, 25, arrayPoints[j] ));
-                //     arrayFigure[i].geometry.vertices.push(new THREE.Vector3( 50, 25, arrayPoints[j] ));
-                //     arrayFigure[i].geometry.vertices.push(new THREE.Vector3( 50, 0, arrayPoints[j] ));
-                //     arrayFigure[i].geometry.vertices.push(new THREE.Vector3( -50, 0, arrayPoints[j] ));
-                //     arrayFigure[i].geometry.vertices.push(new THREE.Vector3( -50, -25, arrayPoints[j] ));
-                //     arrayFigure[i].geometry.vertices.push(new THREE.Vector3( 50, -25, arrayPoints[j] ));
-                //     arrayFigure[i].geometry.vertices.push(new THREE.Vector3( 50, -50, arrayPoints[j] ));
-                // }
-                // for( j=0; j<5; j++) {
-                //     arrayFigure[i].geometry.vertices.push(new THREE.Vector3( arrayPoints[j], -50, -50 ));
-                //     arrayFigure[i].geometry.vertices.push(new THREE.Vector3( arrayPoints[j], 50, -50 ));
-                //     arrayFigure[i].geometry.vertices.push(new THREE.Vector3( arrayPoints[j], 50, 50 ));
-                //     arrayFigure[i].geometry.vertices.push(new THREE.Vector3( arrayPoints[j], -50, 50 ));
-                //     arrayFigure[i].geometry.vertices.push(new THREE.Vector3( arrayPoints[j], -50, -50 ));
-                //
-                //     arrayFigure[i].geometry.vertices.push(new THREE.Vector3( arrayPoints[j], -50, -25 ));
-                //     arrayFigure[i].geometry.vertices.push(new THREE.Vector3( arrayPoints[j], 50, -25 ));
-                //     arrayFigure[i].geometry.vertices.push(new THREE.Vector3( arrayPoints[j], 50, 0 ));
-                //     arrayFigure[i].geometry.vertices.push(new THREE.Vector3( arrayPoints[j], -50, 0 ));
-                //     arrayFigure[i].geometry.vertices.push(new THREE.Vector3( arrayPoints[j], -50, 25 ));
-                //     arrayFigure[i].geometry.vertices.push(new THREE.Vector3( arrayPoints[j], 50, 25 ));
-                //     arrayFigure[i].geometry.vertices.push(new THREE.Vector3( arrayPoints[j], 50, -50 ));
-                //     arrayFigure[i].geometry.vertices.push(new THREE.Vector3( arrayPoints[j], -50, -50 ));
-                //
-                // }
+                arrayFigure[i].geometry = new THREE.Geometry();
+                arrayFigure[i].material = new THREE.LineBasicMaterial( { color: 0x000000 } );
+                var arrayPoints = [-50,-25,0,25,50];
+                var pointsVertices = [];
+                var geometry = [];
+                var line = [];
+                var k;
+                for( j=0; j<5; j++) {
+                    for( k=0; k<5; k++) {
+                        if (((j > 0) && (j < 4)) || ((k > 0) && (k < 4))) {
+                            geometry[k] = new THREE.Geometry();
+                            geometry[k].vertices.push(new THREE.Vector3(arrayPoints[j], arrayPoints[k], 50));
+                            geometry[k].vertices.push(new THREE.Vector3(arrayPoints[j], arrayPoints[k], -50));
+                            pointsVertices.push(new THREE.Vector3(arrayPoints[j], arrayPoints[k], 50));
+                            pointsVertices.push(new THREE.Vector3(arrayPoints[j], arrayPoints[k], -50));
+                            line[k] = new THREE.Line(geometry[k], arrayFigure[i].material);
+                            arrayFigure[i].scene.add(line[k]);
+                        }
+                    }
+                }
+                for( j=0; j<5; j++) {
+                    for( k=0; k<5; k++) {
+                        if (((j > 0) && (j < 4)) || ((k > 0) && (k < 4))) {
+                            geometry[k] = new THREE.Geometry();
+                            geometry[k].vertices.push(new THREE.Vector3( -50, arrayPoints[j], arrayPoints[k]));
+                            geometry[k].vertices.push(new THREE.Vector3( 50, arrayPoints[j], arrayPoints[k]));
+                            pointsVertices.push(new THREE.Vector3( -50, arrayPoints[j], arrayPoints[k]));
+                            pointsVertices.push(new THREE.Vector3( 50, arrayPoints[j], arrayPoints[k]));
+                            line[k] = new THREE.Line(geometry[k], arrayFigure[i].material);
+                            arrayFigure[i].scene.add(line[k]);
+                        }
+                    }
+                }
+                for( j=0; j<5; j++) {
+                    for( k=0; k<5; k++) {
+                        if (((j > 0) && (j < 4)) || ((k > 0) && (k < 4))) {
+                            geometry[k] = new THREE.Geometry();
+                            geometry[k].vertices.push(new THREE.Vector3( arrayPoints[k], -50, arrayPoints[j]));
+                            geometry[k].vertices.push(new THREE.Vector3( arrayPoints[k], 50, arrayPoints[j]));
+                            pointsVertices.push(new THREE.Vector3( arrayPoints[k], -50, arrayPoints[j]));
+                            pointsVertices.push(new THREE.Vector3( arrayPoints[k], 50, arrayPoints[j]));
+                            line[k] = new THREE.Line(geometry[k], arrayFigure[i].material);
+                            arrayFigure[i].scene.add(line[k]);
+                        }
+                    }
+                }
 
 
                 // arrayFigure[i].scene = new THREE.Scene();
@@ -305,24 +300,25 @@ function func_threejs_init() {
 
 
 
-                // arrayFigure[i].pointsMaterial = new THREE.PointsMaterial( {
-                //     color: 0x888888,
-                //     size: 6,
-                //     alphaTest: 0.5
-                // } );
-                // arrayFigure[i].pointsGeometry = new THREE.BufferGeometry().setFromPoints( arrayFigure[i].geometry.vertices );
-                // arrayFigure[i].points = new THREE.Points( arrayFigure[i].pointsGeometry, arrayFigure[i].pointsMaterial );
-                // arrayFigure[i].scene.add( arrayFigure[i].points );
-                //
-                // arrayFigure[i].material = new THREE.LineBasicMaterial({
-                //     color: 0x888888,
-                //     transparent: true,
-                //     opacity: 0.5
-                // });
-                // arrayFigure[i].mesh = new THREE.Line(arrayFigure[i].geometry, arrayFigure[i].material);
-                //
-                // arrayFigure[i].mesh.position.x = 0;
-                // arrayFigure[i].scene.add( arrayFigure[i].mesh );
+                arrayFigure[i].pointsMaterial = new THREE.PointsMaterial( {
+                    color: 0x888888,
+                    size: 16,
+                    alphaTest: 0.5
+                } );
+                console.log(pointsVertices);
+                arrayFigure[i].pointsGeometry = new THREE.BufferGeometry().setFromPoints( pointsVertices );
+                arrayFigure[i].points = new THREE.Points( arrayFigure[i].pointsGeometry, arrayFigure[i].pointsMaterial );
+                arrayFigure[i].scene.add( arrayFigure[i].points );
+
+                arrayFigure[i].material = new THREE.LineBasicMaterial({
+                    color: 0x888888,
+                    transparent: true,
+                    opacity: 0.5
+                });
+                arrayFigure[i].meshline = new THREE.Line(arrayFigure[i].geometry, arrayFigure[i].material);
+
+                arrayFigure[i].meshline.position.x = 0;
+                arrayFigure[i].scene.add( arrayFigure[i].meshline );
 
 
 
